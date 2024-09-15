@@ -1,0 +1,6 @@
+
+# Ignore all HTML files:
+**/*.html
+**/*.tsx
+**/*.ts
+**/*.js
