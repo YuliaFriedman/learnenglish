@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native";
-import { getTheme } from "../../style/Theme";
-import { AppDimentions } from "../../style/dimentions";
+import { getTheme } from "../../../style/Theme";
 
 const theme = getTheme();
 

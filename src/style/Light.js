@@ -9,6 +9,9 @@ export const LightTheme = {
       color: Colors.white,
       backButtonColor: Colors.white
     },
+    storyLine: {
+      nextButtonColor: Colors.green2
+    },
     sentenceBlock: {
       borderColor: Colors.blue1,
       background: Colors.white,
@@ -16,6 +19,15 @@ export const LightTheme = {
     },
     chunkText: {
       textColor: Colors.gray1,
-      selectedTextColor: Colors.green1
-    }
+      selectedTextColor: Colors.green2
+    },
+    SelectTranslationPicAnswer: {
+      borderColor: Colors.blue1,
+    },
+    SelectTranslationPicSelectedAnswer: {
+      backButtonColor: Colors.blue2
+    },
+  SelectTranslationPicWrongAnswer: {
+    backButtonColor: Colors.red1
+  },
 }

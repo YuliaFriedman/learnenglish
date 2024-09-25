@@ -7,10 +7,10 @@ const { width, height } = Dimensions.get('window');
 const baseWidth = 375;
 
 // Function to scale font size based on screen width
-const scaleFontSize = (size) => {
+export const scaleFontSize = (size) => {
   return Math.round((size * width) / baseWidth);
 };
 
-export const AppDimentions = {
-  fontsize: scaleFontSize(18)
+export const fromPercentToPixels = (percent) => {
+  return (width/100)*percent;
 }

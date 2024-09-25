@@ -1,4 +1,5 @@
 import { Chunk, Relation, StoryActivityModel } from "../../activities/story/StoryActivityModel";
+import { SentenceBlock } from "../../activities/story-line/StoryLineActivityModel";
 
 export class StoryLine {
   sentence: string; //"[i~am][a~boy]<.>"
@@ -24,13 +25,22 @@ export const StoryParser =
     }
   },
 
+  parseStoryLine(storyLine: StoryLine):SentenceBlock{
+    return {
+      sentence: this.parseLine(storyLine.sentence),
+      translation: this.parseLine(storyLine.translation),
+      sound: storyLine.sound,
+      relations: this.parseRelations(storyLine.relations)
+    }
+  },
+
   parseLine(text: string):Chunk[]{
-    console.log("PARSER: parsing line " + text);
+    //console.log("PARSER: parsing line " + text);
     const chunkStrings = text.match(/(\[.*?\]|\<.*?\>)/g);
     if(chunkStrings) {
       return chunkStrings.map(str => {
         if (str.startsWith("[")) {
-          console.log("PARSER: handling chunk: " + str);
+          //console.log("PARSER: handling chunk: " + str);
           return {
             words: str.substring(1,str.length - 1).split("~"),
             isSelected: false
@@ -38,7 +48,7 @@ export const StoryParser =
         }
         // sign
         else {
-          console.log("PARSER: chunk is sign: " + str);
+          //console.log("PARSER: chunk is sign: " + str);
           return {
             words: [str.substring(1,str.length - 1)],
             isSign: true,
@@ -51,11 +61,11 @@ export const StoryParser =
   },
 
   parseRelations(relations: string):Record<number, Relation>{
-    console.log("PARSER: parsing relations " + relations);
+    //console.log("PARSER: parsing relations " + relations);
     let results:Record<number, Relation> = {};
     const relationsParts = relations.split("|");
     relationsParts.forEach(relationsStr => {
-      console.log("PARSER: parsing relation " + relationsStr);
+      //console.log("PARSER: parsing relation " + relationsStr);
       const fromTo = relationsStr.split("-");
       const fromList = fromTo[0].split(",").map(f => Number(f)).filter(f => !isNaN(f));
       const toList = fromTo[1].split(",").map(f => Number(f)).filter(f => !isNaN(f));
@@ -64,7 +74,7 @@ export const StoryParser =
             translation: toList,
             additionalChunks: fromList.length == 1 ? undefined :  fromList.filter(num => num != from)
           };
-        console.log("PARSER: adding relati0n from =" + from + ", to = " + toList + ", additional = " + results[from].additionalChunks);
+        //console.log("PARSER: adding relati0n from =" + from + ", to = " + toList + ", additional = " + results[from].additionalChunks);
       })
     });
     return results;

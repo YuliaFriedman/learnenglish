@@ -5,47 +5,56 @@
  * @format
  */
 
-import React, { useEffect, useState } from "react";
-import { SafeAreaView, ScrollView, useColorScheme, Text, View, Pressable } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Pressable, SafeAreaView, ScrollView, Text, useColorScheme, View } from "react-native";
 
-import { Colors } from "react-native/Libraries/NewAppScreen";
 import { LevelsList } from "./src/levels screen/LevelsList";
-import { StoryActivity} from "./src/activities/story/StoryActivity";
-import { Page } from "./src/routing/AppNavigatorService";
-import { navigatorService } from "./src/routing/AppNavigatorService";
-import { PageInfo } from "./src/routing/AppNavigatorService";
+import { StoryActivity } from "./src/activities/story/StoryActivity";
+import { navigatorService, Page, PageInfo } from "./src/routing/AppNavigatorService";
 import { AppStyles } from "./App.Styling";
 import { levels_en_he } from "./src/app-data/levels/en-he/Levels_en_he";
-import { StoryActivityModel } from "./src/activities/story/StoryActivityModel";
 import { AudioManager } from "./src/sound/AudioManager";
+import { Provider } from "react-redux";
+import store from "./src/store/Store";
+import { ViewProducer } from "./src/store/viewProducer";
+import { StoryLineActivity } from "./src/activities/story-line/StoryLineActivityComponent";
+import { Logger } from "./src/logger/Logger";
+import { SelectTranslationPicActivity } from "./src/activities/SelectTranslationPic/SelectTranslationPicActivityComponent";
 
 function App(): React.JSX.Element {
-  console.log("====================");
-  console.log("IN App...");
-  console.log("====================");
+  Logger.log("App", "IN App...",true)
 
+  const scrollViewRef = useRef<ScrollView|null>(null);
+  const ScrollToEndValue = ViewProducer.getScrollToEndValue();
   const [visiblePage, setVisiblePage] = useState<PageInfo|undefined>(navigatorService.getVisible());
 
   useEffect(() => {
     AudioManager.init();
     const handleNavigation = (page:PageInfo) =>{
-      console.log("App: navigation changed: in page " + page.key);
+      Logger.log("App", "navigation changed: in page " + page.key);
       setVisiblePage(page);
     }
 
-    console.log("App: register to 'navigation-changed'");
+    Logger.log("App", "register to 'navigation-changed'");
     const unregister = navigatorService.addListener('navigation-changed', handleNavigation);
 
-    navigatorService.registerPage(Page.LevelsList);
-    navigatorService.registerPage(Page.StoryActivity);
     navigatorService.navigate(Page.LevelsList);
 
     return () => {
-      console.log("App: remove 'navigation-changed' listener");
+      Logger.log("App", "remove 'navigation-changed' listener");
       unregister.remove();
     }
 
   }, []);
+
+  useEffect(() => {
+    if(ScrollToEndValue){
+      Logger.log("App", "scrollToBottom was changed: " + ScrollToEndValue)
+      scrollViewRef.current?.scrollToEnd({animated:true});
+      //dispatch(resetScroll(viewState));
+      ViewProducer.resetScroll();
+    }
+  },[ScrollToEndValue]);
 
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -59,42 +68,50 @@ function App(): React.JSX.Element {
   if(visiblePage) {
     switch (visiblePage.key) {
       case Page.LevelsList:
-        page = <LevelsList levels={levels_en_he} lastCompleted={-1}></LevelsList>
+        page = <LevelsList key="LevelsList" levels={levels_en_he} lastCompleted={-1}></LevelsList>
         title = "Levels List";
         break;
-      case Page.StoryActivity:
-        const model = visiblePage.args as StoryActivityModel;
-        page = <StoryActivity model={model}></StoryActivity>
+      case Page.StoryLineActivity:
+        page = <StoryLineActivity key={visiblePage.args.id} model={visiblePage.args}></StoryLineActivity>
         title = "Story Activity";
+        break;
+      case Page.StoryActivity:
+        page = <StoryActivity key={visiblePage.args.id} model={visiblePage.args}></StoryActivity>
+        title = "Story Activity";
+        break;
+      case Page.SelectTranslationPicActivity:
+        page = <SelectTranslationPicActivity key={visiblePage.args.id} model={visiblePage.args}></SelectTranslationPicActivity>
+        title = "Where is..."
         break;
     }
   }
 
   function backButtonClicked(){
-    console.log("App: back button clicked");
+    Logger.log("App", "ack button clicked");
     navigatorService.navigate(Page.LevelsList);
   }
 
   return (
-    <>
-    <SafeAreaView style={AppStyles.host}>
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <View style={AppStyles.header}>
-          <Pressable style={AppStyles.backButton} onPress={backButtonClicked}>
-            <Text style={AppStyles.backButtonText}>Back</Text>
-          </Pressable>
-          <Text style={AppStyles.title}>{title}</Text>
-          <Pressable style={AppStyles.backButton} onPress={backButtonClicked}>
-            <Text style={AppStyles.backButtonText}>Menu</Text>
-          </Pressable>
-        </View>
+    <Provider store={store}>
+      <SafeAreaView style={AppStyles.host}>
+        <ScrollView
+          ref={scrollViewRef}
+          contentInsetAdjustmentBehavior="automatic"
+          style={backgroundStyle}>
+          <View style={AppStyles.header}>
+            <Pressable style={AppStyles.backButton} onPress={backButtonClicked}>
+              <Text style={AppStyles.backButtonText}>Back</Text>
+            </Pressable>
+            <Text style={AppStyles.title}>{title}</Text>
+            <Pressable style={AppStyles.backButton} onPress={backButtonClicked}>
+              <Text style={AppStyles.backButtonText}>Menu</Text>
+            </Pressable>
+          </View>
 
-        {page}
-      </ScrollView>
-    </SafeAreaView>
-    </>
+          {page}
+        </ScrollView>
+      </SafeAreaView>
+    </Provider>
   );
 }
 

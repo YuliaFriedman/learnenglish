@@ -3,6 +3,8 @@ import { Button, View } from "react-native";
 import { levelsListStyles } from "./LevelsList.styles";
 import { Page } from "../routing/AppNavigatorService";
 import { navigatorService } from "../routing/AppNavigatorService";
+import { LevelManager } from "../services/LevelManager";
+import { Logger } from "../logger/Logger";
 
 export interface LevelsListModel {
   levels: Level[];
@@ -12,8 +14,8 @@ export interface LevelsListModel {
 export function LevelsList(model:LevelsListModel) {
 
   function levelClicked(level: Level){
-    console.log("Level clicked " + level.id, level.steps[0]);
-    navigatorService.navigate(Page.StoryActivity, level.steps[0].model);
+    Logger.log("LevelsList", "Level clicked " + level.id, false, level.steps[0]);
+    LevelManager.startLevel(level);
   }
 
   return (

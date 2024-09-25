@@ -1,11 +1,10 @@
-import { Dimensions, StyleSheet } from "react-native";
-
-const viewWidth = Dimensions.get('window').width;
+import { StyleSheet } from "react-native";
+import { fromPercentToPixels } from "../../style/dimentions";
 
 export const StoryActivityComponentStyling = StyleSheet.create({
   host: {
-    margin: viewWidth/25,
+    margin: fromPercentToPixels(4),
     display: "flex",
-    gap:viewWidth/25
+    gap: fromPercentToPixels(4)
   }
 });

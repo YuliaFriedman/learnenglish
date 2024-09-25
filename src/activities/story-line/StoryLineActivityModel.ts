@@ -1,4 +1,4 @@
-import { ActivityProps } from "../../data-models/LevelStepModel";
+import { ActivityModel, ActivityProps } from "../../data-models/LevelStepModel";
 
 export class Chunk{
   words: string[];
@@ -18,6 +18,6 @@ export class SentenceBlock {
   relations: Record<number, Relation>;
 }
 
-export class StoryActivityModel implements ActivityProps{
-  sentences: SentenceBlock[];
+export class StoryLineActivityModel extends ActivityModel{
+  line: SentenceBlock;
 }

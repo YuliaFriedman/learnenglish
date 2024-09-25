@@ -1,12 +1,13 @@
-import { Chunk, SentenceBlock } from "./StoryActivityModel";
+import { Chunk, SentenceBlock } from "../../story/StoryActivityModel";
 import { View, Text } from "react-native";
 import { ChunkComponent } from "./ChunkComponent";
 import { SentenceBlockComponentStyle } from "./SentenceBlockComponent.styling";
-import { LanguageManager } from "../../app-data/language";
+import { LanguageManager } from "../../../app-data/language";
 import { useEffect } from "react";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { getTheme } from "../../style/Theme";
-import { AudioManager } from "../../sound/AudioManager";
+import { getTheme } from "../../../style/Theme";
+import { AudioManager } from "../../../sound/AudioManager";
+import { Logger } from "../../../logger/Logger";
 
 const theme = getTheme();
 
@@ -19,9 +20,11 @@ export function SentenceBlockComponent(
   }
 ){
 
+
   useEffect(() => {
-    playSoundClicked(args.model.sentence, LanguageManager.currentLanguage, true);
-  });
+    playSound(args.model.sentence, LanguageManager.currentLanguage, true);
+    // eslint-disable-next-line
+  }, []);
 
   function chunkPressed(id:string){
     if(args.onChunkPress){
@@ -53,8 +56,11 @@ export function SentenceBlockComponent(
       addSpace={addSpaceToChunk(index, args.model.sentence)}/>
   });
   if(LanguageManager.isRtl(LanguageManager.currentTranslation)){
-    translation = translation.reverse();
+    //translation = translation.reverse();
   }
+
+  const isTranslationRtl = LanguageManager.isRtl(LanguageManager.currentTranslation);
+  const isSentenceRtl = LanguageManager.isRtl(LanguageManager.currentLanguage);
 
   function addSpaceToChunk(index: number, sentence:Chunk[]){
     const isLast = index == sentence.length - 1;
@@ -62,12 +68,12 @@ export function SentenceBlockComponent(
     return !isLast && !nextIsSign;
   }
 
-  function playSoundClicked(sentence: Chunk[], language: string, triggerCompleteEvent: boolean = false){
+  function playSound(sentence: Chunk[], language: string, triggerCompleteEvent: boolean = false){
     const promise = AudioManager.playSound(args.model.sound, sentence.map(item => item.words.join(" ")).join(" "), language);
       if(triggerCompleteEvent) {
-        console.log("In playSoundClicked: trigger event");
+        Logger.log("SentenceComponent", "In playSound: trigger event");
         promise.then(() => {
-          console.log("In playSoundClicked: play souned finished");
+          Logger.log("SentenceComponent", "In playSound: play sound finished");
           if (args.onVoiceCompleted) {
             args.onVoiceCompleted(args.id);
           }
@@ -77,22 +83,24 @@ export function SentenceBlockComponent(
 
   return (
     <View style={SentenceBlockComponentStyle.host}>
-      <View style={SentenceBlockComponentStyle.container}>
-        <Text style={SentenceBlockComponentStyle.volumeIcon} onPress={() => {playSoundClicked(args.model.sentence, LanguageManager.currentLanguage)}}>
-          <Icon
-            name="volume-up"
-            size={theme.sentenceBlock.voiceIconSize}
-            color={theme.sentenceBlock.voiceIconColor} />
+
+      <View style={[SentenceBlockComponentStyle.container, isSentenceRtl && SentenceBlockComponentStyle.rtlContainer]}>
+        <Icon
+          name="volume-up"
+          size={theme.sentenceBlock.voiceIconSize}
+          color={theme.sentenceBlock.voiceIconColor} />
+        <Text style={SentenceBlockComponentStyle.volumeIcon} onPress={() => {playSound(args.model.sentence, LanguageManager.currentLanguage)}}>
         </Text>
         {sentence}
       </View>
-      <View style={SentenceBlockComponentStyle.container}>
+      <View style={[SentenceBlockComponentStyle.container, isTranslationRtl && SentenceBlockComponentStyle.rtlContainer]}>
+        <Icon
+          name="volume-up"
+          size={theme.sentenceBlock.voiceIconSize}
+          color={theme.sentenceBlock.voiceIconColor}
+          onPress={() => {playSound(args.model.translation, LanguageManager.currentTranslation)}} />
         <Text style={SentenceBlockComponentStyle.volumeIcon}>
-          <Icon
-            name="volume-up"
-            size={theme.sentenceBlock.voiceIconSize}
-            color={theme.sentenceBlock.voiceIconColor}
-            onPress={() => {playSoundClicked(args.model.translation, LanguageManager.currentTranslation)}}/></Text>
+          </Text>
         {translation}
       </View>
     </View>

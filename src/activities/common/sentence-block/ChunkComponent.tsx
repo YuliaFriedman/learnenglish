@@ -1,16 +1,17 @@
-import { Chunk } from "./StoryActivityModel";
+import { Chunk } from "../../story/StoryActivityModel";
 import { Text, View } from "react-native";
 import { ChunkComponentStyling } from "./ChunkComponent.styling";
-import { LanguageManager } from "../../app-data/language";
-import { Dictionary } from "../../app-data/dictionaries/Dictionary";
+import { LanguageManager } from "../../../app-data/language";
+import { Dictionary } from "../../../app-data/dictionaries/Dictionary";
+import { Logger } from "../../../logger/Logger";
 
 export function ChunkComponent(args: {chunk:Chunk, id: string, language: string, addSpace: boolean,onPress: (id: string) => void}){
 
-  console.log("IN Chunk: id = " + args.id + ", is selected = " + args.chunk.isSelected);
+  //console.log("IN Chunk: id = " + args.id + ", is selected = " + args.chunk.isSelected);
 
   function textPressed(){
     if(args.onPress && !args.chunk.isSign){
-      console.log("Chunk pressed: " + args.id);
+      Logger.log("ChunkComponent", "Chunk pressed: " + args.id);
       args.onPress(args.id);
     }
   }

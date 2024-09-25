@@ -1,4 +1,4 @@
-import { ActivityModel, LevelStep } from "./LevelStepModel";
+import { ActivityModel, ActivityProps, LevelStep } from "./LevelStepModel";
 
 export enum LevelStatus {
   New,
@@ -8,5 +8,5 @@ export enum LevelStatus {
 }
 
 export class Level {
-  constructor(public readonly id: string, public readonly steps: LevelStep<ActivityModel>[]) {}
+  constructor(public readonly id: number, public readonly steps: LevelStep<ActivityModel>[]) {}
 }
