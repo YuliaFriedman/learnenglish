@@ -11,6 +11,9 @@ export const Dictionary_en = {
   ball: "ball",
   red: "red",
   green: "green",
-  the: "the",
-  selectPictureInstruction: "Where is the {0}"
+  the: "the"
+}
+
+export const Sentences_en = {
+  whereIsThe: "Where is the {0}",
 }

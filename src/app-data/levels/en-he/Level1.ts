@@ -3,11 +3,13 @@ import { Level } from "../../../data-models/LevelModel";
 import { StoryParser } from "../../story-parser/StoryParser";
 import { StoryLineActivityModel } from "../../../activities/story-line/StoryLineActivityModel";
 import { StoryLineActivity } from "../../../activities/story-line/StoryLineActivityComponent";
-import { Page } from "../../../routing/AppNavigatorService";
-import { LevelsHelper } from "../LevelsHelper";
 import { SelectTranslationPicActivity } from "../../../activities/SelectTranslationPic/SelectTranslationPicActivityComponent";
 import { SelectTranslationPicActivityModel } from "../../../activities/SelectTranslationPic/SelectTranslationPicActivityModel";
 import { Languages } from "../../language";
+import { SaySentenceActivityComponent } from "../../../activities/saySentance/SaySentenceActivityComponent";
+import { SaySentenceActivityModel } from "../../../activities/saySentance/SaySentenceActivityModel";
+import { LevelsBuilder } from "../LevelsBuilder";
+import { Page } from "../../../learn-language-app/navigation/Pages";
 
 // step 1
 /*const storyLine1 = {
@@ -76,21 +78,26 @@ const question1 = {
     {word: "green", language: Languages.HE},
     {word: "this", language: Languages.HE}
   ],
-  correctAnswer: 0
+  correctAnswer: 0,
+
 }
 
-const storyLineModel1 = StoryParser.parseStoryLine(storyLine1);
-const storyLineModel2 = StoryParser.parseStoryLine(storyLine2);
-const storyLineModel3 = StoryParser.parseStoryLine(storyLine3);
-const storyLineModel4 = StoryParser.parseStoryLine(storyLine4);
+const question2 = {
+  sentence: "[a~ball]<.>",
+  translation: "[ball]<.>",
+  sound: "112",
+  relations: "0-0"
+};
 
 export const level1 = new Level(
   0,
   [
-    new LevelStep<StoryLineActivityModel>(StoryLineActivity, {line: storyLineModel1, id: "en-he-1-1"}, Page.StoryLineActivity),
-    new LevelStep<StoryLineActivityModel>(StoryLineActivity, {line: storyLineModel2, id: "en-he-1-2"}, Page.StoryLineActivity),
-    new LevelStep<StoryLineActivityModel>(StoryLineActivity, {line: storyLineModel3, id: "en-he-1-3"}, Page.StoryLineActivity),
-    new LevelStep<StoryLineActivityModel>(StoryLineActivity, {line: storyLineModel4, id: "en-he-1-4"}, Page.StoryLineActivity),
+    new LevelStep<SaySentenceActivityModel>(SaySentenceActivityComponent, LevelsBuilder.buildSaySentenceActivityModel(question2, "en-he-1-6"), Page.SaySentence),
+    new LevelStep<StoryLineActivityModel>(StoryLineActivity, LevelsBuilder.buildStoryLineActivityModel(storyLine1, "en-he-1-1"), Page.StoryLineActivity),
+    new LevelStep<StoryLineActivityModel>(StoryLineActivity, LevelsBuilder.buildStoryLineActivityModel(storyLine2, "en-he-1-2"), Page.StoryLineActivity),
+    new LevelStep<StoryLineActivityModel>(StoryLineActivity, LevelsBuilder.buildStoryLineActivityModel(storyLine3, "en-he-1-3"), Page.StoryLineActivity),
+    new LevelStep<StoryLineActivityModel>(StoryLineActivity, LevelsBuilder.buildStoryLineActivityModel(storyLine4, "en-he-1-4"), Page.StoryLineActivity),
     new LevelStep<SelectTranslationPicActivityModel>(SelectTranslationPicActivity, {...question1, id: "en-he-1-5"}, Page.SelectTranslationPicActivity),
+
   ]);
 

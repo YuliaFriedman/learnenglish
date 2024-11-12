@@ -1,5 +1,7 @@
-import { Chunk, Relation, StoryActivityModel } from "../../activities/story/StoryActivityModel";
-import { SentenceBlock } from "../../activities/story-line/StoryLineActivityModel";
+import { StoryActivityModel } from "../../activities/story/StoryActivityModel";
+import { Relation, SentenceBlock } from "../../activities/common/sentence-block/SentenceBlockComponentModel";
+import { Chunk } from "../../activities/common-models/ChunkModel";
+import { LanguageManager } from "../language";
 
 export class StoryLine {
   sentence: string; //"[i~am][a~boy]<.>"
@@ -27,8 +29,14 @@ export const StoryParser =
 
   parseStoryLine(storyLine: StoryLine):SentenceBlock{
     return {
-      sentence: this.parseLine(storyLine.sentence),
-      translation: this.parseLine(storyLine.translation),
+      sentence: {
+        chunks: this.parseLine(storyLine.sentence),
+        language: LanguageManager.currentLanguage
+      },
+      translation: {
+        chunks: this.parseLine(storyLine.translation),
+        language: LanguageManager.currentTranslation
+      },
       sound: storyLine.sound,
       relations: this.parseRelations(storyLine.relations)
     }

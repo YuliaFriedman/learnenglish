@@ -7,11 +7,19 @@ type TtsCompletePromiseType = {
   reject: ((reason?: any) => void) | null;
 };
 
+export interface SoundInfoToPlay{
+  soundKey: string | undefined;
+  text:string;
+  language: string;
+}
+
 export const AudioManager = {
 
   playWithTts: [Languages.EN],
 
   ttsCompletePromise: {resolve: null, reject: null} as TtsCompletePromiseType,
+  playList: undefined as SoundInfoToPlay[] | undefined,
+  currentPlayIndex: -1,
 
   init(){
     Tts.setDefaultRate(0.2);
@@ -42,21 +50,69 @@ export const AudioManager = {
 
 
   ttsFinished(){
-    if(AudioManager.ttsCompletePromise && AudioManager.ttsCompletePromise.resolve){
-      AudioManager.ttsCompletePromise.resolve(null);
+    // has more to play
+    if(AudioManager.hasMoreSoundsToPlay()){
+      AudioManager.playNextSound();
     }
+    else{
+      AudioManager.resetData();
+      if(AudioManager.ttsCompletePromise && AudioManager.ttsCompletePromise.resolve){
+        AudioManager.ttsCompletePromise.resolve(null);
+      }
+    }
+
   },
 
-  playSound: (soundKey: string | undefined, text:string, language: string) => {
+  resetData(){
+    AudioManager.ttsCompletePromise.resolve = null;
+    AudioManager.ttsCompletePromise.reject = null;
+    AudioManager.currentPlayIndex = -1;
+    AudioManager.playList = undefined;
+
+  },
+
+  playSound: (soundInfo: SoundInfoToPlay, savePromise:boolean = true) => {
     return new Promise((resolve, reject) => {
-      if(AudioManager.playWithTts.indexOf(language) >= 0){
-        AudioManager.ttsCompletePromise.reject = reject;
-        AudioManager.ttsCompletePromise.resolve = resolve;
-        Tts.speak(text);
+      if(AudioManager.playWithTts.indexOf(soundInfo.language) >= 0){
+        if(savePromise) {
+          AudioManager.ttsCompletePromise.reject = reject;
+          AudioManager.ttsCompletePromise.resolve = resolve;
+        }
+        Tts.speak(soundInfo.text);
       }
       else{
 
       }
     });
+  },
+
+  PlaySoundGroup: (soundInfo: SoundInfoToPlay[]) => {
+    if(soundInfo && soundInfo.length > 0){
+      AudioManager.playList = soundInfo;
+      return AudioManager.playNextSound();
+    }
+    else{
+      return Promise.resolve();
+    }
+  },
+
+  playNextSound(){
+    if(AudioManager.hasMoreSoundsToPlay()) {
+      AudioManager.currentPlayIndex++;
+      const nextSound = AudioManager.playList ? AudioManager.playList[AudioManager.currentPlayIndex]:undefined;
+      if(nextSound) {
+        return AudioManager.playSound(nextSound, AudioManager.currentPlayIndex === 0);
+      }
+      else{
+        return Promise.resolve();
+      }
+    }
+    else{
+      return Promise.resolve();
+    }
+  },
+
+  hasMoreSoundsToPlay(){
+    return AudioManager.playList && AudioManager.currentPlayIndex < AudioManager.playList.length - 1;
   }
 }

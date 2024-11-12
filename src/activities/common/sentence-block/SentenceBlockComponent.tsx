@@ -1,13 +1,17 @@
-import { Chunk, SentenceBlock } from "../../story/StoryActivityModel";
 import { View, Text } from "react-native";
 import { ChunkComponent } from "./ChunkComponent";
-import { SentenceBlockComponentStyle } from "./SentenceBlockComponent.styling";
+import {
+  getSentenceBlockComponentStyle,
+  SentenceBlockComponentStyleType
+} from "./SentenceBlockComponent.styling";
 import { LanguageManager } from "../../../app-data/language";
 import { useEffect } from "react";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getTheme } from "../../../style/Theme";
 import { AudioManager } from "../../../sound/AudioManager";
 import { Logger } from "../../../logger/Logger";
+import { SentenceBlock } from "./SentenceBlockComponentModel";
+import { Chunk } from "../../common-models/ChunkModel";
 
 const theme = getTheme();
 
@@ -16,13 +20,15 @@ export function SentenceBlockComponent(
     model: SentenceBlock,
     id: string,
     onChunkPress: (blockId: string, chunkId: string) => void,
-    onVoiceCompleted: (blockId: string) => void
+    onVoiceCompleted: (blockId: string) => void,
+    styleType: SentenceBlockComponentStyleType
   }
 ){
 
+  const style = getSentenceBlockComponentStyle(args.styleType);
 
   useEffect(() => {
-    playSound(args.model.sentence, LanguageManager.currentLanguage, true);
+    playSound(args.model.sentence.chunks, args.model.sentence.language, true);
     // eslint-disable-next-line
   }, []);
 
@@ -32,35 +38,31 @@ export function SentenceBlockComponent(
     }
   }
 
-  let sentence = args.model.sentence.map((chunk, index) => {
+  let sentence = args.model.sentence.chunks.map((chunk, index) => {
     return <ChunkComponent
       key={"sentence_chunk_" + index}
       chunk={chunk}
       id={"sentence_" + index}
-      language={LanguageManager.currentLanguage}
+      language={args.model.sentence.language}
       onPress={(id) => chunkPressed(id)}
-      addSpace={addSpaceToChunk(index, args.model.sentence)}/>
+      addSpace={addSpaceToChunk(index, args.model.sentence.chunks)} />
   });
-  if(LanguageManager.isRtl(LanguageManager.currentLanguage)){
-    sentence = sentence.reverse();
+
+  let translation = null;
+  if(args.model.translation) {
+    translation = args.model.translation.chunks.map((chunk, index) => {
+      return <ChunkComponent
+        key={"translation_chunk_" + index}
+        chunk={chunk}
+        id={"translation_" + index}
+        language={args.model.translation.language}
+        onPress={(id) => chunkPressed(id)}
+        addSpace={addSpaceToChunk(index, args.model.sentence.chunks)} />
+    });
   }
 
-
-  let translation = args.model.translation.map((chunk, index) => {
-    return <ChunkComponent
-      key={"translation_chunk_" + index}
-      chunk={chunk}
-      id={"translation_" + index}
-      language={LanguageManager.currentTranslation}
-      onPress={(id) => chunkPressed(id)}
-      addSpace={addSpaceToChunk(index, args.model.sentence)}/>
-  });
-  if(LanguageManager.isRtl(LanguageManager.currentTranslation)){
-    //translation = translation.reverse();
-  }
-
-  const isTranslationRtl = LanguageManager.isRtl(LanguageManager.currentTranslation);
-  const isSentenceRtl = LanguageManager.isRtl(LanguageManager.currentLanguage);
+  const isTranslationRtl = args.model.translation ? LanguageManager.isRtl(args.model.translation.language) : false;
+  const isSentenceRtl = LanguageManager.isRtl(args.model.sentence.language);
 
   function addSpaceToChunk(index: number, sentence:Chunk[]){
     const isLast = index == sentence.length - 1;
@@ -69,7 +71,7 @@ export function SentenceBlockComponent(
   }
 
   function playSound(sentence: Chunk[], language: string, triggerCompleteEvent: boolean = false){
-    const promise = AudioManager.playSound(args.model.sound, sentence.map(item => item.words.join(" ")).join(" "), language);
+    const promise = AudioManager.playSound({soundKey: args.model.sound, text: sentence.map(item => item.words.join(" ")).join(" "), language});
       if(triggerCompleteEvent) {
         Logger.log("SentenceComponent", "In playSound: trigger event");
         promise.then(() => {
@@ -82,27 +84,31 @@ export function SentenceBlockComponent(
   }
 
   return (
-    <View style={SentenceBlockComponentStyle.host}>
+    <View style={style.host}>
+      <View style={[style.container, isSentenceRtl && style.rtlContainer]}>
 
-      <View style={[SentenceBlockComponentStyle.container, isSentenceRtl && SentenceBlockComponentStyle.rtlContainer]}>
-        <Icon
-          name="volume-up"
-          size={theme.sentenceBlock.voiceIconSize}
-          color={theme.sentenceBlock.voiceIconColor} />
-        <Text style={SentenceBlockComponentStyle.volumeIcon} onPress={() => {playSound(args.model.sentence, LanguageManager.currentLanguage)}}>
+        <Text style={style.volumeIcon} onPress={() => {playSound(args.model.sentence.chunks, args.model.sentence.language)}}>
+          <Icon
+            name="volume-up"
+            size={theme.sentenceBlock.voiceIconSize}
+            color={theme.sentenceBlock.voiceIconColor} />
         </Text>
         {sentence}
       </View>
-      <View style={[SentenceBlockComponentStyle.container, isTranslationRtl && SentenceBlockComponentStyle.rtlContainer]}>
-        <Icon
-          name="volume-up"
-          size={theme.sentenceBlock.voiceIconSize}
-          color={theme.sentenceBlock.voiceIconColor}
-          onPress={() => {playSound(args.model.translation, LanguageManager.currentTranslation)}} />
-        <Text style={SentenceBlockComponentStyle.volumeIcon}>
+      { translation ?
+        <View style={[style.container, isTranslationRtl && style.rtlContainer]}>
+          <Text style={style.volumeIcon}>
+            <Icon
+              name="volume-up"
+              size={theme.sentenceBlock.voiceIconSize}
+              color={theme.sentenceBlock.voiceIconColor}
+              onPress={() => {playSound(args.model.translation.chunks, args.model.translation.language)}} />
           </Text>
-        {translation}
-      </View>
+          {translation}
+        </View>
+        : <></>
+      }
+
     </View>
 
   );

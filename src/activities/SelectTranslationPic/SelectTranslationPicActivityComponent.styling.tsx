@@ -8,36 +8,24 @@ export const SelectTranslationPicActivityComponentStyling = StyleSheet.create({
   host: {
     display: "flex",
     flexDirection: "column",
+    height: "100%",
+    padding: fromPercentToPixels(5),
   },
   question:{
-    flex: 1,
     alignSelf: "center",
     display: "flex",
     flexDirection: "row",
-    padding: fromPercentToPixels(5),
-    marginBottom: fromPercentToPixels(5)
-  },
-  text: {
-    fontSize: theme.SelectTranslationPicText.fontSize,
+    margin: fromPercentToPixels(5),
   },
   answerRow: {
+    flex: 1,
     display: "flex",
     flexDirection: "row",
-    //height:
   },
   answer: {
     flex: 1,
-    alignItems: "center",
-    padding: fromPercentToPixels(4),
-    margin: fromPercentToPixels(4),
-    borderColor: theme.SelectTranslationPicAnswer.borderColor,
-    borderWidth: 1,
-    borderRadius: fromPercentToPixels(2)
-  },
-  selectedAnswer: {
-    backgroundColor: theme.SelectTranslationPicSelectedAnswer.backButtonColor
-  },
-  wrongAnswer: {
-    backgroundColor: theme.SelectTranslationPicWrongAnswer.backButtonColor
+    alignSelf: "center",
+    display: "flex",
+    padding: fromPercentToPixels(5),
   }
 });

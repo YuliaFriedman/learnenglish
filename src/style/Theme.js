@@ -30,6 +30,9 @@ export function getTheme(){
     },
     SelectTranslationPicText: {
       fontSize: scaleFontSize(20)
+    },
+    SelectAnswerBlockVoice:{
+      voiceIconSize: 30
     }
   }, theme);
 }

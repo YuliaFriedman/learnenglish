@@ -6,12 +6,12 @@ export const levelsListStyles = StyleSheet.create({
     flexDirection: "row",
     gap: 10,
     padding: 10,
-    flexWrap: "wrap"
+    flexWrap: "wrap",
+    height: "100%"
   },
 
   levelTile: {
     height: 50,
     width: 50,
-    backgroundColor: 'red'
   }
 });

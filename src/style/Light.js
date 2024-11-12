@@ -25,9 +25,14 @@ export const LightTheme = {
       borderColor: Colors.blue1,
     },
     SelectTranslationPicSelectedAnswer: {
-      backButtonColor: Colors.blue2
+      background: Colors.blue2
     },
-  SelectTranslationPicWrongAnswer: {
-    backButtonColor: Colors.red1
-  },
+    SelectTranslationPicWrongAnswer: {
+      background: Colors.red1
+    },
+    SelectAnswerBlockVoice: {
+      voiceIconColor: Colors.blue1,
+      background: Colors.white,
+      borderColor: Colors.blue1
+    }
 }

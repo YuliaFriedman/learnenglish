@@ -23,12 +23,18 @@ export function StoryLineActivity({ model }: ActivityProps<StoryLineActivityMode
       ...currentModel,
       line: {
         ...currentModel.line,
-        sentence: currentModel.line.sentence.map((item, index) => {
-          return {...item, isSelected: index == typeAndIndex[1]}
-        }),
-        translation: currentModel.line.translation.map((item, index) => {
-          return {...item, isSelected: index == typeAndIndex[1]}
-        })
+        sentence: {
+          ...currentModel.line.sentence,
+          chunks: currentModel.line.sentence.chunks.map((item, index) => {
+            return {...item, isSelected: index == typeAndIndex[1]}
+          })
+        },
+        translation: {
+          ...currentModel.line.translation,
+          chunks: currentModel.line.translation.chunks.map((item, index) => {
+            return {...item, isSelected: index == typeAndIndex[1]}
+          })
+        }
       }
     });
 

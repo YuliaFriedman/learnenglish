@@ -6,7 +6,10 @@ const theme = getTheme();
 export const AppStyles = StyleSheet.create({
     host: {
       backgroundColor: theme.app.background,
-      flex: 1
+      flex: 1,
+    },
+    scrollView: {
+      display: "flex",
     },
     header: {
       display: "flex",

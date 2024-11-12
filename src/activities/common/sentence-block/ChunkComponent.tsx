@@ -1,9 +1,9 @@
-import { Chunk } from "../../story/StoryActivityModel";
 import { Text, View } from "react-native";
 import { ChunkComponentStyling } from "./ChunkComponent.styling";
 import { LanguageManager } from "../../../app-data/language";
 import { Dictionary } from "../../../app-data/dictionaries/Dictionary";
 import { Logger } from "../../../logger/Logger";
+import { Chunk } from "../../common-models/ChunkModel";
 
 export function ChunkComponent(args: {chunk:Chunk, id: string, language: string, addSpace: boolean,onPress: (id: string) => void}){
 
