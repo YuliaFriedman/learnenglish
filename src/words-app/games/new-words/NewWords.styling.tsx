@@ -1,18 +1,30 @@
 import { StyleSheet } from "react-native";
 
 export const NewWordsStyling = StyleSheet.create({
-  groupContainer: {
+
+  host:{
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center"
+  },
+
+  next: {
+    alignSelf: "center"
+  },
+
+  cardContainer: {
     display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 10,
-    columnGap: 30,
+    gap: 30,
     justifyContent: "center",
     margin: "10%"
   },
 
-  step: {
-    width: "20%",
+  wordCard: {
+    width: "40%",
     borderRadius: 5,
     borderColor: "blue",
     borderWidth: 2,
@@ -20,15 +32,5 @@ export const NewWordsStyling = StyleSheet.create({
     position: "relative"
 
   },
-
-  stepText: {
-    textAlign: "center"
-  },
-
-  starIcon: {
-    position: "absolute",
-    top: -15,
-    left: -15,
-  }
 
 })

@@ -13,6 +13,7 @@ import { categories } from "./app-data/levels/Categories";
 import CategoriesStepsComponent from "./CategoryStepsComponent/CategoriesSteps.component";
 import { appDataInitializer } from "./app-data/store/AppDataInitializer";
 import GameContainerComponent from "./games/GameContainer.component";
+import { AudioManager } from "../sound/AudioManager";
 
 export function WordsApp(){
 
@@ -27,6 +28,7 @@ export function WordsApp(){
   useEffect(() => {
     initData();
     navigationInitializer.init();
+    AudioManager.init();
     const handleNavigation = (page:PageInfo) =>{
       setVisiblePage(page);
       Logger.log(logSource, "NAVIGATION CHANGED: in page " + page.key);

@@ -1,6 +1,7 @@
 import Tts from 'react-native-tts';
 import { Languages } from "../app-data/language";
 import { Alert } from 'react-native';
+import { Logger } from "../logger/Logger";
 
 type TtsCompletePromiseType = {
   resolve: ((value: unknown) => void) | null;
@@ -15,6 +16,8 @@ export interface SoundInfoToPlay{
 
 export const AudioManager = {
 
+  logSource: "AudioManager",
+
   playWithTts: [Languages.EN],
 
   ttsCompletePromise: {resolve: null, reject: null} as TtsCompletePromiseType,
@@ -22,6 +25,7 @@ export const AudioManager = {
   currentPlayIndex: -1,
 
   init(){
+    Tts.removeAllListeners('tts-finish');
     Tts.setDefaultRate(0.2);
     Tts.addEventListener('tts-finish', () => AudioManager.ttsFinished());
     // Example usage
@@ -51,14 +55,15 @@ export const AudioManager = {
 
   ttsFinished(){
     // has more to play
+    Logger.log(AudioManager.logSource, "ttsFinished");
     if(AudioManager.hasMoreSoundsToPlay()){
       AudioManager.playNextSound();
     }
     else{
-      AudioManager.resetData();
       if(AudioManager.ttsCompletePromise && AudioManager.ttsCompletePromise.resolve){
         AudioManager.ttsCompletePromise.resolve(null);
       }
+      AudioManager.resetData();
     }
 
   },
@@ -97,6 +102,7 @@ export const AudioManager = {
   },
 
   playNextSound(){
+    Logger.log(AudioManager.logSource, "playNextSound");
     if(AudioManager.hasMoreSoundsToPlay()) {
       AudioManager.currentPlayIndex++;
       const nextSound = AudioManager.playList ? AudioManager.playList[AudioManager.currentPlayIndex]:undefined;

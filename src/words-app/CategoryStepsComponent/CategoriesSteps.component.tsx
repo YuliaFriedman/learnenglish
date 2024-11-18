@@ -88,7 +88,7 @@ function CategoriesStepsComponent(): React.JSX.Element {
       return <></>;
     }
     else{
-      return <Pressable onPress={() => navigateToStep(group[0])}>
+      return <Pressable onPress={() => navigateToStep(group[0])}  key={group[0].id}>
         <Icon name="edit" size={50} color="black"/>
       </Pressable>
     }
@@ -101,8 +101,8 @@ function CategoriesStepsComponent(): React.JSX.Element {
 
   return (
     <View>
-      {groups.map(group => {
-        return <View style={CategoriesStepsStyling.groupContainer}>
+      {groups.map((group,index) => {
+        return <View style={CategoriesStepsStyling.groupContainer} key={"group_" + index}>
           {group && group.length > 0 && group[0].game.type === GameType.Test ? buildExam(group) : buildGroup(group)}
         </View>
       })}

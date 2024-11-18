@@ -12,6 +12,6 @@ export const AppHeaderStyling = StyleSheet.create({
   },
 
   homeButton: {
-    backgroundColor: "red"
+    backgroundColor: "green"
   }
 })

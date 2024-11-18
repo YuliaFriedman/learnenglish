@@ -1,18 +1,17 @@
 import { StyleSheet } from "react-native";
 
-export const NewWordsStyling = StyleSheet.create({
-  groupContainer: {
+export const SelectTranslationStyling = StyleSheet.create({
+  cardContainer: {
     display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 10,
-    columnGap: 30,
+    gap: 30,
     justifyContent: "center",
     margin: "10%"
   },
 
-  step: {
-    width: "20%",
+  wordCard: {
+    width: "40%",
     borderRadius: 5,
     borderColor: "blue",
     borderWidth: 2,
@@ -21,14 +20,8 @@ export const NewWordsStyling = StyleSheet.create({
 
   },
 
-  stepText: {
-    textAlign: "center"
-  },
-
-  starIcon: {
-    position: "absolute",
-    top: -15,
-    left: -15,
+  next: {
+    alignSelf: "center"
   }
 
 })

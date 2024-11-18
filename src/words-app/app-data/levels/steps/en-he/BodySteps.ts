@@ -1,5 +1,5 @@
-import { StepModel, StepStatus } from "../../models/StepModel";
-import { GameType } from "../../models/GameType";
+import { StepModel, StepStatus } from "../../../models/StepModel";
+import { GameType } from "../../../models/GameType";
 
 export const BodySteps: StepModel[] = [
   {

@@ -4,9 +4,11 @@ import { Logger } from "../../../../logger/Logger";
 
 const logSource = "StepsReducer";
 
+export type SingleLanguageSteps = Record<string, StepModel[]>;
+
 export interface StepsState {
   currentStep: number | null;
-  allSteps: Record<string, StepModel[]>;
+  allSteps: Record<string, SingleLanguageSteps>;
 }
 
 const initialState:StepsState = {
@@ -19,6 +21,7 @@ export const categoriesSlice = createSlice<StepsState>({
   initialState,
   reducers:{
     setSelectedStep: (state: StepsState, {payload}) => {
+      Logger.log(logSource, "In setSelectedStep: step = " + (payload || "undefined"));
       state.currentStep = payload;
     },
     setAllSteps: (state: StepsState, {payload}) => {

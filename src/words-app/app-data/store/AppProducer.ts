@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { setCategoriesList, setSelectedCategory } from "./reducers/CategoriesReducer";
 import { Category } from "../models/CategoryModel";
 import { StepModel } from "../models/StepModel";
-import { setAllSteps, setSelectedStep } from "./reducers/StepsReducer";
+import { setAllSteps, setSelectedStep, SingleLanguageSteps } from "./reducers/StepsReducer";
 import { Logger } from "../../../logger/Logger";
 
 class AppProducer {
@@ -39,13 +39,15 @@ class AppProducer {
 
   // steps
 
-  setAllSteps = (steps: Record<string, StepModel[]>) => {
+  setAllSteps = (steps: Record<string, SingleLanguageSteps>) => {
     Logger.log(this.logSource, "setting all steps = ", false, steps);
     store.dispatch(setAllSteps(steps));
   }
 
   getStepsByCategory = (category: string): StepModel[] => {
-    return store.getState()?.steps?.allSteps[category];
+    const language = this.getSelectedLanguage();
+    const translation = this.getSelectedTranslation();
+    return store.getState()?.steps?.allSteps[language + "-" + translation][category];
   }
 
   getCurrentSteps = (): StepModel[] => {
@@ -60,12 +62,38 @@ class AppProducer {
     return store.getState()?.steps?.currentStep;
   }
 
+  setNextStep = () => {
+    const currentStepId = this.getCurrentStepId();
+    const steps = this.getCurrentSteps();
+    const currentStepIndex = steps.findIndex(step => step.id === currentStepId);
+    // if last
+    if(currentStepIndex === steps.length - 1){
+      Logger.log(this.logSource, "IN setNextStep: this is last step " + currentStepIndex);
+      return false;
+    }
+    else{
+      Logger.log(this.logSource, "IN setNextStep: Moving to step " + (currentStepIndex + 1), false, steps[currentStepIndex + 1]);
+      this.setCurrentStep(steps[currentStepIndex + 1].id);
+      return true;
+    }
+  }
+
   getCurrentStep = () => {
     return this.getStepById(this.getCurrentStepId());
   }
 
   getStepById = (id: number): StepModel|undefined => {
     return this.getCurrentSteps().find(step => step.id === id);
+  }
+
+  // language
+
+  getSelectedLanguage = () => {
+    return store.getState()?.language.currentLanguage;
+  }
+
+  getSelectedTranslation = () => {
+    return store.getState()?.language.currentTranslation;
   }
 }
 

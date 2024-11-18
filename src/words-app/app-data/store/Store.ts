@@ -2,15 +2,13 @@ import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
 import categoriesReducer from "./reducers/CategoriesReducer";
 import stepsReducer from "./reducers/StepsReducer";
-
-/*export type AppState = {
-  categories: CategoriesState
-}*/
+import languageReducer from "./reducers/LanguageReducer";
 
 const store = configureStore({
   reducer: {
     categories: categoriesReducer,
-    steps: stepsReducer
+    steps: stepsReducer,
+    language: languageReducer
   }
 });
 

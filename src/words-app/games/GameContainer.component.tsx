@@ -6,27 +6,33 @@
  */
 
 import React, { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { GameModel } from "../app-data/models/GameModel";
 import { appProducer } from "../app-data/store/AppProducer";
 import { GameType } from "../app-data/models/GameType";
 import NewWordsComponent from "./new-words/NewWords.component";
-import { NewWordsModel } from "./new-words/NewWordsModel";
 import { Logger } from "../../logger/Logger";
+import { GameContainerStyling } from "./GameContainer.styling";
+import SelectTranslationComponent from "./select-translation/SelectTranslation.component";
+import { useSelector } from "react-redux";
+import { AppState } from "../app-data/store/Store";
 
-function GameContainerComponent(model: {model: GameModel}|undefined): React.JSX.Element {
+function GameContainerComponent(): React.JSX.Element {
 
   const logSource = "GameContainer";
 
   const [currentGameModel, setCurrentGameModel] = useState<GameModel|undefined>(undefined);
+
+  const currentStepId = useSelector((state: AppState) => state.steps.currentStep);//appProducer.getCurrentStepId();
 
   useEffect(() => {
     updateGameModel();
   },[]);
 
   useEffect(() => {
+    Logger.log(logSource, "Current step changed");
     updateGameModel();
-  }, [appProducer.getCurrentStepId()]);
+  }, [currentStepId]);
 
   function updateGameModel(){
     const currentStep = appProducer.getCurrentStep();
@@ -41,11 +47,14 @@ function GameContainerComponent(model: {model: GameModel}|undefined): React.JSX.
       case GameType.NewWord:
         game = <NewWordsComponent model={currentGameModel.data}></NewWordsComponent>;
         break;
+      case GameType.SelectTranslation:
+        game = <SelectTranslationComponent model={currentGameModel.data}></SelectTranslationComponent>
+        break;
     }
   }
 
   return (
-    <View>
+    <View style={GameContainerStyling.host}>
       {game}
     </View>
 
