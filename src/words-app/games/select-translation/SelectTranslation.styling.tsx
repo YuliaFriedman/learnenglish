@@ -1,6 +1,13 @@
 import { StyleSheet } from "react-native";
 
 export const SelectTranslationStyling = StyleSheet.create({
+
+  host:{
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
+  },
+
   cardContainer: {
     display: "flex",
     flexDirection: "row",

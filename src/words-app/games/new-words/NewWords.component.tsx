@@ -85,7 +85,6 @@ function NewWordsComponent(args: {model: NewWordsModel}): React.JSX.Element {
 
   function nextButtonPressed() {
     appProducer.setNextStep();
-    //appProducer.setCurrentStep(1);
   }
 
   function animateWordScale(index: number) {

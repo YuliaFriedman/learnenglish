@@ -16,19 +16,25 @@ import { WordCardModel } from "../word-card/WordCardModel";
 import { appProducer } from "../../app-data/store/AppProducer";
 import { dictionary } from "../../app-data/levels/dictionary/Dictionary";
 import WordCardComponent from "../word-card/WordCard.component";
+import WordTextCardComponent from "../word-text-card/WordTextCard.component";
+import { WordTextCardModel } from "../word-text-card/WordTextCardModel";
 
 function SelectTranslationComponent(args: {model: SelectTranslationModel}): React.JSX.Element {
 
   const logSource = "SelectTranslationComponent";
 
   const [translations,setTranslations] = useState<WordCardModel[]>([]);
-  const [word, setWord] = useState("");
+  const [word, setWord] = useState<WordTextCardModel|undefined>(undefined);
   const [selected, setSelected] = useState<number|undefined>(undefined);
   const [showIncorrect, setShowIncorrect] = useState(false);
 
   Logger.log(logSource, ">>>>>>>>> In SelectTranslationComponent");
 
   useEffect(() => {
+    initData();
+  }, []);
+
+  function initData(){
     let selectedLanguage = null;
     let selectedTranslation = null;
     if(args.model.source){
@@ -51,8 +57,16 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
     });
     setTranslations(newWords);
 
-    setWord(dictionary.getWord(selectedLanguage, args.model.word).word);
-  }, []);
+    setWord({
+      ...dictionary.getWord(selectedLanguage, args.model.word),
+      pressable: true,
+      shouldSayTheWord: false,
+      language: selectedLanguage
+    });
+  }
+
+
+
 
   function translationPressed(index: number){
     if(selected != index){
@@ -64,18 +78,20 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
   function nextButtonPressed() {
     if(selected === args.model.answer){
       // play correct sound
-      // go next
+      appProducer.setNextStep();
     }
     else{
       // play incorrect sound
-      // mark as incorrect
       setShowIncorrect(true);
     }
   }
 
+
   return (
-    <View>
-      <View><Text>{word}</Text></View>
+    <View style={SelectTranslationStyling.host}>
+      <View>
+        {word ? <WordTextCardComponent model={word}></WordTextCardComponent> : <></>}
+      </View>
       <View style={SelectTranslationStyling.cardContainer}>
       {
         translations.map((translation, i) => {
