@@ -6,6 +6,7 @@ export class WordCardModel {
   shouldSayTheWord?: boolean = false;
   onSpeakStarted?: () => void;
   onSpeakCompleted?: () => void;
+  onPressed?: () => void;
   pressable: boolean = true;
   language: string;
   translation?: string;

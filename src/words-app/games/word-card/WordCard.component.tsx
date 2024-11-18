@@ -44,6 +44,9 @@ function WordCardComponent(args: {model: WordCardModel}): React.JSX.Element {
   function buttonPressed(){
     if(args.model.pressable){
       playSound();
+      if(args.model.onPressed){
+        args.model.onPressed();
+      }
     }
     else{
       Logger.log(logSource, "word card is not pressable " + args.model.word);

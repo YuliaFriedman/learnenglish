@@ -11,7 +11,8 @@ export const ColorsSteps: StepModel[] = [
       data: {
         source: true,
         word: "red",
-        translations: ["red", "green", "blue", "yellow"]
+        translations: ["red", "green", "blue", "yellow"],
+        answer: 0
       }
     }
   },

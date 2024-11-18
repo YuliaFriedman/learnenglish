@@ -20,6 +20,14 @@ export const SelectTranslationStyling = StyleSheet.create({
 
   },
 
+  selectedWordCard: {
+    backgroundColor: "#eeeeff"
+  },
+
+  incorrectWordCard: {
+    backgroundColor: "#ffeeee"
+  },
+
   next: {
     alignSelf: "center"
   }

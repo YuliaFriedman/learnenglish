@@ -21,10 +21,10 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
 
   const logSource = "SelectTranslationComponent";
 
-  const [buttonDisabled,setButtonDisabled] = useState(true);
   const [translations,setTranslations] = useState<WordCardModel[]>([]);
   const [word, setWord] = useState("");
-
+  const [selected, setSelected] = useState<number|undefined>(undefined);
+  const [showIncorrect, setShowIncorrect] = useState(false);
 
   Logger.log(logSource, ">>>>>>>>> In SelectTranslationComponent");
 
@@ -45,7 +45,8 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
         ...dictionary.getWord(selectedTranslation, word),
         shouldSayTheWord: false,
         pressable: true,
-        language: selectedTranslation
+        language: selectedTranslation,
+        onPressed: () => translationPressed(i)
       }
     });
     setTranslations(newWords);
@@ -53,8 +54,23 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
     setWord(dictionary.getWord(selectedLanguage, args.model.word).word);
   }, []);
 
-  function nextButtonPressed() {
+  function translationPressed(index: number){
+    if(selected != index){
+      setShowIncorrect(false);
+    }
+    setSelected(index);
+  }
 
+  function nextButtonPressed() {
+    if(selected === args.model.answer){
+      // play correct sound
+      // go next
+    }
+    else{
+      // play incorrect sound
+      // mark as incorrect
+      setShowIncorrect(true);
+    }
   }
 
   return (
@@ -63,12 +79,19 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
       <View style={SelectTranslationStyling.cardContainer}>
       {
         translations.map((translation, i) => {
-          return <View key={"translation_" + i} style={SelectTranslationStyling.wordCard}><WordCardComponent model={translation} ></WordCardComponent></View>
+          return <View
+                    key={"translation_" + i}
+                    style={[
+                      SelectTranslationStyling.wordCard,
+                      i === selected && SelectTranslationStyling.selectedWordCard,
+                      showIncorrect && i === selected && selected != args.model.answer && SelectTranslationStyling.incorrectWordCard]}>
+                    <WordCardComponent model={translation} ></WordCardComponent>
+                 </View>
         })
       }
       </View>
       <View style={SelectTranslationStyling.next}>
-        <NextButtonComponent onPress={nextButtonPressed} disabled={buttonDisabled}></NextButtonComponent>
+        <NextButtonComponent onPress={nextButtonPressed} ></NextButtonComponent>
       </View>
     </View>
   );
