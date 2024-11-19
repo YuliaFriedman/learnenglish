@@ -16,6 +16,7 @@ import { GameContainerStyling } from "./GameContainer.styling";
 import SelectTranslationComponent from "./select-translation/SelectTranslation.component";
 import { useSelector } from "react-redux";
 import { AppState } from "../app-data/store/Store";
+import SayWordComponent from "./say-word/SayWord.component";
 
 function GameContainerComponent(): React.JSX.Element {
 
@@ -48,7 +49,10 @@ function GameContainerComponent(): React.JSX.Element {
         game = <NewWordsComponent model={currentGameModel.data}></NewWordsComponent>;
         break;
       case GameType.SelectTranslation:
-        game = <SelectTranslationComponent model={currentGameModel.data}></SelectTranslationComponent>
+        game = <SelectTranslationComponent model={currentGameModel.data}></SelectTranslationComponent>;
+        break;
+      case GameType.SayWord:
+        game = <SayWordComponent model={currentGameModel.data}></SayWordComponent>;
         break;
     }
   }

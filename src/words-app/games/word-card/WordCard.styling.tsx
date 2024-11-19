@@ -6,7 +6,18 @@ export const WordCardStyling = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    padding: "10%"
+    padding: "10%",
+    borderRadius: 5,
+    borderColor: "blue",
+    borderWidth: 2,
+  },
+
+  selectedWordCard: {
+    backgroundColor: "#eeeeff"
+  },
+
+  incorrectWordCard: {
+    backgroundColor: "#ffeeee"
   },
   img: {
    width: "100%",

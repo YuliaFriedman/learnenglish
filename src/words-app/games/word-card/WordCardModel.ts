@@ -10,4 +10,6 @@ export class WordCardModel {
   pressable: boolean = true;
   language: string;
   translation?: string;
+  isSelected?: boolean = false;
+  isError?: boolean = false;
 }

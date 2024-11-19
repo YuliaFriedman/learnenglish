@@ -19,21 +19,21 @@ export const SelectTranslationStyling = StyleSheet.create({
 
   wordCard: {
     width: "40%",
-    borderRadius: 5,
-    borderColor: "blue",
-    borderWidth: 2,
-    padding: 10,
-    position: "relative"
+    //borderRadius: 5,
+   // borderColor: "blue",
+    //borderWidth: 2,
+    //padding: 10,
+    //position: "relative"
 
   },
 
-  selectedWordCard: {
+  /*selectedWordCard: {
     backgroundColor: "#eeeeff"
-  },
+  },*/
 
-  incorrectWordCard: {
+  /*incorrectWordCard: {
     backgroundColor: "#ffeeee"
-  },
+  },*/
 
   next: {
     alignSelf: "center"

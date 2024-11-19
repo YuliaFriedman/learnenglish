@@ -6,7 +6,7 @@ export const SpeechToTextManager = {
   onSpeechEnd: (e) => {},
   onSpeechResults: (e) => {},
 
-  init: (onSpeechStart: () => void, onSpeechEnd: () => void, onSpeechResults: () => void) => {
+  init: (onSpeechStart: () => void, onSpeechEnd: () => void, onSpeechResults: (results) => void) => {
     SpeechToTextManager.onSpeechStart = onSpeechStart;
     SpeechToTextManager.onSpeechEnd = onSpeechEnd;
     SpeechToTextManager.onSpeechResults = onSpeechResults;
@@ -16,14 +16,18 @@ export const SpeechToTextManager = {
   },
 
   onSpeechStartHandler: (e) => {
-    console.log("onSpeechStartHandler", e);
+    if(e?.error) {
+      console.log("onSpeechStartHandler", e);
+    }
     if(SpeechToTextManager.onSpeechStart){
       SpeechToTextManager.onSpeechStart(e);
     }
   },
 
   onSpeechEndHandler: (e) => {
-    console.log("onSpeechEndHandler", e);
+    if(e?.error) {
+      console.log("onSpeechEndHandler", e);
+    }
     if(SpeechToTextManager.onSpeechEnd){
       SpeechToTextManager.onSpeechEnd(e);
     }

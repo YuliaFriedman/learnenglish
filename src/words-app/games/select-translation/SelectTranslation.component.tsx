@@ -28,7 +28,7 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
   const [selected, setSelected] = useState<number|undefined>(undefined);
   const [showIncorrect, setShowIncorrect] = useState(false);
 
-  Logger.log(logSource, ">>>>>>>>> In SelectTranslationComponent");
+  Logger.log(logSource, ">>>>>>>>> In SayWordComponent");
 
   useEffect(() => {
     initData();
@@ -69,20 +69,33 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
 
 
   function translationPressed(index: number){
-    if(selected != index){
-      setShowIncorrect(false);
-    }
-    setSelected(index);
+    setTranslations(currentTranslations => {
+      return currentTranslations.map((tran, i) => {
+        return {
+          ...tran,
+          isError: false,
+          isSelected: i === index
+        }
+      })
+    });
   }
 
   function nextButtonPressed() {
-    if(selected === args.model.answer){
+    const selectedIndex = translations.findIndex(item => item.isSelected);
+    if(selectedIndex === args.model.answer){
       // play correct sound
       appProducer.setNextStep();
     }
     else{
       // play incorrect sound
-      setShowIncorrect(true);
+      setTranslations(currentTranslations => {
+        return currentTranslations.map((tran, i) => {
+          return {
+            ...tran,
+            isError: tran.isSelected
+          }
+        })
+      });
     }
   }
 
@@ -97,10 +110,7 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
         translations.map((translation, i) => {
           return <View
                     key={"translation_" + i}
-                    style={[
-                      SelectTranslationStyling.wordCard,
-                      i === selected && SelectTranslationStyling.selectedWordCard,
-                      showIncorrect && i === selected && selected != args.model.answer && SelectTranslationStyling.incorrectWordCard]}>
+                    style={[SelectTranslationStyling.wordCard]}>
                     <WordCardComponent model={translation} ></WordCardComponent>
                  </View>
         })
