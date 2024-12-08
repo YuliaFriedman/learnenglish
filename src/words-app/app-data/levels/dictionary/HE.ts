@@ -8,7 +8,7 @@ export const he_dictionary: Record<string, Word> = {
   },
   green: {
     word: "ירוק",
-    image: "ball",
+    image: "questionMark",
     sound: "green"
   },
   blue: {

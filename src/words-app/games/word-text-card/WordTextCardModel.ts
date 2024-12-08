@@ -6,7 +6,8 @@ export class WordTextCardModel {
   onSpeakStarted?: () => void;
   onSpeakCompleted?: () => void;
   onPressed?: () => void;
-  pressable: boolean = true;
+  pressable?: boolean = true;
   language: string;
   translation?: string;
+  showMic?: boolean = true
 }

@@ -9,10 +9,8 @@ import React, { useEffect, useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import { WordTextCardModel } from "./WordTextCardModel";
 import { Logger } from "../../../logger/Logger";
-import { images } from "../../app-data/ImagesManager";
 import { WordTextCardStyling } from "./WordTextCard.styling";
 import { AudioManager } from "../../../sound/AudioManager";
-import { Languages } from "../../../app-data/language";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 function WordTextCardComponent(args: {model: WordTextCardModel}): React.JSX.Element {
@@ -56,7 +54,7 @@ function WordTextCardComponent(args: {model: WordTextCardModel}): React.JSX.Elem
 
   return (
     <Pressable style={WordTextCardStyling.host} onPress={buttonPressed}>
-      <Icon name="microphone" size={30} color="blue"/>
+      {args?.model?.showMic && <Icon name="microphone" size={30} color="blue"/>}
       <Text style={WordTextCardStyling.text}>{args.model.word}</Text>
     </Pressable>
 

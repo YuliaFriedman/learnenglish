@@ -14,6 +14,7 @@ import CategoriesStepsComponent from "./CategoryStepsComponent/CategoriesSteps.c
 import { appDataInitializer } from "./app-data/store/AppDataInitializer";
 import GameContainerComponent from "./games/GameContainer.component";
 import { AudioManager } from "../sound/AudioManager";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export function WordsApp(){
 
@@ -80,10 +81,12 @@ export function WordsApp(){
 
   return (
     <Provider store={store}>
-      <View style={WordsAppStyling.host}>
-        <AppHeaderComponent title={title}></AppHeaderComponent>
-        {page}
-      </View>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <View style={WordsAppStyling.host}>
+          <AppHeaderComponent title={title}></AppHeaderComponent>
+          {page}
+        </View>
+      </GestureHandlerRootView>
     </Provider>
   );
 }

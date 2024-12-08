@@ -1,3 +1,4 @@
+import { Logger } from "../../../logger/Logger";
 
 export class WordCardModel {
   word: string;
@@ -7,9 +8,30 @@ export class WordCardModel {
   onSpeakStarted?: () => void;
   onSpeakCompleted?: () => void;
   onPressed?: () => void;
-  pressable: boolean = true;
+  pressable?: boolean = true;
   language: string;
   translation?: string;
   isSelected?: boolean = false;
   isError?: boolean = false;
+  showText?: boolean = true;
+  imgVisible?: boolean = true;
+
+  constructor(args: Partial<WordCardModel>) {
+    this.word = args.word || "";
+    this.image = args.image || "";
+    this.sound = args.sound || "";
+    this.shouldSayTheWord = args.shouldSayTheWord ?? args.shouldSayTheWord;
+    this.onSpeakStarted = args.onSpeakStarted ?? args.onSpeakStarted;
+    this.onSpeakCompleted = args.onSpeakCompleted ?? args.onSpeakCompleted;
+    this.onPressed = args.onPressed ?? args.onPressed;
+    this.pressable = args.pressable ?? args.pressable;
+    this.language = args.language || "en";
+    this.translation = args.translation ?? args.translation;
+    this.isSelected = args.isSelected ?? this.isSelected;
+    this.isError = args.isError ?? this.isError;
+    this.showText = args.showText ?? this.showText;
+    this.imgVisible = args.imgVisible ?? this.imgVisible;
+
+  }
+
 }

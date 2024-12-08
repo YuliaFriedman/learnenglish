@@ -26,7 +26,7 @@ function WordCardComponent(args: {model: WordCardModel}): React.JSX.Element {
 
   function playSound(){
     if(args?.model){
-      Logger.log(logSource, "Playing sound " + args?.model?.word + "(" + args?.model?.language + ")");
+      Logger.log(logSource, "Playing sound " + args?.model?.word + "(" + args?.model?.language + ") - img = " + args?.model?.image);
       if(args?.model?.onSpeakStarted){
         args?.model?.onSpeakStarted();
       }
@@ -58,11 +58,13 @@ function WordCardComponent(args: {model: WordCardModel}): React.JSX.Element {
   return (
     <Pressable
       style={[WordCardStyling.host, args?.model?.isSelected && WordCardStyling.selectedWordCard, args?.model?.isError && WordCardStyling.incorrectWordCard]}
-      onPress={buttonPressed}>
-      <Image source={require('./../../../../assets/images/ball.webp')} style={WordCardStyling.img} resizeMode={"contain"}/>
-      <Text style={WordCardStyling.text}>{args.model.word}</Text>
+      onPress={buttonPressed}
+      onStartShouldSetResponder={() => false} // Let parent handle gestures
+      onMoveShouldSetResponder={() => true} // Let parent handle gestures
+     >
+      <View style={[WordCardStyling.imageContainer, !args?.model?.imgVisible && WordCardStyling.invisibleImg ]}><Image source={images[args?.model?.image]} style={WordCardStyling.img} resizeMode={"center"}/></View>
+      {args?.model?.showText && <Text style={WordCardStyling.text}>{args.model.word}</Text>}
     </Pressable>
-
   );
 }
 

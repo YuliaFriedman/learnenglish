@@ -10,6 +10,8 @@ export const WordCardStyling = StyleSheet.create({
     borderRadius: 5,
     borderColor: "blue",
     borderWidth: 2,
+    flex: 1,
+
   },
 
   selectedWordCard: {
@@ -19,12 +21,28 @@ export const WordCardStyling = StyleSheet.create({
   incorrectWordCard: {
     backgroundColor: "#ffeeee"
   },
+
+  imageContainer:{
+    width: '100%',  // or any desired width
+    height: undefined,    // define a height
+    overflow: 'hidden',
+    alignItems: "center"
+  },
+
+  invisibleImg: {
+    opacity: 0
+  },
+
   img: {
-   width: "100%",
-   height: 100,
-    marginBottom: "10%"
+    width: '100%',
+    height: '100%',
+    maxWidth: '100%',
+    maxHeight: '100%',
+    aspectRatio: 1, // Adjust this value to match your image's aspect ratio
+    resizeMode: 'contain',
  },
   text: {
-    fontSize:20
+    marginBottom: "10%",
+    fontSize:20,
   }
 })

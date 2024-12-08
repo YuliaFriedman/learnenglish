@@ -28,7 +28,7 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
   const [selected, setSelected] = useState<number|undefined>(undefined);
   const [showIncorrect, setShowIncorrect] = useState(false);
 
-  Logger.log(logSource, ">>>>>>>>> In SayWordComponent");
+  Logger.log(logSource, ">>>>>>>>> In MatchTranslationComponent");
 
   useEffect(() => {
     initData();
