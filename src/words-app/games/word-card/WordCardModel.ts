@@ -15,6 +15,7 @@ export class WordCardModel {
   isError?: boolean = false;
   showText?: boolean = true;
   imgVisible?: boolean = true;
+  disabled?: boolean = false;
 
   constructor(args: Partial<WordCardModel>) {
     this.word = args.word || "";
@@ -31,7 +32,7 @@ export class WordCardModel {
     this.isError = args.isError ?? this.isError;
     this.showText = args.showText ?? this.showText;
     this.imgVisible = args.imgVisible ?? this.imgVisible;
-
+    this.disabled = args.disabled ?? this.disabled;
   }
 
 }
