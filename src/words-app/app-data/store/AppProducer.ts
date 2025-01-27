@@ -29,7 +29,7 @@ class AppProducer {
     return store.getState().categories.categoriesList;
   }
 
-  getCategory = (id:string) => {
+  getCategory = (id:string|null) => {
     return store.getState().categories.categoriesList.find(category => category.id === id);
   }
 
@@ -44,7 +44,10 @@ class AppProducer {
     store.dispatch(setAllSteps(steps));
   }
 
-  getStepsByCategory = (category: string): StepModel[] => {
+  getStepsByCategory = (category: string|null): StepModel[] => {
+    if(category === null){
+      return [];
+    }
     const language = this.getSelectedLanguage();
     const translation = this.getSelectedTranslation();
     return store.getState()?.steps?.allSteps[language + "-" + translation][category];
@@ -82,7 +85,7 @@ class AppProducer {
     return this.getStepById(this.getCurrentStepId());
   }
 
-  getStepById = (id: number): StepModel|undefined => {
+  getStepById = (id: number|null): StepModel|undefined => {
     return this.getCurrentSteps().find(step => step.id === id);
   }
 

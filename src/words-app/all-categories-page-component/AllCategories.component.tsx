@@ -19,7 +19,7 @@ function AllCategoriesComponent(): React.JSX.Element {
 
   const logSource = "AllCategories";
 
-  const [allCategoriesView, setAllCategoriesView] = useState([]);
+  const [allCategoriesView, setAllCategoriesView] = useState<React.ReactNode[]>([]);
 
   //const allCategories: Category[] = appProducer.getCategoriesList();
 
@@ -49,7 +49,7 @@ function AllCategoriesComponent(): React.JSX.Element {
     }) : []);
   }
 
-  function categoryPressed(category){
+  function categoryPressed(category:Category){
     appProducer.setSelectedCategory(category.id);
     navigatorService.navigate(WordsAppPages.steps);
   }
