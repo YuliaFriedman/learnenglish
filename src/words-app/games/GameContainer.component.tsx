@@ -18,7 +18,6 @@ import { useSelector } from "react-redux";
 import { AppState } from "../app-data/store/Store";
 import SayWordComponent from "./say-word/SayWord.component";
 import MatchTranslationComponent from "./match-translation/MatchTranslation.component";
-import MatchTranslationComponent1 from "./match-translation/MatchTranslation1.component";
 
 function GameContainerComponent(): React.JSX.Element {
 
@@ -57,7 +56,7 @@ function GameContainerComponent(): React.JSX.Element {
         game = <SayWordComponent model={currentGameModel.data}></SayWordComponent>;
         break;
       case GameType.MatchTranslation:
-        game = <MatchTranslationComponent1 model={currentGameModel.data}></MatchTranslationComponent1>;
+        game = <MatchTranslationComponent model={currentGameModel.data}></MatchTranslationComponent>;
         break;
     }
   }

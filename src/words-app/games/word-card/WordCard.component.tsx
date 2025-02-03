@@ -14,7 +14,7 @@ import { WordCardStyling } from "./WordCard.styling";
 import { AudioManager } from "../../../sound/AudioManager";
 import { Languages } from "../../../app-data/language";
 
-function WordCardComponent(args: {model: WordCardModel, isDisabled: boolean }): React.JSX.Element {
+function WordCardComponent(args: {model: WordCardModel, disabled: boolean }): React.JSX.Element {
 
   const logSource = "WordCardComponent";
 

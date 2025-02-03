@@ -22,7 +22,6 @@ export const MatchTranslationStyling = StyleSheet.create({
   translationsRow: {
     display: "flex",
     flexDirection: "row",
-    backgroundColor:"red",
     gap: 10,
     height: "10%",
     marginBottom: "10%"
@@ -45,7 +44,13 @@ export const MatchTranslationStyling = StyleSheet.create({
 
   wordCard: {
     width: "40%",
-    height: "30%"
+    height: "30%",
+    backgroundColor: "black"
+  },
+
+  draggedLayout: {
+    borderColor: "red",
+    backgroundColor: "red"
   },
 
   nextContainer: {

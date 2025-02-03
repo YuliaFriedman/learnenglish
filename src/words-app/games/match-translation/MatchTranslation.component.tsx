@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useRef, useState } from "react";
-import { Animated, PanResponder, View, Text, LayoutRectangle } from "react-native";
+import { Animated, InteractionManager, LayoutChangeEvent, LayoutRectangle, View } from "react-native";
 import { MatchTranslationModel } from "./MatchTranslationModel";
 import { Logger } from "../../../logger/Logger";
 import { MatchTranslationStyling } from "./MatchTranslation.styling";
@@ -17,7 +17,7 @@ import { dictionary } from "../../app-data/levels/dictionary/Dictionary";
 import WordCardComponent from "../word-card/WordCard.component";
 import { AudioManager } from "../../../sound/AudioManager";
 import { arrayUtil } from "../../../utils/ArrayUtil";
-import { PanGestureHandler } from "react-native-gesture-handler";
+import DraggableComponent from "../../common-components/draggable/draggable.component";
 
 function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.JSX.Element {
 
@@ -26,149 +26,48 @@ function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.
   const [words, setWords] = useState<WordCardModel[]>([]);
   const [translations, setTranslations] = useState<WordCardModel[]>([]);
   const [canContinue, setCanContinue] = useState(false);
-
-  const activeHandlerId = useRef<number | null>(null); // Tracks the active handler
-  const dragX = useRef<{[key: string]: Animated.Value}>({}); // Horizontal drag position
-  const dragY = useRef<{[key: string]: Animated.Value}>({}); // Vertical drag position
-  const cardRowLayouts = useRef<LayoutRectangle[]>([]); // Store `cardRow` item layouts
-  const cardTranslationsLayouts = useRef<LayoutRectangle[]>([]); // Store `cardRow` item layouts
-
-// Initialize drag positions for each word
-  args.model.words.forEach((_, index) => {
-    if (!dragX.current[index]) {
-      dragX.current[index] = new Animated.Value(0);
-    }
-    if (!dragY.current[index]) {
-      dragY.current[index] = new Animated.Value(0);
-    }
-  });
-
-  // Gesture Handler
-  const onGestureEvent = (index) => {
-    //if(!activeHandlerId.current || index === activeHandlerId.current) {
-      Logger.log(logSource, "dragging index = " + index, false, { x: dragX.current[index], y: dragY.current[index] });
-      return Animated.event(
-        [
-          {
-            nativeEvent: {
-              translationX: dragX.current[index],
-              translationY: dragY.current[index],
-            },
-          },
-        ],
-        { useNativeDriver: false } // Ensures animations run smoothly on the UI thread
-      );
-    //}
-  }
-
-  const onHandlerStateChange = (index: number, event: any) => {
-
-    const { state } = event.nativeEvent;
-    Logger.log(logSource, "onHandlerStateChangee: index = " +index + ", state = " + state + ", current active = " +  activeHandlerId.current);
-
-    if (state === 2) {
-      const finalX = event.nativeEvent.absoluteX;
-      const finalY = event.nativeEvent.absoluteY;
-
-      console.log(`current loc: [${preattifyNum(finalX)}, ${preattifyNum(finalY)}]`, false,dragX.current[index].__getValue() );
-
-      // Gesture ACTIVE
-      activeHandlerId.current = index;
-    } else if (state === 5) {
-
-      // Get the dragged view's initial position and size
-      const draggedLayout = cardTranslationsLayouts.current[index]; // Assume this is the layout saved for the dragged view
-      const draggedInitialLeft = draggedLayout?.x || 0;
-      const draggedInitialTop = draggedLayout?.y || 0;
-      const draggedWidth = draggedLayout?.width || 0;
-      const draggedHeight = draggedLayout?.height || 0;
-      console.log(`initial: left: ${preattifyNum(draggedInitialLeft)} top: ${preattifyNum(draggedInitialTop)} width: ${preattifyNum(draggedWidth)} height: ${preattifyNum(draggedHeight)}`);
-      // Add translation offsets to calculate the new position
-      const draggedTranslationX = dragX.current[index].__getValue(); // Get the current dragX.current value
-      const draggedTranslationY = dragY.current[index].__getValue(); // Get the current dragY.current value
-      const draggedLeft = draggedInitialLeft + draggedTranslationX;
-      const draggedTop = draggedInitialTop + draggedTranslationY;
-      const draggedRight = draggedLeft + draggedWidth;
-      const draggedBottom = draggedTop + draggedHeight;
-
-      // Check for overlap with each WordCardComponent layout
-      cardRowLayouts.current.forEach((layout, targetIndex) => {
-        const targetLeft = layout.x;
-        const targetTop = layout.y;
-        const targetRight = layout.x + layout.width;
-        const targetBottom = layout.y + layout.height;
-        console.log(`drag: [${preattifyNum(draggedLeft)} - ${preattifyNum(draggedRight)},${preattifyNum(draggedTop)} - ${preattifyNum(draggedBottom)}] target: [${preattifyNum(targetLeft)} - ${preattifyNum(targetRight)},${preattifyNum(targetTop)} - ${preattifyNum(targetBottom)}](x: ${draggedTranslationX},y: ${draggedTranslationY})`);
-        const isOverlapping =
-          draggedLeft < targetRight &&
-          draggedRight > targetLeft &&
-          draggedTop < targetBottom &&
-          draggedBottom > targetTop;
-
-        if (isOverlapping) {
-          console.log(`Dragged view overlaps with WordCardComponent at index ${targetIndex}`);
-          // Perform your matching logic here
-        } else {
-          console.log(`No overlap with WordCardComponent at index ${targetIndex}`);
-        }
-      });
-
-
-      /*// Check if dragged item overlaps with any cardRow item
-      const finalX = event.nativeEvent.absoluteX;
-      const finalY = event.nativeEvent.absoluteY;
-
-      cardRowLayouts.current.forEach((layout, targetIndex) => {
-        if (
-          finalX > layout.x &&
-          finalX < layout.x + layout.width &&
-          finalY > layout.y &&
-          finalY < layout.y + layout.height
-        ) {
-          console.log(`IN LAYOUT ${targetIndex}: final: [${preattifyNum(finalX)}, ${preattifyNum(finalY)}], x: [${preattifyNum(layout.x)} - ${preattifyNum(layout.x + layout.width)}], y: [${preattifyNum(layout.y)} - ${preattifyNum(layout.y + layout.height)}]`);
-          // Perform an action here (e.g., mark as matched)
-        }
-        else{
-
-          console.log(`Not in layout ${targetIndex}: final: [${preattifyNum(finalX)}, ${preattifyNum(finalY)}], x: [${preattifyNum(layout.x)} - ${preattifyNum(layout.x + layout.width)}], y: [${preattifyNum(layout.y)} - ${preattifyNum(layout.y + layout.height)}]`);
-        }
-      });*/
-
-
-      // Gesture END or CANCELLED
-        activeHandlerId.current = null;
-
-        // Reset position
-        Animated.spring(dragX.current[index], { toValue: 0, useNativeDriver: true }).start();
-        Animated.spring(dragY.current[index], { toValue: 0, useNativeDriver: true }).start();
-      }
-  };
-
-  function preattifyNum(num:Number){
-    //Logger.log(logSource, "preattifyNum " + num);
-    return num.toFixed(0);
-  }
-
-  const saveCardRowLayout = (event: any, index: number,word: WordCardModel) => {
-    const layout = event.nativeEvent.layout;
-    console.log(`initializing word layout ${index} word ${word.word}: x: [${preattifyNum(layout.x)} - ${preattifyNum(layout.x + layout.width)}], y: [${preattifyNum(layout.y)} - ${preattifyNum(layout.y + layout.height)}]`);
-    cardRowLayouts.current[index] = layout;
-  };
-
-  const saveCardTranslationLayout = (event: any, index: number,word: WordCardModel) => {
-    const layout = event.nativeEvent.layout;
-    console.log(`initializing translation layout ${index} word ${word.word}: x: [${preattifyNum(layout.x)} - ${preattifyNum(layout.x + layout.width)}], y: [${preattifyNum(layout.y)} - ${preattifyNum(layout.y + layout.height)}]`);
-    cardTranslationsLayouts.current[index] = layout;
-  };
+  const dropRefs = useRef<View[]>([]);
+  const dropLayouts = useRef<LayoutRectangle[]>([]);
+  const  dropZoneColors = useRef<Animated.Value[]>([]);
+  const defaultAnimatedValue = new Animated.Value(0)
 
   useEffect(() => {
     initData();
   }, []);
+
+
+  useEffect(() => {
+    InteractionManager.runAfterInteractions(() => {
+    Logger.log(logSource, `In useEffect...${dropRefs.current.length}`);
+    // Measure layouts after initial render
+      dropRefs.current.forEach((ref, index) => {
+        if (ref) {
+          ref.measure((x, y, width, height, pageX, pageY) => {
+            Logger.log(logSource, `Measured layout for index ${index}: x=${pageX}, y=${pageY}, width=${width}, height=${height}`);
+            dropLayouts.current[index] = { x: pageX, y: pageY, width, height };
+          });
+        }
+        else{
+          Logger.log(logSource, `ref is null ${index}`);
+        }
+      });
+    }); 
+  }, [words, translations]);
+
+  // Using onLayout
+  const handleLayout = (index: number) => (event: LayoutChangeEvent) => {
+    const { x, y, width, height } = event.nativeEvent.layout;
+    Logger.log(logSource, `onLayout for index ${index}: x=${x}, y=${y}, width=${width}, height=${height}`);
+    dropLayouts.current[index] = { x, y, width, height };
+  };
+
 
   function initData(){
     const selectedLanguage = appProducer.getSelectedLanguage();
     const selectedTranslation = appProducer.getSelectedTranslation();
     const wordsList:WordCardModel[] = [];
     const translationsList:WordCardModel[] = [];
+    dropZoneColors.current = [];
 
     args?.model?.words.forEach((word) => {
       const dictionaryWord = dictionary.getWord(selectedLanguage, word);
@@ -190,20 +89,34 @@ function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.
       }));
       arrayUtil.shuffleArray(translationsList);
       setTranslations(translationsList);
+
+      dropZoneColors.current = [...dropZoneColors.current, new Animated.Value(0)];
     });
     playInstructions();
   }
 
   function playInstructions(){
-    AudioManager.playSound({
+    /*AudioManager.playSound({
       text: "Find the correct matches",
       language: appProducer.getSelectedLanguage(),
       soundKey: ""
-    });
+    });*/
   }
 
   function nextButtonPressed() {
     appProducer.setNextStep();
+  }
+
+  function onDragToLayout(index: number | undefined) {
+    //Logger.log(logSource, `in onDragToLayout: dropZoneColors length = ${dropZoneColors.current.length}, target: ${index}`);
+    dropZoneColors.current.forEach((dropZoneColor, i) => {
+      Animated.timing(dropZoneColor, {
+        toValue: index === i ? 1 : 0,
+        duration: 10,
+        useNativeDriver: false
+      }).start();
+
+    });
   }
 
   return (
@@ -211,37 +124,40 @@ function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.
       <View style={MatchTranslationStyling.cardRow}>
         {
           words.map((word, i) => {
-            return <View
-              key={"words_" + i}
-              style={[MatchTranslationStyling.wordCard]}
-              onLayout={(event) => saveCardRowLayout(event, i, word)}>
-              <WordCardComponent model={word}></WordCardComponent>
-            </View>
+            const dropZoneBackgroundColor = dropZoneColors.current.length > i ? dropZoneColors.current[i].interpolate({
+              inputRange: [0, 1],
+              outputRange: ["red", "yellow"]
+            }) : defaultAnimatedValue.interpolate({
+              inputRange: [0, 1],
+              outputRange: ["red", "yellow"]
+            });
+            return <Animated.View  
+                onLayout={handleLayout(i)}
+                ref={(ref) => (dropRefs.current[i] = ref)}
+                key={"words_" + i} 
+                style={[MatchTranslationStyling.wordCard, { backgroundColor: dropZoneBackgroundColor }]}>
+              <View
+                //style={[MatchTranslationStyling.wordCard, draggedLayout === i && MatchTranslationStyling.draggedLayout]}
+                //style={[MatchTranslationStyling.wordCard, { backgroundColor: dropZoneBackgroundColor }]}
+                style={{height: "100%"}}
+                >
+                <WordCardComponent model={word} ></WordCardComponent>
+              </View>
+            </Animated.View>
           })
         }
       </View>
 
       <View style={MatchTranslationStyling.translationsRow}>
         {translations.map((word, i) => {
-          return <PanGestureHandler
-            key={"gesture_translation_" + i}
-            onGestureEvent={onGestureEvent(i)}
-              onHandlerStateChange={(event) => onHandlerStateChange(i, event)}
-            >
-              <Animated.View key={"translation_" + i}
-                style={[MatchTranslationStyling.singleMatchItem,
-                  {
-                    transform: [
-                      { translateX: dragX.current[i] },
-                      { translateY: dragY.current[i] },
-                    ],
-                  },
-                ]}
-                onLayout={(event) => saveCardTranslationLayout(event, i, word)}
-              >
+          return <View key={"translation_" + i}
+                           style={[MatchTranslationStyling.singleMatchItem]}
+                           >
+              <DraggableComponent dropLayouts={dropLayouts} centralRefs={dropRefs} onDrag={onDragToLayout}>
                 <WordCardComponent model={word} />
-              </Animated.View>
-            </PanGestureHandler>
+              </DraggableComponent>
+            </View>
+
 
 
         })}
