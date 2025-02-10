@@ -2,7 +2,7 @@ import { Animated, LayoutChangeEvent, LayoutRectangle, PanResponder, PanResponde
 import { cloneElement, isValidElement, ReactElement, useRef, useState } from "react";
 import { draggableStyle } from "./draggable.style";
 import { Logger } from "../../../logger/Logger";
-import { DroppableComponentProps, DroppableComponentType } from "../droppable/droppable.component";
+import { DroppableComponentType } from "../droppable/droppable.component";
 
 export type DraggableComponentProps<T = {}> = {
   children: ReactElement<T & { isDragging: boolean }>; // Ensure children accept `isDragging` as a prop

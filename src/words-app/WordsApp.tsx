@@ -1,5 +1,5 @@
-import AllCategoriesComponent from "./all-categories-page-component/AllCategories.component";
-import AppHeaderComponent from "./app-header/AppHeader.component";
+import AllCategoriesComponent from "./components/all-categories-page-component/AllCategories.component";
+import AppHeaderComponent from "./components/app-header/AppHeader.component";
 import { View } from "react-native";
 import { WordsAppStyling } from "./WordsApp.styling";
 import React, { useEffect, useState } from "react";
@@ -10,11 +10,11 @@ import { Provider } from "react-redux";
 import store from "./app-data/store/Store";
 import { appProducer } from "./app-data/store/AppProducer";
 import { categories } from "./app-data/levels/Categories";
-import CategoriesStepsComponent from "./CategoryStepsComponent/CategoriesSteps.component";
+import CategoriesStepsComponent from "./components/CategoryStepsComponent/CategoriesSteps.component";
 import { appDataInitializer } from "./app-data/store/AppDataInitializer";
-import GameContainerComponent from "./games/GameContainer.component";
 import { AudioManager } from "../sound/AudioManager";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import GameContainerComponent from "./components/games/game-container/GameContainer.component";
 
 export function WordsApp(){
 
@@ -32,7 +32,7 @@ export function WordsApp(){
     AudioManager.init();
     const handleNavigation = (page:PageInfo) =>{
       setVisiblePage(page);
-      Logger.log(logSource, "NAVIGATION CHANGED: in page " + page.key);
+      Logger.log(logSource, "NAVIGATIONN CHANGED: in page " + page.key);
     }
     const unregister = navigatorService.addListener('navigation-changed', handleNavigation);
     navigatorService.navigate(WordsAppPages.categories);

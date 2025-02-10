@@ -1,0 +1,147 @@
+/**
+ * Sample React Native GameContainerComponent
+ * https://github.com/facebook/react-native
+ *
+ * @format
+ */
+
+import React, { useEffect, useRef, useState } from "react";
+import { Animated, Image, Pressable, Text, View } from "react-native";
+import { SayWordModel } from "./SayWordModel";
+import { Logger } from "../../../../logger/Logger";
+import { images } from "../../../app-data/ImagesManager";
+import { SayWordStyling } from "./SayWord.styling";
+import NextButtonComponent from "../../common/next-button/NextButton.component";
+import { WordCardModel } from "../word-card/WordCardModel";
+import { appProducer } from "../../../app-data/store/AppProducer";
+import { dictionary } from "../../../app-data/levels/dictionary/Dictionary";
+import WordCardComponent from "../word-card/WordCard.component";
+import WordTextCardComponent from "../word-text-card/WordTextCard.component";
+import { WordTextCardModel } from "../word-text-card/WordTextCardModel";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { SpeechToTextManager } from "../../../../sound/SpeechToTextManager";
+import { NewWordsStyling } from "../new-words/NewWords.styling";
+import { AudioManager } from "../../../../sound/AudioManager";
+
+function SayWordComponent(args: {model: SayWordModel}): React.JSX.Element {
+
+  const logSource = "SayWordComponent";
+
+  const [word, setWord] = useState<WordTextCardModel|undefined>(undefined);
+  const [canContinue, setCanContinue] = useState(false);
+  let [isListening, setIsListening] = useState(false);
+  const scaleValue = useRef(new Animated.Value(1)).current;
+  const animationRef = useRef<Animated.CompositeAnimation | null>(null);
+  const [attempts, setAttempts] = useState(0);
+
+  useEffect(() => {
+    initData();
+    SpeechToTextManager.init(speechStartHandler, speechEndHandler, speechResultsHandler);
+    startAnimation();
+    return () => {
+      SpeechToTextManager.destroy();
+      stopAnimation();
+    };
+  }, []);
+
+  useEffect(() => {
+    if(attempts > 2){
+      setCanContinue(true);
+    }
+  }, [attempts])
+
+  function initData(){
+    const selectedLanguage = appProducer.getSelectedLanguage();
+    const wordFromDictionary = dictionary.getWord(selectedLanguage, args.model.word);
+    setWord({
+      ...wordFromDictionary,
+      pressable: true,
+      shouldSayTheWord: false,
+      language: selectedLanguage
+    });
+
+    if(wordFromDictionary){
+      AudioManager.playSound({
+        text: "say the word",
+        language: appProducer.getSelectedLanguage(),
+        soundKey: ""
+      }).then(() => {
+        setTimeout(() => {
+          AudioManager.playSound({
+            text: wordFromDictionary.word,
+            language: appProducer.getSelectedLanguage(),
+            soundKey: ""
+          });
+        }, 400);
+
+      });
+
+    }
+
+  }
+
+  function micPressed(){
+    stopAnimation();
+    SpeechToTextManager.start();
+  }
+
+  function speechStartHandler() {
+    setIsListening(true);
+  }
+
+  function speechEndHandler(){
+    setIsListening(false);
+  }
+
+  function speechResultsHandler(results){
+    let hasWordInResults = results && results.value && results.value.indexOf(word?.word) >= 0;
+    Logger.log(logSource, "has word in results: " + hasWordInResults, false, results);
+    if(results && results.value && results.value.indexOf(word?.word) >= 0){
+      setCanContinue(true);
+    }
+    else{
+      setAttempts(attempts => attempts + 1);
+    }
+  }
+
+  function nextButtonPressed() {
+      appProducer.setNextStep();
+  }
+
+  const startAnimation = () => {
+    // Start looping animation
+    animationRef.current = Animated.loop(
+      Animated.sequence([
+        Animated.timing(scaleValue, {
+          toValue: 1.05, // Scale up
+          duration: 500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scaleValue, {
+          toValue: 1, // Scale back down
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    animationRef.current?.start();
+  };
+
+  const stopAnimation = () => {
+    if (animationRef.current) {
+      animationRef.current?.stop();
+    }
+  };
+
+  return (
+    <View style={SayWordStyling.host}>
+      <View style={SayWordStyling.wordContainer}>{word ? <WordCardComponent model={word} ></WordCardComponent> : <></>}</View>
+      <Animated.View style={[SayWordStyling.micContainer, { transform: [{ scale: scaleValue }] }]}>
+        <Pressable  onPress={micPressed} disabled={isListening}><Icon  name="microphone" size={30} color="white"/></Pressable>
+      </Animated.View>
+      <View style={SayWordStyling.nextContainer}><NextButtonComponent onPress={nextButtonPressed} disabled={!canContinue}></NextButtonComponent></View>
+    </View>
+  );
+}
+
+export default SayWordComponent;
