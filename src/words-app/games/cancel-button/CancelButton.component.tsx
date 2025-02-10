@@ -6,13 +6,12 @@
  */
 
 import React, { useEffect, useState } from "react";
-import { NextButtonModel } from "./NextButtonModel";
-import { NextButtonStyling } from "./NextButton.styling";
-import { View } from "react-native";
+import { CancelButtonModel } from "./CancelButtonModel";
+import { CancelButtonStyling } from "./CancelButton.styling";
 import ButtonComponent from "../../common-components/button/button.component";
 //import { ButtonComponent } from "../../common-components/button/button.component";
 
-function NextButtonComponent(model: NextButtonModel): React.JSX.Element {
+function CancelButtonComponent(model: CancelButtonModel): React.JSX.Element {
 
   const logSource = "NextButtonComponent";
 
@@ -21,9 +20,9 @@ function NextButtonComponent(model: NextButtonModel): React.JSX.Element {
   }, []);
 
   return (
-    <ButtonComponent {...model} style={{buttonStyle: NextButtonStyling.nextButton, textStyle: NextButtonStyling.textStyle }}>
+    <ButtonComponent {...model} style={{buttonStyle: CancelButtonStyling.nextButton, textStyle: CancelButtonStyling.textStyle }}>
     </ButtonComponent>
   );
 }
 
-export default NextButtonComponent;
+export default CancelButtonComponent;

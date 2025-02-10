@@ -32,6 +32,10 @@ export const MatchTranslationStyling = StyleSheet.create({
     backgroundColor: "yellow"
   },
 
+  droppedMatchItem: {
+    opacity: 0.5
+  },
+
   cardRow: {
     display: "flex",
     flexDirection: "row",
@@ -45,7 +49,11 @@ export const MatchTranslationStyling = StyleSheet.create({
   wordCard: {
     width: "40%",
     height: "30%",
-    backgroundColor: "black"
+    backgroundColor: "red"
+  },
+
+  dropHighlight: {
+    backgroundColor: "yellow"
   },
 
   draggedLayout: {
@@ -57,7 +65,9 @@ export const MatchTranslationStyling = StyleSheet.create({
     alignSelf: "center",
     marginTop: 20,
     display: "flex",
-    justifyContent: "flex-end"
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    gap: 5
   },
 
   next: {
