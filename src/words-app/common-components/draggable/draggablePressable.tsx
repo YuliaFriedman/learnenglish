@@ -1,5 +1,6 @@
 import { StyleSheet, View } from "react-native";
 import { ReactElement, useRef, useState } from "react";
+import { GestureResponderEvent } from "react-native/Libraries/Types/CoreEventTypes";
 
 export interface DraggableProps<T = {}> {
   onPress?: () => void;
@@ -11,7 +12,7 @@ export function DraggablePressable({onPress, children}:DraggableProps){
   const touchStart = useRef({ x: 0, y: 0 }); // Reference for the initial touch position
   const [dragThreshold] = useState(2); // Set a threshold for detecting drag
 
-  const onStartShouldSetResponder = (e) => {
+  const onStartShouldSetResponder = (e:GestureResponderEvent) => {
     const { pageX, pageY } = e.nativeEvent;
     touchStart.current = { x: pageX, y: pageY }; // Store the initial touch position
     console.log('Touch started at:', touchStart.current);
@@ -19,7 +20,7 @@ export function DraggablePressable({onPress, children}:DraggableProps){
   };
 
   //onTouchMove will track the movement and set `isDragging` once the threshold is exceeded
-  const onTouchMove = (e) => {
+  const onTouchMove = (e:GestureResponderEvent) => {
     const { pageX, pageY } = e.nativeEvent;
 
     // Calculate the distance moved from the starting touch position

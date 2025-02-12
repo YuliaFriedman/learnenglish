@@ -1,6 +1,7 @@
 import { forwardRef, ReactElement, useImperativeHandle, useRef } from "react";
 import { Animated, LayoutChangeEvent, LayoutRectangle, View } from "react-native";
 import { Logger } from "../../../logger/Logger";
+import { AnimatedInterpolation } from "react-native/Libraries/Animated/Animated";
 
 export interface DroppableHighlightSetting {
     cssProperty: string;
@@ -23,8 +24,8 @@ export type DroppableComponentProps<T = {}> = {
 }
 
 const DroppableComponent = forwardRef<DroppableComponentType, DroppableComponentProps>(({children, highlightSettings, canDrop}: DroppableComponentProps, ref) => {
- 
-    const logSource = "DroppableComponentProps"; 
+
+    const logSource = "DroppableComponentProps";
 
     const dropRefs = useRef<View|null>(null);
     const layout = useRef<LayoutRectangle|null>(null);
@@ -39,19 +40,19 @@ const DroppableComponent = forwardRef<DroppableComponentType, DroppableComponent
 
     const onDrag = () => {
         if(canDrop){
-            updateTargetHighlight(1);  
+            updateTargetHighlight(1);
         }
     }
 
     const onNoDrag = () => {
         if(canDrop){
-            updateTargetHighlight(0);  
+            updateTargetHighlight(0);
         }
     }
 
     const onDrop = () => {
         if(canDrop){
-            updateTargetHighlight(0);  
+            updateTargetHighlight(0);
         }
     }
 
@@ -76,7 +77,7 @@ const DroppableComponent = forwardRef<DroppableComponentType, DroppableComponent
     }
 
     function getDropBG(){
-        let results = {};
+        let results:{[key: string]:AnimatedInterpolation } = {};
         highlightSettings.forEach(settings => {
             results[settings.cssProperty] = dropZoneColors.current.interpolate({
                 inputRange: [0, 1],
@@ -86,7 +87,7 @@ const DroppableComponent = forwardRef<DroppableComponentType, DroppableComponent
 
         return results;
     }
-    
+
 
     return <Animated.View
             onLayout={handleLayout()}

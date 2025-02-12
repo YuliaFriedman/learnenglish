@@ -37,7 +37,7 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
 
   function initData(){
     let selectedLanguage = null;
-    let selectedTranslation = null;
+    let selectedTranslation: string = "";
     if(args.model.source){
       selectedLanguage = appProducer.getSelectedLanguage();
       selectedTranslation = appProducer.getSelectedTranslation();
@@ -65,7 +65,7 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
       pressable: true,
       shouldSayTheWord: false,
       language: selectedLanguage,
-      
+
     }));
   }
 

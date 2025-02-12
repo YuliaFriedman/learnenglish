@@ -78,7 +78,7 @@ const DraggableComponent = <T,>({ children, onDrop, droppableComponents }: Dragg
     elementY > layout.y &&
     elementY < layout.y + layout.height;
 
-    Logger.log(logSource, `Is Inside ${layoutIndex} = ${isInside}: gesture = [${elementX.toFixed(2)},${elementY.toFixed(2)}] layout = [{${layout?.x.toFixed(2)} - ${(layout?.x + layout?.width).toFixed(2)}}, {${layout.y.toFixed(2)} - ${(layout.y + layout.height).toFixed(2)}}]`)
+    //Logger.log(logSource, `Is Inside ${layoutIndex} = ${isInside}: gesture = [${elementX.toFixed(2)},${elementY.toFixed(2)}] layout = [{${layout?.x.toFixed(2)} - ${(layout?.x + layout?.width).toFixed(2)}}, {${layout.y.toFixed(2)} - ${(layout.y + layout.height).toFixed(2)}}]`)
 
     return isInside;
   }

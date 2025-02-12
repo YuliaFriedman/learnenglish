@@ -17,7 +17,7 @@ import { AnswerStatus } from "../../../common-models/AnswerStatus";
 import draggableComponent from "../../../common-components/draggable/draggable.component.tsx";
 import { DraggablePressable } from "../../../common-components/draggable/draggablePressable.tsx";
 
-function WordCardComponent(args: {model: WordCardModel, disabled: boolean }): React.JSX.Element {
+function WordCardComponent(args: {model: WordCardModel }): React.JSX.Element {
 
   const logSource = "WordCardComponent";
 

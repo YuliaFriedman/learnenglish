@@ -36,7 +36,7 @@ function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.
   const [words, setWords] = useState<WordCardModel[]>([]);
   const [translations, setTranslations] = useState<WordCardModel[]>([]);
   const [solutions, setSolutions] = useState<SolutionModel[]>([]);
-  const [dropableProps, setDropableProps] = useState<Partial<DroppableComponentProps>[]>([]);
+  const [dropableProps, setDropableProps] = useState<{canDrop:boolean}[]>([]);
   const [canContinue, setCanContinue] = useState(false);
   const droppableComponents = useRef<DroppableComponentType[]|null[]>([]);
 
@@ -53,21 +53,22 @@ function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.
   function updateDataBySolution(){
     if(words && words.length > 0){
       let newWords = [...words];
-      
+      let newDropable = [...dropableProps];
       Logger.log(logSource, `Solutions changed: solutions = ${JSON.stringify(solutions)}`);
       newWords.forEach((word, index) => {
         let solutionOfWord = solutions.find(sol => sol.targetIndex === index);
         if(solutionOfWord){
           word.image = translations[solutionOfWord.sourceIndex].image;
-          dropableProps[index].canDrop = false;
+          newDropable[index].canDrop = false;
         }
         else{
           word.image = 'questionMark';
           word.answerStatus = AnswerStatus.notChecked;
-          dropableProps[index].canDrop = true;
+          newDropable[index].canDrop = true;
         }
       });
       setWords(newWords);
+      setDropableProps(newDropable);
     }
   }
 
@@ -139,11 +140,11 @@ function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.
         const result = [...currentWords];
         result[solution.sourceIndex] = {
           ...result[solution.sourceIndex],
-          answerStatus: sourceWordIndex === targetWordIndex ? AnswerStatus.correct : AnswerStatus.wrong            
+          answerStatus: sourceWordIndex === targetWordIndex ? AnswerStatus.correct : AnswerStatus.wrong
         }
         return result;
       })
-      
+
     });
     return allAnswersCorrect;
   }
@@ -175,7 +176,7 @@ function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.
         {
           words.map((word, i) => {
             return <View style={[MatchTranslationStyling.wordCard]} key={"words_" + i}>
-              <DroppableComponent  {...dropableProps[i]} ref={(ref) => droppableComponents.current[i] = ref} 
+              <DroppableComponent  {...dropableProps[i]} ref={(ref) => droppableComponents.current[i] = ref}
               highlightSettings={[{cssProperty: "backgroundColor", defaultValue: MatchTranslationStyling.wordCard.backgroundColor, value: MatchTranslationStyling.dropHighlight.backgroundColor}]}>
                 <View style={{height: "100%"}}>
                   <WordCardComponent model={word} ></WordCardComponent>
@@ -195,7 +196,7 @@ function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.
           else{
             return <View key={"translation_" + i} style={[MatchTranslationStyling.singleMatchItem]}
                           >
-              <DraggableComponent 
+              <DraggableComponent
                 droppableComponents={droppableComponents.current}
                 onDrop={(targetIndex) => onDropToLayout(i, targetIndex)}>
                 <WordCardComponent model={word} />
