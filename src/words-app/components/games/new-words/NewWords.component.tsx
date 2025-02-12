@@ -15,6 +15,7 @@ import NextButtonComponent from "../../common/next-button/NextButton.component";
 import { WordCardModel } from "../word-card/WordCardModel";
 import { appProducer } from "../../../app-data/store/AppProducer";
 import { dictionary } from "../../../app-data/levels/dictionary/Dictionary";
+import { AnswerStatus } from "../../../common-models/AnswerStatus";
 
 function NewWordsComponent(args: {model: NewWordsModel}): React.JSX.Element {
 
@@ -33,9 +34,10 @@ function NewWordsComponent(args: {model: NewWordsModel}): React.JSX.Element {
   useEffect(() => {
     const selectedLanguage = appProducer.getSelectedLanguage();
     let newWords = args.model.words.map((word,i) => {
-      return {
-        ...dictionary.getWord(selectedLanguage, word),
-        word: word,
+      let dicWord = dictionary.getWord(selectedLanguage, word);
+      return new WordCardModel( {
+        id: word,
+        ...dicWord || { word: word},
         image: "",
         sound: "",
         shouldSayTheWord: false,
@@ -43,7 +45,7 @@ function NewWordsComponent(args: {model: NewWordsModel}): React.JSX.Element {
         onSpeakCompleted: () => wordSpeakCompleted(i),
         pressable: !buttonDisabled,
         language: selectedLanguage
-      }
+      })
     });
     setWords(newWords);
   }, [buttonDisabled]);
@@ -53,14 +55,16 @@ function NewWordsComponent(args: {model: NewWordsModel}): React.JSX.Element {
     setTimeout(() => {
       const selectedLanguage = appProducer.getSelectedLanguage();
       let newWords = args.model.words.map((word,i) => {
-        return {
-          ...dictionary.getWord(selectedLanguage, word),
+        let dicWord = dictionary.getWord(selectedLanguage, word);
+        return new WordCardModel({
+          id: word,
+          ...dicWord || { word: word},
           shouldSayTheWord: index === i,
           onSpeakStarted: () => wordSpeakStarted(i),
           onSpeakCompleted: () => wordSpeakCompleted(i),
           pressable: !buttonDisabled,
           language: selectedLanguage
-        }
+        })
       });
       setWords(newWords);
     }, 600);

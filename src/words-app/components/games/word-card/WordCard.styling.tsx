@@ -22,6 +22,10 @@ export const WordCardStyling = StyleSheet.create({
     backgroundColor: "#ffeeee"
   },
 
+  correctWordCard: {
+    backgroundColor: "green"
+  },
+
   imageContainer:{
     width: '100%',  // or any desired width
     height: undefined,    // define a height

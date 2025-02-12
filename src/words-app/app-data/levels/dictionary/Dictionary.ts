@@ -12,7 +12,7 @@ class Dictionary{
     this.dictionaries["he"] = he_dictionary;
   }
 
-  getWord(language: string, word: string){
+  getWord(language: string, word: string): Word|undefined{
     if(this.dictionaries[language]) {
       return this.dictionaries[language][word];
     }

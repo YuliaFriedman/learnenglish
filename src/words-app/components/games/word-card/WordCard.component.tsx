@@ -13,16 +13,15 @@ import { images } from "../../../app-data/ImagesManager";
 import { WordCardStyling } from "./WordCard.styling";
 import { AudioManager } from "../../../../sound/AudioManager";
 import { Languages } from "../../../../app-data/language";
+import { AnswerStatus } from "../../../common-models/AnswerStatus";
+import draggableComponent from "../../../common-components/draggable/draggable.component.tsx";
+import { DraggablePressable } from "../../../common-components/draggable/draggablePressable.tsx";
 
 function WordCardComponent(args: {model: WordCardModel, disabled: boolean }): React.JSX.Element {
 
   const logSource = "WordCardComponent";
 
-  const [isDragging, setIsDragging] = useState(false);
-  const touchStart = useRef({ x: 0, y: 0 }); // Reference for the initial touch position
-  const [dragThreshold] = useState(2); // Set a threshold for detecting drag
-
-  useEffect(() => {
+  useEffect(() => {draggableComponent
     if(args?.model?.shouldSayTheWord){
       playSound();
     }
@@ -47,111 +46,45 @@ function WordCardComponent(args: {model: WordCardModel, disabled: boolean }): Re
     }
   }
 
-  const onStartShouldSetResponder = (e) => {
-    const { pageX, pageY } = e.nativeEvent;
-    touchStart.current = { x: pageX, y: pageY }; // Store the initial touch position
-    console.log('Touch started at:', touchStart.current);
-    return false; // Allow touch to propagate to other elements (not capturing for drag)
-  };
-
-  // onTouchMove will track the movement and set `isDragging` once the threshold is exceeded
-  const onTouchMove = (e) => {
-    const { pageX, pageY } = e.nativeEvent;
-
-    // Calculate the distance moved from the starting touch position
-    const dx = Math.abs(pageX - touchStart.current.x);
-    const dy = Math.abs(pageY - touchStart.current.y);
-
-    // If movement exceeds threshold, mark it as a drag
-    if (dx > dragThreshold || dy > dragThreshold) {
-      if (!isDragging) {
-        console.log('Started dragging');
-        setIsDragging(true);
-      }
-    }
-  };
-
-  // onTouchEnd will determine whether it was a drag or tap
-  const onTouchEnd = () => {
-    if (isDragging) {
-      console.log('Drag performed');
-      // You can handle drag end logic here
-    } else {
-      console.log('Tap performed');
-      buttonPressed(); // Handle tap
-    }
-
-    // Reset dragging state after touch ends
-    setIsDragging(false);
-  };
-
   function buttonPressed(){
-    if(!isDragging){
-      if(args?.model?.pressable){
-        playSound();
-        if(args.model.onPressed){
-          args.model.onPressed();
-        }
-      }
-      else{
-        Logger.log(logSource, "word card is not pressable " + args.model.word);
+    if(args?.model?.pressable){
+      playSound();
+      if(args.model.onPressed){
+        args.model.onPressed();
       }
     }
-    setIsDragging(false);
+    else{
+      Logger.log(logSource, "word card is not pressable " + args.model.word);
+    }
   }
 
   return (
-    <View
-      style={[
-        WordCardStyling.host,
-        args?.model?.isSelected && WordCardStyling.selectedWordCard,
-        args?.model?.isError && WordCardStyling.incorrectWordCard,
-      ]}
-      onStartShouldSetResponder={onStartShouldSetResponder}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
-    >
+    <DraggablePressable onPress={buttonPressed}>
       <View
         style={[
-          WordCardStyling.imageContainer,
-          !args?.model?.imgVisible && WordCardStyling.invisibleImg
+          WordCardStyling.host,
+          args?.model?.isSelected && WordCardStyling.selectedWordCard,
+          args?.model?.answerStatus === AnswerStatus.wrong && WordCardStyling.incorrectWordCard,
+          args?.model?.answerStatus === AnswerStatus.correct && WordCardStyling.correctWordCard,
         ]}
       >
-        <Image
-          source={images[args?.model?.image]}
-          style={WordCardStyling.img}
-          resizeMode={"center"}
-        />
+        <View
+          style={[
+            WordCardStyling.imageContainer,
+            !args?.model?.imgVisible && WordCardStyling.invisibleImg
+          ]}
+        >
+          <Image
+            source={images[args?.model?.image]}
+            style={WordCardStyling.img}
+            resizeMode={"center"}
+          />
+        </View>
+        {args?.model?.showText && <Text style={WordCardStyling.text}>{args.model.word}</Text>}
       </View>
-      {args?.model?.showText && <Text style={WordCardStyling.text}>{args.model.word}</Text>}
-    </View>
+    </DraggablePressable>
+
   );
-  /*
-  return (
-    <Pressable
-      style={[
-        WordCardStyling.host,
-        args?.model?.isSelected && WordCardStyling.selectedWordCard,
-        args?.model?.isError && WordCardStyling.incorrectWordCard
-      ]}
-      onPress={buttonPressed}
-      onStartShouldSetResponder={() => false} // Let parent handle gestures
-      onMoveShouldSetResponder={() => false} // Let parent handle gestures
-     >
-      <View
-        style={[
-          WordCardStyling.imageContainer,
-          !args?.model?.imgVisible && WordCardStyling.invisibleImg
-        ]}>
-        <Image
-          source={images[args?.model?.image]}
-          style={WordCardStyling.img}
-          resizeMode={"center"}
-        />
-      </View>
-      {args?.model?.showText && <Text style={WordCardStyling.text}>{args.model.word}</Text>}
-    </Pressable>
-  );*/
 }
 
 export default WordCardComponent;
