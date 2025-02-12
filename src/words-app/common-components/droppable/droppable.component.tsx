@@ -13,14 +13,16 @@ export interface DroppableComponentType {
     getLayout: () => LayoutRectangle|null;
     onNoDrag: () => void;
     onDrop: () => void;
+    canDrop: boolean;
   }
 
 export type DroppableComponentProps<T = {}> = {
     children: ReactElement<T>;
     highlightSettings: DroppableHighlightSetting[];
+    canDrop: boolean;
 }
 
-const DroppableComponent = forwardRef<DroppableComponentType, DroppableComponentProps>(({children, highlightSettings}: DroppableComponentProps, ref) => {
+const DroppableComponent = forwardRef<DroppableComponentType, DroppableComponentProps>(({children, highlightSettings, canDrop}: DroppableComponentProps, ref) => {
  
     const logSource = "DroppableComponentProps"; 
 
@@ -36,15 +38,21 @@ const DroppableComponent = forwardRef<DroppableComponentType, DroppableComponent
     };
 
     const onDrag = () => {
-        updateTargetHighlight(1);  
+        if(canDrop){
+            updateTargetHighlight(1);  
+        }
     }
 
     const onNoDrag = () => {
-        updateTargetHighlight(0);  
+        if(canDrop){
+            updateTargetHighlight(0);  
+        }
     }
 
     const onDrop = () => {
-        updateTargetHighlight(0);  
+        if(canDrop){
+            updateTargetHighlight(0);  
+        }
     }
 
     const getLayout = () => {
@@ -55,7 +63,8 @@ const DroppableComponent = forwardRef<DroppableComponentType, DroppableComponent
         onDrag,
         getLayout,
         onNoDrag,
-        onDrop
+        onDrop,
+        canDrop
     }));
 
     function updateTargetHighlight(highlightVal: 0|1){

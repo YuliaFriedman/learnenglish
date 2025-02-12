@@ -1,6 +1,8 @@
 import { Logger } from "../../../../logger/Logger";
+import { AnswerStatus } from "../../../common-models/AnswerStatus";
 
 export class WordCardModel {
+  id: string;
   word: string;
   image: string;
   sound: string;
@@ -12,12 +14,13 @@ export class WordCardModel {
   language: string;
   translation?: string;
   isSelected?: boolean = false;
-  isError?: boolean = false;
+  answerStatus: AnswerStatus = AnswerStatus.notChecked;
   showText?: boolean = true;
   imgVisible?: boolean = true;
   disabled?: boolean = false;
 
   constructor(args: Partial<WordCardModel>) {
+    this.id = args.id || "";
     this.word = args.word || "";
     this.image = args.image || "";
     this.sound = args.sound || "";
@@ -29,7 +32,7 @@ export class WordCardModel {
     this.language = args.language || "en";
     this.translation = args.translation ?? args.translation;
     this.isSelected = args.isSelected ?? this.isSelected;
-    this.isError = args.isError ?? this.isError;
+    this.answerStatus = args.answerStatus ?? this.answerStatus;
     this.showText = args.showText ?? this.showText;
     this.imgVisible = args.imgVisible ?? this.imgVisible;
     this.disabled = args.disabled ?? this.disabled;

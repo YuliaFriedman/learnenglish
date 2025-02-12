@@ -18,12 +18,15 @@ import WordCardComponent from "../word-card/WordCard.component";
 import { AudioManager } from "../../../../sound/AudioManager";
 import { arrayUtil } from "../../../../utils/ArrayUtil";
 import DraggableComponent from "../../../common-components/draggable/draggable.component";
-import DroppableComponent, { DroppableComponentType } from "../../../common-components/droppable/droppable.component";
+import DroppableComponent, { DroppableComponentProps, DroppableComponentType } from "../../../common-components/droppable/droppable.component";
 import CancelButtonComponent from "../../common/cancel-button/CancelButton.component";
+import { AnswerStatus } from "../../../common-models/AnswerStatus";
+import { AppSoundsPlayer } from "../../../../services/AppSoundsPlayer";
 
 interface SolutionModel{
   sourceIndex: number;
   targetIndex: number;
+  status: AnswerStatus;
 }
 
 function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.JSX.Element {
@@ -33,7 +36,7 @@ function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.
   const [words, setWords] = useState<WordCardModel[]>([]);
   const [translations, setTranslations] = useState<WordCardModel[]>([]);
   const [solutions, setSolutions] = useState<SolutionModel[]>([]);
-
+  const [dropableProps, setDropableProps] = useState<Partial<DroppableComponentProps>[]>([]);
   const [canContinue, setCanContinue] = useState(false);
   const droppableComponents = useRef<DroppableComponentType[]|null[]>([]);
 
@@ -43,6 +46,11 @@ function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.
 
 
   useEffect(() => {
+    updateDataBySolution();
+    setCanContinue(solutions.length == args.model.words.length);
+  },[solutions]);
+
+  function updateDataBySolution(){
     if(words && words.length > 0){
       let newWords = [...words];
       
@@ -51,14 +59,17 @@ function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.
         let solutionOfWord = solutions.find(sol => sol.targetIndex === index);
         if(solutionOfWord){
           word.image = translations[solutionOfWord.sourceIndex].image;
+          dropableProps[index].canDrop = false;
         }
         else{
           word.image = 'questionMark';
+          word.answerStatus = AnswerStatus.notChecked;
+          dropableProps[index].canDrop = true;
         }
-      })
+      });
       setWords(newWords);
     }
-  },[solutions]);
+  }
 
   function initData(){
     const selectedLanguage = appProducer.getSelectedLanguage();
@@ -66,9 +77,11 @@ function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.
     const wordsList:WordCardModel[] = [];
     const translationsList:WordCardModel[] = [];
 
+    // init words
     args?.model?.words.forEach((word) => {
       const dictionaryWord = dictionary.getWord(selectedLanguage, word);
       wordsList.push(new WordCardModel({
+        id: word,
         ...dictionaryWord,
         language: selectedLanguage,
         image: "questionMark",
@@ -77,15 +90,22 @@ function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.
       arrayUtil.shuffleArray(wordsList);
       setWords(wordsList);
 
+      // init translations
       const dictionaryTranslationWord = dictionary.getWord(selectedTranslation, word);
       translationsList.push(new WordCardModel({
+        id: word,
         ...dictionaryTranslationWord,
         language: selectedTranslation,
         showText: false,
-        pressable: true
       }));
       arrayUtil.shuffleArray(translationsList);
       setTranslations(translationsList);
+
+      // set dropable props
+      setDropableProps(currentList => {
+        currentList.push({ canDrop: true });
+        return currentList;
+      });
     });
     playInstructions();
   }
@@ -99,7 +119,33 @@ function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.
   }
 
   function nextButtonPressed() {
-    appProducer.setNextStep();
+    if(checkSolutions()){
+      AppSoundsPlayer.playCorrectSound();
+      appProducer.setNextStep();
+    }
+    else{
+      setCanContinue(false);
+      AppSoundsPlayer.playWrongAnswer();
+    }
+  }
+
+  function checkSolutions(){
+    let allAnswersCorrect = true;
+    solutions.forEach(solution => {
+      const sourceWordIndex = args.model.words.indexOf(words[solution.sourceIndex].id);
+      const targetWordIndex = args.model.words.indexOf(words[solution.targetIndex].id);
+      allAnswersCorrect = allAnswersCorrect && sourceWordIndex === targetWordIndex;
+      setWords(currentWords => {
+        const result = [...currentWords];
+        result[solution.sourceIndex] = {
+          ...result[solution.sourceIndex],
+          answerStatus: sourceWordIndex === targetWordIndex ? AnswerStatus.correct : AnswerStatus.wrong            
+        }
+        return result;
+      })
+      
+    });
+    return allAnswersCorrect;
   }
 
   function resetMatch(){
@@ -112,14 +158,13 @@ function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.
         let newSolution = [...currentSolution];
         let currentValInWord = currentSolution.findIndex(item => item.sourceIndex === translationIndex);
         if(currentValInWord >= 0){
-          newSolution[currentValInWord].targetIndex = wordIndex
+          newSolution = newSolution.splice(currentValInWord, 1);
         }
-        else{
-          newSolution.push({
-            sourceIndex: translationIndex,
-            targetIndex: wordIndex
-          })
-        }
+        newSolution.push({
+          sourceIndex: translationIndex,
+          targetIndex: wordIndex,
+          status: AnswerStatus.notChecked
+        })
         return newSolution;
     });
   }
@@ -130,7 +175,7 @@ function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.
         {
           words.map((word, i) => {
             return <View style={[MatchTranslationStyling.wordCard]} key={"words_" + i}>
-              <DroppableComponent  ref={(ref) => droppableComponents.current[i] = ref} 
+              <DroppableComponent  {...dropableProps[i]} ref={(ref) => droppableComponents.current[i] = ref} 
               highlightSettings={[{cssProperty: "backgroundColor", defaultValue: MatchTranslationStyling.wordCard.backgroundColor, value: MatchTranslationStyling.dropHighlight.backgroundColor}]}>
                 <View style={{height: "100%"}}>
                   <WordCardComponent model={word} ></WordCardComponent>

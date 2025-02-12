@@ -18,6 +18,7 @@ import { dictionary } from "../../../app-data/levels/dictionary/Dictionary";
 import WordCardComponent from "../word-card/WordCard.component";
 import WordTextCardComponent from "../word-text-card/WordTextCard.component";
 import { WordTextCardModel } from "../word-text-card/WordTextCardModel";
+import { AnswerStatus } from "../../../common-models/AnswerStatus";
 
 function SelectTranslationComponent(args: {model: SelectTranslationModel}): React.JSX.Element {
 
@@ -47,22 +48,25 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
     }
 
     let newWords = args.model.translations.map((word,i) => {
-      return {
+      return new WordCardModel({
+        id: word,
         ...dictionary.getWord(selectedTranslation, word),
         shouldSayTheWord: false,
         pressable: true,
         language: selectedTranslation,
         onPressed: () => translationPressed(i)
-      }
+      });
     });
     setTranslations(newWords);
 
-    setWord({
+    setWord(new WordCardModel({
+      id: args.model.word,
       ...dictionary.getWord(selectedLanguage, args.model.word),
       pressable: true,
       shouldSayTheWord: false,
-      language: selectedLanguage
-    });
+      language: selectedLanguage,
+      
+    }));
   }
 
 
@@ -73,7 +77,7 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
       return currentTranslations.map((tran, i) => {
         return {
           ...tran,
-          isError: false,
+          answerStatus: AnswerStatus.notChecked,
           isSelected: i === index
         }
       })
@@ -92,7 +96,7 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
         return currentTranslations.map((tran, i) => {
           return {
             ...tran,
-            isError: tran.isSelected
+            isError: tran.isSelected ? AnswerStatus.wrong : AnswerStatus.notChecked
           }
         })
       });

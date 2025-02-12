@@ -5,7 +5,7 @@ import { Logger } from "../../../logger/Logger";
 import { DroppableComponentType } from "../droppable/droppable.component";
 
 export type DraggableComponentProps<T = {}> = {
-  children: ReactElement<T & { isDragging: boolean }>; // Ensure children accept `isDragging` as a prop
+  children: ReactElement<T>; // Ensure children accept `isDragging` as a prop
   droppableComponents: DroppableComponentType[];
   onDrag?: (layoutIndex: number|undefined) => void;
   onDrop?: (layoutIndex: number) => void;
@@ -13,11 +13,11 @@ export type DraggableComponentProps<T = {}> = {
 
 const DraggableComponent = <T,>({ children, onDrop, droppableComponents }: DraggableComponentProps<T>): JSX.Element => {
 
-  const logSource = "DraggableComponentProps"; 
+  const logSource = "DraggableComponentProps";
 
   const [pan, setPan] = useState(new Animated.ValueXY());
   const [isDragging, setIsDragging] = useState(false);
-  
+
   const panResponder = PanResponder.create({
 
       onStartShouldSetPanResponder: (evt, gestureState) => {
@@ -39,7 +39,7 @@ const DraggableComponent = <T,>({ children, onDrop, droppableComponents }: Dragg
       onPanResponderMove: (event, gestureState) => {
         Animated.event([null, { dx: pan.x, dy: pan.y }], { useNativeDriver: false })(event, gestureState);
         const currentTargetLayoutIndex = droppableComponents.findIndex((dc, i) => isInsideLayout(dc.getLayout(), gestureState, i))
-        
+
         if(currentTargetLayoutIndex >=0){
           droppableComponents[currentTargetLayoutIndex].onDrag();
         }
@@ -55,10 +55,10 @@ const DraggableComponent = <T,>({ children, onDrop, droppableComponents }: Dragg
         let dropped = false;
         const lauoutToDropIndex = droppableComponents.findIndex((dc, i) => isInsideLayout(dc.getLayout(), gestureState, i));
 
-        if(lauoutToDropIndex != undefined && lauoutToDropIndex >= 0){
+        if(lauoutToDropIndex != undefined && lauoutToDropIndex >= 0 && droppableComponents[lauoutToDropIndex].canDrop){
           dropped = true;
           if(onDrop){
-            onDrop(lauoutToDropIndex); 
+            onDrop(lauoutToDropIndex);
             droppableComponents[lauoutToDropIndex].onDrop();
           }
         }
@@ -78,15 +78,10 @@ const DraggableComponent = <T,>({ children, onDrop, droppableComponents }: Dragg
     elementY > layout.y &&
     elementY < layout.y + layout.height;
 
-    Logger.log(logSource, `Is Inside ${layoutIndex} = ${isInside}: gesture = [${elementX.toFixed(2)},${elementY.toFixed(2)}] layout = [{${layout.x.toFixed(2)} - ${(layout.x + layout.width).toFixed(2)}}, {${layout.y.toFixed(2)} - ${(layout.y + layout.height).toFixed(2)}}]`)
+    Logger.log(logSource, `Is Inside ${layoutIndex} = ${isInside}: gesture = [${elementX.toFixed(2)},${elementY.toFixed(2)}] layout = [{${layout?.x.toFixed(2)} - ${(layout?.x + layout?.width).toFixed(2)}}, {${layout.y.toFixed(2)} - ${(layout.y + layout.height).toFixed(2)}}]`)
 
     return isInside;
   }
-
-  // Clone the child and inject `isDragging`
-  const childrenWithProps = isValidElement(children)
-    ? cloneElement(children, { isDragging } as T & { isDragging: boolean })
-    : children; 
 
   return (
     <Animated.View
@@ -94,8 +89,8 @@ const DraggableComponent = <T,>({ children, onDrop, droppableComponents }: Dragg
       style={[pan.getLayout(), draggableStyle.draggable]}
       {...panResponder.panHandlers}
     >
-        
-      {childrenWithProps}
+
+      {children}
 
     </Animated.View>
   );
