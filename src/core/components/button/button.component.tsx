@@ -7,9 +7,9 @@
 
 import React, { useEffect } from "react";
 import { Pressable, Text } from "react-native";
-import { Logger } from "../../../logger/Logger";
-import { ButtonModel } from "./buttonModel";
-import { ButtonStyling } from "./button.styling";
+import { Logger } from "../../../logger/Logger.ts";
+import { ButtonModel } from "./buttonModel.ts";
+import { ButtonStyling } from "./button.styling.tsx";
 
 function ButtonComponent(model: ButtonModel): React.JSX.Element {
 

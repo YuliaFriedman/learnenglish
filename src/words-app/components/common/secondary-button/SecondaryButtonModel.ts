@@ -1,4 +1,4 @@
-import { ButtonModel } from "../../../common-components/button/buttonModel";
+import { ButtonModel } from "../../../../core/components/button/buttonModel";
 
 export interface SecondaryButtonModel extends ButtonModel{
 

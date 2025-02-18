@@ -13,9 +13,9 @@ import { images } from "../../../app-data/ImagesManager";
 import { WordCardStyling } from "./WordCard.styling";
 import { AudioManager } from "../../../../sound/AudioManager";
 import { Languages } from "../../../../app-data/language";
-import { AnswerStatus } from "../../../common-models/AnswerStatus";
-import draggableComponent from "../../../common-components/draggable/draggable.component.tsx";
-import { DraggablePressable } from "../../../common-components/draggable/draggablePressable.tsx";
+import { AnswerStatus } from "../../../app-data/models/AnswerStatus.ts";
+import draggableComponent from "../../../../core/components/draggable/draggable.component.tsx";
+import { DraggablePressable } from "../../../../core/components/draggable/draggablePressable.tsx";
 
 export interface WordCardComponentProps {
   model: WordCardModel;

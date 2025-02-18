@@ -15,7 +15,6 @@ import PrimaryButtonComponent from "../../common/primary-button/PrimaryButton.co
 import { WordCardModel } from "../word-card/WordCardModel";
 import { appProducer } from "../../../app-data/store/AppProducer";
 import { dictionary } from "../../../app-data/levels/dictionary/Dictionary";
-import { AnswerStatus } from "../../../common-models/AnswerStatus";
 
 function NewWordsComponent(args: {model: NewWordsModel}): React.JSX.Element {
 

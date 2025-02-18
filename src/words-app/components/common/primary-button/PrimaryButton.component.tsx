@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from "react";
 import { PrimaryButtonModel } from "./PrimaryButtonModel.ts";
 import { PrimaryButtonStyling } from "./PrimaryButton.styling.tsx";
-import ButtonComponent from "../../../common-components/button/button.component";
+import ButtonComponent from "../../../../core/components/button/button.component";
 
 function PrimaryButtonComponent(model: PrimaryButtonModel): React.JSX.Element {
 

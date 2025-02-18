@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from "react";
 import { SecondaryButtonModel } from "./SecondaryButtonModel.ts";
 import { SecondaryButtonStyling } from "./SecondaryButton.styling.tsx";
-import ButtonComponent from "../../../common-components/button/button.component";
+import ButtonComponent from "../../../../core/components/button/button.component";
 
 function SecondaryButtonComponent(model: SecondaryButtonModel): React.JSX.Element {
 

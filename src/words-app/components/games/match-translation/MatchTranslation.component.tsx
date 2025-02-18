@@ -17,10 +17,10 @@ import { dictionary } from "../../../app-data/levels/dictionary/Dictionary";
 import WordCardComponent from "../word-card/WordCard.component";
 import { AudioManager } from "../../../../sound/AudioManager";
 import { arrayUtil } from "../../../../utils/ArrayUtil";
-import DraggableComponent from "../../../common-components/draggable/draggable.component";
-import DroppableComponent, { DroppableComponentProps, DroppableComponentType } from "../../../common-components/droppable/droppable.component";
+import DraggableComponent from "../../../../core/components/draggable/draggable.component";
+import DroppableComponent, { DroppableComponentProps, DroppableComponentType } from "../../../../core/components/droppable/droppable.component";
 import SecondaryButtonComponent from "../../common/secondary-button/SecondaryButton.component.tsx";
-import { AnswerStatus } from "../../../common-models/AnswerStatus";
+import { AnswerStatus } from "../../../app-data/models/AnswerStatus.ts";
 import { AppSoundsPlayer } from "../../../../services/AppSoundsPlayer";
 
 interface SolutionModel{

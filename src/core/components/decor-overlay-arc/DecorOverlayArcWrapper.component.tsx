@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { DecorOverlayArc } from "./DecorOverlayArc.component.tsx";
 import { fromPercentToPixels } from "../../../style/dimentions.ts";
 import React from "react";
-import { ThemeManager } from "../../style/ThemeManager.ts";
+import { ThemeManager } from "../../../words-app/style/ThemeManager.ts";
 
 export interface DecorOverlayArcWrapperStyling {
   leftPos: DimensionValue;

@@ -1,5 +1,5 @@
 import { Logger } from "../../../../logger/Logger";
-import { AnswerStatus } from "../../../common-models/AnswerStatus";
+import { AnswerStatus } from "../../../app-data/models/AnswerStatus.ts";
 import { PartialWithRequiredProp } from "../../../../utils/Common-Types.ts";
 
 export class WordCardModel {

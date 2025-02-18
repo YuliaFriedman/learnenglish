@@ -1,6 +1,6 @@
 import {
   DecorOverlayArcWrapperComponent
-} from "../../../common-components/decor-overlay-arc/DecorOverlayArcWrapper.component.tsx";
+} from "../../../../core/components/decor-overlay-arc/DecorOverlayArcWrapper.component.tsx";
 import React, { ReactElement } from "react";
 import LinearGradient from "react-native-linear-gradient";
 import { TileOutfitProps, TileStyle } from "./TileStyle.models.ts";

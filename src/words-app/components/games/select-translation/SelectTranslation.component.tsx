@@ -18,7 +18,7 @@ import { dictionary } from "../../../app-data/levels/dictionary/Dictionary";
 import WordCardComponent from "../word-card/WordCard.component";
 import WordTextCardComponent from "../word-text-card/WordTextCard.component";
 import { WordTextCardModel } from "../word-text-card/WordTextCardModel";
-import { AnswerStatus } from "../../../common-models/AnswerStatus";
+import { AnswerStatus } from "../../../app-data/models/AnswerStatus.ts";
 import { AppSoundsPlayer } from "../../../../services/AppSoundsPlayer.ts";
 
 function SelectTranslationComponent(args: {model: SelectTranslationModel}): React.JSX.Element {

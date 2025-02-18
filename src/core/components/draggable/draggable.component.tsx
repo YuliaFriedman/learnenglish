@@ -1,8 +1,8 @@
 import { Animated, LayoutChangeEvent, LayoutRectangle, PanResponder, PanResponderGestureState, Text, View } from "react-native";
 import { cloneElement, isValidElement, ReactElement, useRef, useState } from "react";
-import { draggableStyle } from "./draggable.style";
-import { Logger } from "../../../logger/Logger";
-import { DroppableComponentType } from "../droppable/droppable.component";
+import { draggableStyle } from "./draggable.style.tsx";
+import { Logger } from "../../../logger/Logger.ts";
+import { DroppableComponentType } from "../droppable/droppable.component.tsx";
 
 export type DraggableComponentProps<T = {}> = {
   children: ReactElement<T>; // Ensure children accept `isDragging` as a prop

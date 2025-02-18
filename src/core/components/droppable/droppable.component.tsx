@@ -1,6 +1,6 @@
 import { forwardRef, ReactElement, useImperativeHandle, useRef } from "react";
 import { Animated, LayoutChangeEvent, LayoutRectangle, View } from "react-native";
-import { Logger } from "../../../logger/Logger";
+import { Logger } from "../../../logger/Logger.ts";
 import { AnimatedInterpolation } from "react-native/Libraries/Animated/Animated";
 
 export interface DroppableHighlightSetting {
