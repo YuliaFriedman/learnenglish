@@ -10,7 +10,7 @@ import { View } from "react-native";
 import { MatchTranslationModel } from "./MatchTranslationModel";
 import { Logger } from "../../../../logger/Logger";
 import { MatchTranslationStyling } from "./MatchTranslation.styling";
-import NextButtonComponent from "../../common/next-button/NextButton.component";
+import PrimaryButtonComponent from "../../common/primary-button/PrimaryButton.component.tsx";
 import { WordCardModel } from "../word-card/WordCardModel";
 import { appProducer } from "../../../app-data/store/AppProducer";
 import { dictionary } from "../../../app-data/levels/dictionary/Dictionary";
@@ -19,7 +19,7 @@ import { AudioManager } from "../../../../sound/AudioManager";
 import { arrayUtil } from "../../../../utils/ArrayUtil";
 import DraggableComponent from "../../../common-components/draggable/draggable.component";
 import DroppableComponent, { DroppableComponentProps, DroppableComponentType } from "../../../common-components/droppable/droppable.component";
-import CancelButtonComponent from "../../common/cancel-button/CancelButton.component";
+import SecondaryButtonComponent from "../../common/secondary-button/SecondaryButton.component.tsx";
 import { AnswerStatus } from "../../../common-models/AnswerStatus";
 import { AppSoundsPlayer } from "../../../../services/AppSoundsPlayer";
 
@@ -207,8 +207,8 @@ function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.
       </View>
 
       <View style={MatchTranslationStyling.nextContainer}>
-        <CancelButtonComponent onPress={resetMatch} disabled={solutions.length == 0}>Reset</CancelButtonComponent>
-        <NextButtonComponent onPress={nextButtonPressed} disabled={!canContinue}>Next</NextButtonComponent>
+        <SecondaryButtonComponent onPress={resetMatch} disabled={solutions.length == 0}>Reset</SecondaryButtonComponent>
+        <PrimaryButtonComponent onPress={nextButtonPressed} disabled={!canContinue}>Next</PrimaryButtonComponent>
       </View>
     </View>
   );

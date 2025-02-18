@@ -19,6 +19,7 @@ export const SelectTranslationStyling = StyleSheet.create({
 
   wordCard: {
     width: "40%",
+    height: "37%"
     //borderRadius: 5,
    // borderColor: "blue",
     //borderWidth: 2,

@@ -5,6 +5,27 @@ import { Colors } from "./Colors";
   return LightTheme;
 }*/
 
+const ThemeManager = {
+
+  currentTheme: null,
+
+  init(){
+
+  },
+
+  loadTheme(){
+
+  },
+
+  setTheme(theme){
+
+  },
+
+  getTheme(){
+
+  }
+}
+
 const theme = LightTheme;
 
 // Get screen dimensions

@@ -14,6 +14,7 @@ import { appProducer } from "../../app-data/store/AppProducer";
 import { Logger } from "../../../logger/Logger";
 import { navigatorService } from "../../../routing/AppNavigatorService";
 import { WordsAppPages } from "../../navigation/WordsAppPages";
+import { CategoryCard } from "./category-card/CategoryCard.component.tsx";
 
 function AllCategoriesComponent(): React.JSX.Element {
 
@@ -35,18 +36,14 @@ function AllCategoriesComponent(): React.JSX.Element {
   function buildCategoriesView(){
     const allCategories = appProducer.getCategoriesList();
     Logger.log(logSource, "categories changed: ", false, allCategories)
-    setAllCategoriesView(allCategories ? allCategories.map(category => {
-      Logger.log(logSource, "Next Category: " + category.title + ", icon = " + category.icon);
-      return <Pressable key={category.id} style={AllCategoriesStyling.testCell} onPress={() => categoryPressed(category)}>
-        <View style={AllCategoriesStyling.imageWrapper}>
-          <Image
-            style={AllCategoriesStyling.image}
-            source={images[category.icon]}
-            resizeMode={"contain"} />
-        </View>
-        <Text style={AllCategoriesStyling.testText}>{category.title}</Text>
-      </Pressable>
-    }) : []);
+    setAllCategoriesView(allCategories
+      ? allCategories.map((category, index) => {
+          Logger.log(logSource, "Next Category: " + category.title + ", icon = " + category.icon + " style = " + JSON.stringify(category.style));
+          return (
+            <CategoryCard key={'category_' + index} category={category} onPress={() => categoryPressed(category)}></CategoryCard>
+          )
+        })
+      : []);
   }
 
   function categoryPressed(category:Category){

@@ -1,0 +1,39 @@
+import { Image, Pressable, Text, View } from "react-native";
+import { images } from "../../../app-data/ImagesManager.ts";
+import React from "react";
+import { Category } from "../../../app-data/models/CategoryModel.ts";
+import { CategoryCardStyling } from "./CategoryCard.styling.tsx";
+import { TileOutfitComponent } from "../../common/tile-outfit/TileOutfit.component.tsx";
+
+export interface CategoryCardProps {
+  category: Category;
+  onPress: () => void;
+}
+
+
+export function CategoryCard({category, onPress}: CategoryCardProps) {
+  return (
+
+      <Pressable key={category.id} style={[CategoryCardStyling.CategoryCell, {shadowColor: category.style?.colors[0]}]} onPress={() => onPress && onPress()}>
+        <TileOutfitComponent tileStyle={{
+          colors: category.style?.colors,
+          locations: category.style?.locations,
+          borderColor: category.style?.borderColor,
+          overlayColor: category.style?.overlayColor
+        }}>
+        <View >
+            <View style={CategoryCardStyling.imageWrapper}>
+              <Image
+                style={CategoryCardStyling.image}
+                source={images[category.icon]}
+                resizeMode={"contain"} />
+            </View>
+            <Text style={CategoryCardStyling.cardText}>{category.title}</Text>
+        </View>
+        </TileOutfitComponent>
+      </Pressable>
+
+
+
+  );
+}

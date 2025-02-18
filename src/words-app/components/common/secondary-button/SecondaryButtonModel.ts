@@ -1,5 +1,5 @@
 import { ButtonModel } from "../../../common-components/button/buttonModel";
 
-export interface CancelButtonModel extends ButtonModel{
-  
+export interface SecondaryButtonModel extends ButtonModel{
+
 }

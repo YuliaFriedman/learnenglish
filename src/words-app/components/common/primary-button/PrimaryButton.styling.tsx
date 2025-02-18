@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-export const NextButtonStyling = StyleSheet.create({
+export const PrimaryButtonStyling = StyleSheet.create({
   nextButton:{
     backgroundColor: "green",
   },

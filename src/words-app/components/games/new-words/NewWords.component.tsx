@@ -5,13 +5,13 @@
  * @format
  */
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Animated, Text, View } from "react-native";
 import { NewWordsModel } from "./NewWordsModel";
 import { Logger } from "../../../../logger/Logger";
 import WordCardComponent from "../word-card/WordCard.component";
 import { NewWordsStyling } from "./NewWords.styling";
-import NextButtonComponent from "../../common/next-button/NextButton.component";
+import PrimaryButtonComponent from "../../common/primary-button/PrimaryButton.component.tsx";
 import { WordCardModel } from "../word-card/WordCardModel";
 import { appProducer } from "../../../app-data/store/AppProducer";
 import { dictionary } from "../../../app-data/levels/dictionary/Dictionary";
@@ -26,48 +26,34 @@ function NewWordsComponent(args: {model: NewWordsModel}): React.JSX.Element {
   const [scaleAnimations, setScaleAnimations] = useState(() =>
     args.model.words.map(() => new Animated.Value(1))
   );
+  const selectedLanguage = useRef(appProducer.getSelectedLanguage());
 
   useEffect(() => {
     setNextWordToSpeak(0);
   },[]);
 
   useEffect(() => {
-    const selectedLanguage = appProducer.getSelectedLanguage();
-    let newWords = args.model.words.map((word,i) => {
-      let dicWord = dictionary.getWord(selectedLanguage, word);
-      return new WordCardModel( {
-        id: word,
-        ...dicWord || { word: word},
-        image: "",
-        sound: "",
-        shouldSayTheWord: false,
-        onSpeakStarted: () => wordSpeakStarted(i),
-        onSpeakCompleted: () => wordSpeakCompleted(i),
-        pressable: !buttonDisabled,
-        language: selectedLanguage
-      })
-    });
+    let newWords = args.model.words.map((word,i) => createWordModel(word, false));
     setWords(newWords);
   }, [buttonDisabled]);
 
   function setNextWordToSpeak(index: number) {
     Logger.log(logSource, "In setNextWordToSpeak: index = " + index);
     setTimeout(() => {
-      const selectedLanguage = appProducer.getSelectedLanguage();
-      let newWords = args.model.words.map((word,i) => {
-        let dicWord = dictionary.getWord(selectedLanguage, word);
-        return new WordCardModel({
-          id: word,
-          ...dicWord || { word: word},
-          shouldSayTheWord: index === i,
-          onSpeakStarted: () => wordSpeakStarted(i),
-          onSpeakCompleted: () => wordSpeakCompleted(i),
-          pressable: !buttonDisabled,
-          language: selectedLanguage
-        })
-      });
+      let newWords = args.model.words.map((word,i) => createWordModel(word, index === i));
       setWords(newWords);
     }, 600);
+  }
+
+  function createWordModel(word: string, shouldSayTheWord:boolean){
+    let dicWord = dictionary.getWord(selectedLanguage.current, word);
+    return new WordCardModel( {
+      id: word,
+      ...dicWord || { word: word},
+      shouldSayTheWord: shouldSayTheWord,
+      pressable: !buttonDisabled,
+      language: selectedLanguage.current
+    })
   }
 
   function wordSpeakCompleted(index: number){
@@ -108,18 +94,21 @@ function NewWordsComponent(args: {model: NewWordsModel}): React.JSX.Element {
   }
 
   return (
-    <View>
+    <View style={NewWordsStyling.host}>
       <View style={NewWordsStyling.cardContainer}>
         {
           words.map((wordModel, i) => (
             <Animated.View style={[NewWordsStyling.wordCard, { transform: [{ scale: scaleAnimations[i] }] }]} key={wordModel.word}>
-                     <WordCardComponent model={wordModel} ></WordCardComponent>
+                     <WordCardComponent
+                       model={wordModel}
+                       onSpeakStarted={() => wordSpeakStarted(i)}
+                       onSpeakCompleted={() => wordSpeakCompleted(i)}></WordCardComponent>
             </Animated.View>
           ))
         }
       </View>
       <View style={NewWordsStyling.next}>
-        <NextButtonComponent onPress={nextButtonPressed} disabled={buttonDisabled}></NextButtonComponent>
+        <PrimaryButtonComponent onPress={nextButtonPressed} disabled={buttonDisabled}>Next</PrimaryButtonComponent>
       </View>
     </View>
   );

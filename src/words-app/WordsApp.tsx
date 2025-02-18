@@ -83,8 +83,12 @@ export function WordsApp(){
     <Provider store={store}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <View style={WordsAppStyling.host}>
-          <AppHeaderComponent title={title}></AppHeaderComponent>
-          {page}
+          <View style={WordsAppStyling.header}>
+            <AppHeaderComponent title={title}></AppHeaderComponent>
+          </View>
+          <View style={WordsAppStyling.content}>
+            {page}
+          </View>
         </View>
       </GestureHandlerRootView>
     </Provider>

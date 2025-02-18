@@ -43,38 +43,5 @@ export const AllCategoriesStyling = StyleSheet.create({
     flexDirection: "column",
     gap: 5
   },
-  testCell: {
-    backgroundColor: "green",
-    display: "flex",
-    flexDirection: "column",
-    margin: "5%",
-    alignItems: "stretch",
-    borderRadius: 15,
-  },
 
-  image: {
-
-    height: fromPercentToPixels(20),
-    width: fromPercentToPixels(20),
-    margin: "5%",
-    backgroundColor: "white"
-
-  },
-
-  imageWrapper: {
-    alignItems: "center",
-    padding: 5,
-    borderRadius: 5,
-    margin: 15,
-    marginBottom: 0,
-    backgroundColor: "white",
-
-  },
-
-  testText: {
-    margin: "5%",
-    textAlign: "center",
-    color: "white",
-    fontSize: scaleFontSize(15)
-  }
 });

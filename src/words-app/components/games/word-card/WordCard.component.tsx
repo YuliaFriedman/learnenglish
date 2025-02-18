@@ -17,44 +17,51 @@ import { AnswerStatus } from "../../../common-models/AnswerStatus";
 import draggableComponent from "../../../common-components/draggable/draggable.component.tsx";
 import { DraggablePressable } from "../../../common-components/draggable/draggablePressable.tsx";
 
-function WordCardComponent(args: {model: WordCardModel }): React.JSX.Element {
+export interface WordCardComponentProps {
+  model: WordCardModel;
+  onSpeakStarted?: () => void,
+  onSpeakCompleted?: () => void,
+  onPressed?: () => void
+}
+
+function WordCardComponent({ model, onSpeakStarted, onSpeakCompleted, onPressed }:WordCardComponentProps): React.JSX.Element {
 
   const logSource = "WordCardComponent";
 
   useEffect(() => {draggableComponent
-    if(args?.model?.shouldSayTheWord){
+    if(model?.shouldSayTheWord){
       playSound();
     }
-  }, [args?.model?.shouldSayTheWord]);
+  }, [model?.shouldSayTheWord]);
 
   function playSound(){
-    if(args?.model){
-      Logger.log(logSource, "Playing sound " + args?.model?.word + "(" + args?.model?.language + ") - img = " + args?.model?.image);
-      if(args?.model?.onSpeakStarted){
-        args?.model?.onSpeakStarted();
+    if(model){
+      Logger.log(logSource, "Playing sound " + model?.word + "(" + model?.language + ") - img = " + model?.image);
+      if(onSpeakStarted){
+        onSpeakStarted();
       }
       AudioManager.playSound({
-        text: args.model.word,
-        soundKey: args.model.sound,
-        language: args.model.language
+        text: model.word,
+        soundKey: model.sound,
+        language: model.language
       }).then(() => {
-        Logger.log(logSource, "Play sound completed for word " + args.model.word);
-        if(args.model?.onSpeakCompleted){
-          args.model.onSpeakCompleted();
+        Logger.log(logSource, "Play sound completed for word " + model.word);
+        if(onSpeakCompleted){
+          onSpeakCompleted();
         }
       });
     }
   }
 
   function buttonPressed(){
-    if(args?.model?.pressable){
+    if(model?.pressable){
       playSound();
-      if(args.model.onPressed){
-        args.model.onPressed();
+      if(onPressed){
+        onPressed();
       }
     }
     else{
-      Logger.log(logSource, "word card is not pressable " + args.model.word);
+      Logger.log(logSource, "word card is not pressable " + model.word);
     }
   }
 
@@ -63,24 +70,24 @@ function WordCardComponent(args: {model: WordCardModel }): React.JSX.Element {
       <View
         style={[
           WordCardStyling.host,
-          args?.model?.isSelected && WordCardStyling.selectedWordCard,
-          args?.model?.answerStatus === AnswerStatus.wrong && WordCardStyling.incorrectWordCard,
-          args?.model?.answerStatus === AnswerStatus.correct && WordCardStyling.correctWordCard,
+          model?.isSelected && WordCardStyling.selectedWordCard,
+          model?.answerStatus === AnswerStatus.wrong && WordCardStyling.incorrectWordCard,
+          model?.answerStatus === AnswerStatus.correct && WordCardStyling.correctWordCard,
         ]}
       >
         <View
           style={[
             WordCardStyling.imageContainer,
-            !args?.model?.imgVisible && WordCardStyling.invisibleImg
+            !model?.imgVisible && WordCardStyling.invisibleImg
           ]}
         >
           <Image
-            source={images[args?.model?.image]}
+            source={images[model?.image]}
             style={WordCardStyling.img}
             resizeMode={"center"}
           />
         </View>
-        {args?.model?.showText && <Text style={WordCardStyling.text}>{args.model.word}</Text>}
+        {model?.showText && <Text style={WordCardStyling.text}>{model.word}</Text>}
       </View>
     </DraggablePressable>
 

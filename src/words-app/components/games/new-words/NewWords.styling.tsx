@@ -7,7 +7,8 @@ export const NewWordsStyling = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    alignContent: "center"
+    alignContent: "center",
+    height: "100%",
   },
 
   next: {
@@ -25,6 +26,7 @@ export const NewWordsStyling = StyleSheet.create({
 
   wordCard: {
     width: "40%",
+    height: "35%",
   },
 
 })

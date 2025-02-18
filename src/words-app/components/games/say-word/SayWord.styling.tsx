@@ -15,6 +15,7 @@ export const SayWordStyling = StyleSheet.create({
 
   wordContainer: {
     width: "100%",
+    height: "30%",
     alignSelf: "center"
   },
 
@@ -28,6 +29,10 @@ export const SayWordStyling = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+  },
+
+  spaceView: {
+    flex: 1
   },
 
   nextContainer: {

@@ -1,13 +1,16 @@
+import { PartialWithRequiredProp } from "../../../../utils/Common-Types.ts";
 
 export class WordTextCardModel {
-  word: string;
-  sound: string;
+  id: string = "";
+  word: string = "";
+  sound: string = "";
   shouldSayTheWord?: boolean = false;
-  onSpeakStarted?: () => void;
-  onSpeakCompleted?: () => void;
-  onPressed?: () => void;
   pressable?: boolean = true;
-  language: string;
+  language: string = "";
   translation?: string;
-  showMic?: boolean = true
+  showMic?: boolean = true;
+
+  constructor(args: PartialWithRequiredProp<WordTextCardModel, 'id'> ) {
+    Object.assign(this, args);
+  }
 }

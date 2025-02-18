@@ -13,6 +13,8 @@ import { AppHeaderModel } from "./AppHeaderModel";
 import { navigatorService } from "../../../routing/AppNavigatorService";
 import { WordsAppPages } from "../../navigation/WordsAppPages";
 import { Logger } from "../../../logger/Logger";
+import LinearGradient from "react-native-linear-gradient";
+import { ThemeManager } from "../../style/ThemeManager.ts";
 
 
 function AppHeaderComponent(model : AppHeaderModel): React.JSX.Element {
@@ -25,10 +27,20 @@ function AppHeaderComponent(model : AppHeaderModel): React.JSX.Element {
   }
 
   return (
-    <View style={AppHeaderStyling.host}>
-      <View><Pressable onPress={navigateHome} style={AppHeaderStyling.homeButton}><Text>Home</Text></Pressable></View>
-      <Text style={AppHeaderStyling.title}>{model.title}</Text>
-      <View></View>
+    <View style={AppHeaderStyling.headerBorder}>
+      <LinearGradient
+        style={AppHeaderStyling.innerWrapper}
+        colors={ThemeManager.theme.header.bg.colors}
+        locations={ThemeManager.theme.header.bg.locations}
+        start={ThemeManager.theme.header.bg.start}
+        end={ThemeManager.theme.header.bg.end}
+      >
+        <View style={AppHeaderStyling.host}>
+          <View style={AppHeaderStyling.leftPart}><Pressable onPress={navigateHome} style={AppHeaderStyling.homeButton}><Text>Home</Text></Pressable></View>
+          <Text style={AppHeaderStyling.title}>{model.title}</Text>
+          <View style={AppHeaderStyling.rightPart}></View>
+        </View>
+      </LinearGradient>
     </View>
   );
 }

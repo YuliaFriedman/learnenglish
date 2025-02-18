@@ -11,7 +11,7 @@ import { SelectTranslationModel } from "./SelectTranslationModel";
 import { Logger } from "../../../../logger/Logger";
 import { images } from "../../../app-data/ImagesManager";
 import { SelectTranslationStyling } from "./SelectTranslation.styling";
-import NextButtonComponent from "../../common/next-button/NextButton.component";
+import PrimaryButtonComponent from "../../common/primary-button/PrimaryButton.component.tsx";
 import { WordCardModel } from "../word-card/WordCardModel";
 import { appProducer } from "../../../app-data/store/AppProducer";
 import { dictionary } from "../../../app-data/levels/dictionary/Dictionary";
@@ -19,6 +19,7 @@ import WordCardComponent from "../word-card/WordCard.component";
 import WordTextCardComponent from "../word-text-card/WordTextCard.component";
 import { WordTextCardModel } from "../word-text-card/WordTextCardModel";
 import { AnswerStatus } from "../../../common-models/AnswerStatus";
+import { AppSoundsPlayer } from "../../../../services/AppSoundsPlayer.ts";
 
 function SelectTranslationComponent(args: {model: SelectTranslationModel}): React.JSX.Element {
 
@@ -26,8 +27,6 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
 
   const [translations,setTranslations] = useState<WordCardModel[]>([]);
   const [word, setWord] = useState<WordTextCardModel|undefined>(undefined);
-  const [selected, setSelected] = useState<number|undefined>(undefined);
-  const [showIncorrect, setShowIncorrect] = useState(false);
 
   Logger.log(logSource, ">>>>>>>>> In MatchTranslationComponent");
 
@@ -54,23 +53,18 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
         shouldSayTheWord: false,
         pressable: true,
         language: selectedTranslation,
-        onPressed: () => translationPressed(i)
       });
     });
     setTranslations(newWords);
 
-    setWord(new WordCardModel({
+    setWord(new WordTextCardModel({
       id: args.model.word,
       ...dictionary.getWord(selectedLanguage, args.model.word),
       pressable: true,
       shouldSayTheWord: false,
       language: selectedLanguage,
-
     }));
   }
-
-
-
 
   function translationPressed(index: number){
     setTranslations(currentTranslations => {
@@ -85,24 +79,27 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
   }
 
   function nextButtonPressed() {
-    const selectedIndex = translations.findIndex(item => item.isSelected);
-    if(selectedIndex === args.model.answer){
-      // play correct sound
+    if(isCorrectAnswer()){
+      AppSoundsPlayer.playCorrectSound();
       appProducer.setNextStep();
     }
     else{
-      // play incorrect sound
+      AppSoundsPlayer.playWrongAnswer();
       setTranslations(currentTranslations => {
         return currentTranslations.map((tran, i) => {
           return {
             ...tran,
-            isError: tran.isSelected ? AnswerStatus.wrong : AnswerStatus.notChecked
+            answerStatus: tran.isSelected ? AnswerStatus.wrong : AnswerStatus.notChecked
           }
         })
       });
     }
   }
 
+function isCorrectAnswer(){
+  const selectedIndex = translations.findIndex(item => item.isSelected);
+  return selectedIndex === args.model.answer;
+}
 
   return (
     <View style={SelectTranslationStyling.host}>
@@ -112,16 +109,16 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
       <View style={SelectTranslationStyling.cardContainer}>
       {
         translations.map((translation, i) => {
-          return <View
-                    key={"translation_" + i}
-                    style={[SelectTranslationStyling.wordCard]}>
-                    <WordCardComponent model={translation} ></WordCardComponent>
-                 </View>
+          return (
+            <View key={"translation_" + i} style={[SelectTranslationStyling.wordCard]}>
+                <WordCardComponent onPressed={() => translationPressed(i)} model={translation} ></WordCardComponent>
+            </View>
+          )
         })
       }
       </View>
       <View style={SelectTranslationStyling.next}>
-        <NextButtonComponent onPress={nextButtonPressed} ></NextButtonComponent>
+        <PrimaryButtonComponent onPress={nextButtonPressed}>Next</PrimaryButtonComponent>
       </View>
     </View>
   );

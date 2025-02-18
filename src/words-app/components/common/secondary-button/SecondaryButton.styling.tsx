@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-export const CancelButtonStyling = StyleSheet.create({
+export const SecondaryButtonStyling = StyleSheet.create({
   nextButton:{
     backgroundColor: "gray",
   },

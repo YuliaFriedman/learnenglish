@@ -13,49 +13,57 @@ import { WordTextCardStyling } from "./WordTextCard.styling";
 import { AudioManager } from "../../../../sound/AudioManager";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-function WordTextCardComponent(args: {model: WordTextCardModel}): React.JSX.Element {
+export interface WordTextCardComponentProps {
+  model: WordTextCardModel;
+  onSpeakStarted?: () => void,
+  onSpeakCompleted?: () => void,
+  onPressed?: () => void
+}
+
+
+function WordTextCardComponent({model, onSpeakStarted, onSpeakCompleted, onPressed}: WordTextCardComponentProps): React.JSX.Element {
 
   const logSource = "WordTextCardComponent";
 
   useEffect(() => {
-    if(args.model?.shouldSayTheWord){
+    if(model?.shouldSayTheWord){
       playSound();
     }
-  }, [args.model?.shouldSayTheWord]);
+  }, [model?.shouldSayTheWord]);
 
   function playSound(){
-    Logger.log(logSource, "Playing sound " + args.model.word + "(" + args.model.language + ")");
-    if(args.model?.onSpeakStarted){
-      args.model.onSpeakStarted();
+    Logger.log(logSource, "Playing sound " + model.word + "(" + model.language + ")");
+    if(onSpeakStarted){
+      onSpeakStarted();
     }
     AudioManager.playSound({
-      text: args.model.word,
-      soundKey: args.model.sound,
-      language: args.model.language
+      text: model.word,
+      soundKey: model.sound,
+      language: model.language
     }).then(() => {
-      Logger.log(logSource, "Play sound completed for word " + args.model.word);
-      if(args.model?.onSpeakCompleted){
-        args.model.onSpeakCompleted();
+      Logger.log(logSource, "Play sound completed for word " + model.word);
+      if(onSpeakCompleted){
+        onSpeakCompleted();
       }
     });
   }
 
   function buttonPressed(){
-    if(args.model.pressable){
+    if(model.pressable){
       playSound();
-      if(args.model.onPressed){
-        args.model.onPressed();
+      if(onPressed){
+        onPressed();
       }
     }
     else{
-      Logger.log(logSource, "word card is not pressable " + args.model.word);
+      Logger.log(logSource, "word card is not pressable " + model.word);
     }
   }
 
   return (
     <Pressable style={WordTextCardStyling.host} onPress={buttonPressed}>
-      {args?.model?.showMic && <Icon name="microphone" size={30} color="blue"/>}
-      <Text style={WordTextCardStyling.text}>{args.model.word}</Text>
+      {model?.showMic && <Icon name="microphone" size={30} color="blue"/>}
+      <Text style={WordTextCardStyling.text}>{model.word}</Text>
     </Pressable>
 
   );

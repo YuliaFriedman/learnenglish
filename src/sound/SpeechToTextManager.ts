@@ -1,12 +1,21 @@
 import Voice from '@react-native-voice/voice';
+import {
+  SpeechEndEvent,
+  SpeechResultsEvent,
+  SpeechStartEvent
+} from "@react-native-voice/voice/src/VoiceModuleTypes.ts";
+
+export interface SpeechResults {
+  values?: string[]
+}
 
 export const SpeechToTextManager = {
 
-  onSpeechStart: (e) => {},
-  onSpeechEnd: (e) => {},
-  onSpeechResults: (e) => {},
+  onSpeechStart: (e:SpeechStartEvent) => {} ,
+  onSpeechEnd: (e:SpeechEndEvent) => {},
+  onSpeechResults: (e:SpeechResults) => {},
 
-  init: (onSpeechStart: () => void, onSpeechEnd: () => void, onSpeechResults: (results) => void) => {
+  init: (onSpeechStart: () => void, onSpeechEnd: () => void, onSpeechResults: (results:SpeechResults) => void) => {
     SpeechToTextManager.onSpeechStart = onSpeechStart;
     SpeechToTextManager.onSpeechEnd = onSpeechEnd;
     SpeechToTextManager.onSpeechResults = onSpeechResults;
@@ -15,7 +24,7 @@ export const SpeechToTextManager = {
     Voice.onSpeechResults = SpeechToTextManager.onSpeechResultsHandler;
   },
 
-  onSpeechStartHandler: (e) => {
+  onSpeechStartHandler: (e:SpeechStartEvent) => {
     if(e?.error) {
       console.log("onSpeechStartHandler", e);
     }
@@ -24,7 +33,7 @@ export const SpeechToTextManager = {
     }
   },
 
-  onSpeechEndHandler: (e) => {
+  onSpeechEndHandler: (e:SpeechEndEvent) => {
     if(e?.error) {
       console.log("onSpeechEndHandler", e);
     }
@@ -33,10 +42,10 @@ export const SpeechToTextManager = {
     }
   },
 
-  onSpeechResultsHandler: (results) => {
+  onSpeechResultsHandler: (results:SpeechResultsEvent) => {
     console.log("onSpeechResultsHandler", results);
     if(SpeechToTextManager.onSpeechResults){
-      SpeechToTextManager.onSpeechResults(results);
+      SpeechToTextManager.onSpeechResults({values: results.value});
     }
   },
 
@@ -52,8 +61,8 @@ export const SpeechToTextManager = {
 
   destroy: () => {
     Voice.destroy().then(Voice.removeAllListeners);
-    SpeechToTextManager.onSpeechStart = null;
-    SpeechToTextManager.onSpeechEnd = null;
-    SpeechToTextManager.onSpeechResults = null;
+    SpeechToTextManager.onSpeechStart = () => {};
+    SpeechToTextManager.onSpeechEnd = () => {};
+    SpeechToTextManager.onSpeechResults = () => {};
   }
 }
