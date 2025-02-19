@@ -6,15 +6,18 @@
  */
 
 import React, { useEffect, useRef, useState } from "react";
-import { Animated, Text, View } from "react-native";
+import { Animated, View } from "react-native";
 import { NewWordsModel } from "./NewWordsModel";
 import { Logger } from "../../../../logger/Logger";
 import WordCardComponent from "../word-card/WordCard.component";
 import { NewWordsStyling } from "./NewWords.styling";
 import PrimaryButtonComponent from "../../common/primary-button/PrimaryButton.component.tsx";
 import { WordCardModel } from "../word-card/WordCardModel";
-import { appProducer } from "../../../app-data/store/AppProducer";
 import { dictionary } from "../../../app-data/levels/dictionary/Dictionary";
+import InjectionManager from "../../../../core/services/InjectionManager.ts";
+import { IAppProducer } from "../../../app-data/store/IAppProducer.ts";
+import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
+import { Languages } from "../../../../app-data/language.ts";
 
 function NewWordsComponent(args: {model: NewWordsModel}): React.JSX.Element {
 
@@ -25,9 +28,13 @@ function NewWordsComponent(args: {model: NewWordsModel}): React.JSX.Element {
   const [scaleAnimations, setScaleAnimations] = useState(() =>
     args.model.words.map(() => new Animated.Value(1))
   );
-  const selectedLanguage = useRef(appProducer.getSelectedLanguage());
+  let selectedLanguage = useRef<Languages>(Languages.EN);
+
+  const appProducer = useRef<IAppProducer | null>(null);
 
   useEffect(() => {
+    initInjections();
+    selectedLanguage.current = appProducer.current?.getSelectedLanguage() || Languages.EN;
     setNextWordToSpeak(0);
   },[]);
 
@@ -35,6 +42,12 @@ function NewWordsComponent(args: {model: NewWordsModel}): React.JSX.Element {
     let newWords = args.model.words.map((word,i) => createWordModel(word, false));
     setWords(newWords);
   }, [buttonDisabled]);
+
+  function initInjections(){
+    if(!appProducer.current){
+      appProducer.current = InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN);
+    }
+  }
 
   function setNextWordToSpeak(index: number) {
     Logger.log(logSource, "In setNextWordToSpeak: index = " + index);
@@ -73,7 +86,7 @@ function NewWordsComponent(args: {model: NewWordsModel}): React.JSX.Element {
   }
 
   function nextButtonPressed() {
-    appProducer.setNextStep();
+    appProducer.current?.setNextStep();
   }
 
   function animateWordScale(index: number) {

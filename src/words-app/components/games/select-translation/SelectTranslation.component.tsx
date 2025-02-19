@@ -5,21 +5,23 @@
  * @format
  */
 
-import React, { useEffect, useState } from "react";
-import { Image, Pressable, Text, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { View } from "react-native";
 import { SelectTranslationModel } from "./SelectTranslationModel";
 import { Logger } from "../../../../logger/Logger";
-import { images } from "../../../app-data/ImagesManager";
 import { SelectTranslationStyling } from "./SelectTranslation.styling";
 import PrimaryButtonComponent from "../../common/primary-button/PrimaryButton.component.tsx";
 import { WordCardModel } from "../word-card/WordCardModel";
-import { appProducer } from "../../../app-data/store/AppProducer";
 import { dictionary } from "../../../app-data/levels/dictionary/Dictionary";
 import WordCardComponent from "../word-card/WordCard.component";
 import WordTextCardComponent from "../word-text-card/WordTextCard.component";
 import { WordTextCardModel } from "../word-text-card/WordTextCardModel";
 import { AnswerStatus } from "../../../app-data/models/AnswerStatus.ts";
 import { AppSoundsPlayer } from "../../../../services/AppSoundsPlayer.ts";
+import InjectionManager from "../../../../core/services/InjectionManager.ts";
+import { IAppProducer } from "../../../app-data/store/IAppProducer.ts";
+import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
+import { Languages } from "../../../../app-data/language.ts";
 
 function SelectTranslationComponent(args: {model: SelectTranslationModel}): React.JSX.Element {
 
@@ -27,23 +29,30 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
 
   const [translations,setTranslations] = useState<WordCardModel[]>([]);
   const [word, setWord] = useState<WordTextCardModel|undefined>(undefined);
-
+  const appProducer = useRef<IAppProducer | null>(null);
   Logger.log(logSource, ">>>>>>>>> In MatchTranslationComponent");
 
   useEffect(() => {
+    initInjections();
     initData();
   }, []);
 
+  function initInjections(){
+    if(!appProducer.current){
+      appProducer.current = InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN);
+    }
+  }
+
   function initData(){
-    let selectedLanguage = null;
+    let selectedLanguage: string = "";
     let selectedTranslation: string = "";
     if(args.model.source){
-      selectedLanguage = appProducer.getSelectedLanguage();
-      selectedTranslation = appProducer.getSelectedTranslation();
+      selectedLanguage = appProducer.current?.getSelectedLanguage() || Languages.EN;
+      selectedTranslation = appProducer.current?.getSelectedTranslation() || Languages.EN;
     }
     else{
-      selectedLanguage = appProducer.getSelectedTranslation();
-      selectedTranslation = appProducer.getSelectedLanguage();
+      selectedLanguage = appProducer.current?.getSelectedTranslation() || Languages.EN;
+      selectedTranslation = appProducer.current?.getSelectedLanguage() || Languages.EN;
     }
 
     let newWords = args.model.translations.map((word,i) => {
@@ -81,7 +90,7 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
   function nextButtonPressed() {
     if(isCorrectAnswer()){
       AppSoundsPlayer.playCorrectSound();
-      appProducer.setNextStep();
+      appProducer.current?.setNextStep();
     }
     else{
       AppSoundsPlayer.playWrongAnswer();

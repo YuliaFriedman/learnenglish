@@ -17,6 +17,9 @@
     "@react-navigation/native-stack": "^6.10.1",
     "@reduxjs/toolkit": "^2.2.7",
     "@types/react-redux": "^7.1.33",
+    "inversify": "^6.2.2",
+    "inversify-hooks": "^2.1.6",
+    "inversify-react": "^1.2.0",
     "lodash": "^4.17.21",
     "react": "18.2.0",
     "react-icons": "^5.3.0",
@@ -29,7 +32,8 @@
     "react-native-vector-icons": "^10.2.0",
     "react-redux": "^9.1.2",
     "redux": "^5.0.1",
-    "redux-thunk": "^3.1.0"
+    "redux-thunk": "^3.1.0",
+    "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

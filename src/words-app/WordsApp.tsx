@@ -2,19 +2,23 @@ import AllCategoriesComponent from "./components/all-categories-page-component/A
 import AppHeaderComponent from "./components/app-header/AppHeader.component";
 import { View } from "react-native";
 import { WordsAppStyling } from "./WordsApp.styling";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { navigationInitializer, WordsAppPages } from "./navigation/WordsAppPages";
 import { navigatorService, PageInfo } from "../routing/AppNavigatorService";
 import { Logger } from "../logger/Logger";
 import { Provider } from "react-redux";
 import store from "./app-data/store/Store";
-import { appProducer } from "./app-data/store/AppProducer";
 import { categories } from "./app-data/levels/Categories";
 import CategoriesStepsComponent from "./components/CategoryStepsComponent/CategoriesSteps.component";
 import { appDataInitializer } from "./app-data/store/AppDataInitializer";
 import { AudioManager } from "../sound/AudioManager";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import GameContainerComponent from "./components/games/game-container/GameContainer.component";
+import { initDependencyInjections } from "./dependency-injection/DepInjectionInitializer.ts";
+import InjectionManager from "../core/services/InjectionManager.ts";
+import { Provider as InversifyProvider} from 'inversify-react';
+import { IAppProducer } from "./app-data/store/IAppProducer.ts";
+import { DepInjectionsTokens } from "./dependency-injection/DepInjectionTokens.ts";
 
 export function WordsApp(){
 
@@ -24,9 +28,11 @@ export function WordsApp(){
   const [title,setTitle] = useState("");
   const [page,setPage] = useState(<></>);
 
-
+  const appProducer = useRef<IAppProducer | null>(null);
 
   useEffect(() => {
+    initDependencyInjections();
+    initInjections();
     initData();
     navigationInitializer.init();
     AudioManager.init();
@@ -44,12 +50,18 @@ export function WordsApp(){
 
   useEffect(() => {
     buildPageAndTitle();
-  },[appProducer.getSelectedCategory(),visiblePage]);
+  },[appProducer.current?.getSelectedCategory(),visiblePage]);
+
+  function initInjections(){
+    if(!appProducer.current){
+      appProducer.current = InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN);
+    }
+  }
 
   function initData(){
     const appData = appDataInitializer.getData();
-    appProducer.setCategoriesList(appData.categories);
-    appProducer.setAllSteps(appData.steps);
+    appProducer.current?.setCategoriesList(appData.categories);
+    appProducer.current?.setAllSteps(appData.steps);
   }
 
   function buildPageAndTitle(){
@@ -63,8 +75,8 @@ export function WordsApp(){
           break;
         case WordsAppPages.steps:
           newPage = <CategoriesStepsComponent></CategoriesStepsComponent>;
-          const selectedCategoryId = appProducer.getSelectedCategory();
-          const selectedCategory = appProducer.getCategory(selectedCategoryId);
+          const selectedCategoryId = appProducer.current?.getSelectedCategory();
+          const selectedCategory = selectedCategoryId ? appProducer.current?.getCategory(selectedCategoryId) : null;
           newTitle = selectedCategory ? selectedCategory.title : "Words App";
           break;
         case WordsAppPages.game:
@@ -80,17 +92,19 @@ export function WordsApp(){
 
 
   return (
-    <Provider store={store}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <View style={WordsAppStyling.host}>
-          <View style={WordsAppStyling.header}>
-            <AppHeaderComponent title={title}></AppHeaderComponent>
+    <InversifyProvider container={InjectionManager.container}>
+      <Provider store={store}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <View style={WordsAppStyling.host}>
+            <View style={WordsAppStyling.header}>
+              <AppHeaderComponent title={title}></AppHeaderComponent>
+            </View>
+            <View style={WordsAppStyling.content}>
+              {page}
+            </View>
           </View>
-          <View style={WordsAppStyling.content}>
-            {page}
-          </View>
-        </View>
-      </GestureHandlerRootView>
-    </Provider>
+        </GestureHandlerRootView>
+      </Provider>
+     </InversifyProvider>
   );
 }

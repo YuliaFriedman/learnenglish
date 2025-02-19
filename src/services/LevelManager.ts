@@ -1,4 +1,4 @@
-import { navigatorService, Page } from "../routing/AppNavigatorService";
+import { navigatorService } from "../routing/AppNavigatorService";
 import { Level } from "../data-models/LevelModel";
 import { Logger } from "../logger/Logger";
 
@@ -21,7 +21,8 @@ export const LevelManager:LevelManagerType = {
   },
 
   loadNextStep: () => {
-    if(LevelManager.currentLevel?.steps.length > LevelManager.currentStep) {
+    const numOfSteps = LevelManager.currentLevel?.steps.length ?? 0;
+    if(LevelManager.currentStep != undefined && numOfSteps > LevelManager.currentStep) {
       Logger.log("LevelManager", "loading next step: level = " + LevelManager.currentLevel?.id + ", step = " + LevelManager.currentStep);
       navigatorService.navigate(LevelManager.currentLevel?.steps[LevelManager.currentStep].activityKey, LevelManager.currentLevel?.steps[LevelManager.currentStep].model);
       LevelManager.currentStep++;

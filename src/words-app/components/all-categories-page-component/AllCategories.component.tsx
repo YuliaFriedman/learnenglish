@@ -10,31 +10,40 @@ import { Image, Pressable, SafeAreaView, ScrollView, Text, useColorScheme, View 
 import { AllCategoriesStyling } from "./AllCategories.styling";
 import { Category } from "../../app-data/models/CategoryModel";
 import { images } from "../../app-data/ImagesManager";
-import { appProducer } from "../../app-data/store/AppProducer";
 import { Logger } from "../../../logger/Logger";
 import { navigatorService } from "../../../routing/AppNavigatorService";
 import { WordsAppPages } from "../../navigation/WordsAppPages";
 import { CategoryCard } from "./category-card/CategoryCard.component.tsx";
+import InjectionManager from "../../../core/services/InjectionManager.ts";
+import { IAppProducer } from "../../app-data/store/IAppProducer.ts";
+import { DepInjectionsTokens } from "../../dependency-injection/DepInjectionTokens.ts";
 
 function AllCategoriesComponent(): React.JSX.Element {
 
   const logSource = "AllCategories";
 
   const [allCategoriesView, setAllCategoriesView] = useState<React.ReactNode[]>([]);
+  const appProducer = useRef<IAppProducer | null>(null);
 
   //const allCategories: Category[] = appProducer.getCategoriesList();
 
-
   useEffect(() =>{
+    initInjections();
     buildCategoriesView();
   }, [])
 
   useEffect(() => {
     buildCategoriesView();
-  }, appProducer.getCategoriesList());
+  }, appProducer.current?.getCategoriesList());
+
+  function initInjections(){
+    if(!appProducer.current){
+      appProducer.current = InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN);
+    }
+  }
 
   function buildCategoriesView(){
-    const allCategories = appProducer.getCategoriesList();
+    const allCategories = appProducer.current?.getCategoriesList();
     Logger.log(logSource, "categories changed: ", false, allCategories)
     setAllCategoriesView(allCategories
       ? allCategories.map((category, index) => {
@@ -47,7 +56,7 @@ function AllCategoriesComponent(): React.JSX.Element {
   }
 
   function categoryPressed(category:Category){
-    appProducer.setSelectedCategory(category.id);
+    appProducer.current?.setSelectedCategory(category.id);
     navigatorService.navigate(WordsAppPages.steps);
   }
 

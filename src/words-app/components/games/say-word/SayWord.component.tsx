@@ -6,19 +6,21 @@
  */
 
 import React, { useEffect, useRef, useState } from "react";
-import { Animated, Image, Pressable, Text, View } from "react-native";
+import { Animated, Pressable, View } from "react-native";
 import { SayWordModel } from "./SayWordModel";
 import { Logger } from "../../../../logger/Logger";
-import { images } from "../../../app-data/ImagesManager";
 import { SayWordStyling } from "./SayWord.styling";
 import PrimaryButtonComponent from "../../common/primary-button/PrimaryButton.component.tsx";
 import { WordCardModel } from "../word-card/WordCardModel";
-import { appProducer } from "../../../app-data/store/AppProducer";
 import { dictionary } from "../../../app-data/levels/dictionary/Dictionary";
 import WordCardComponent from "../word-card/WordCard.component";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { SpeechResults, SpeechToTextManager } from "../../../../sound/SpeechToTextManager";
 import { AudioManager } from "../../../../sound/AudioManager";
+import { IAppProducer } from "../../../app-data/store/IAppProducer.ts";
+import InjectionManager from "../../../../core/services/InjectionManager.ts";
+import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
+import { Languages } from "../../../../app-data/language.ts";
 
 function SayWordComponent(args: {model: SayWordModel}): React.JSX.Element {
 
@@ -32,7 +34,10 @@ function SayWordComponent(args: {model: SayWordModel}): React.JSX.Element {
   const [attempts, setAttempts] = useState(0);
   const maxNumOfAttempts = useRef(2);
 
+  const appProducer = useRef<IAppProducer | null>(null);
+
   useEffect(() => {
+    initInjections();
     initData();
     SpeechToTextManager.init(speechStartHandler, speechEndHandler, speechResultsHandler);
     startAnimation();
@@ -48,8 +53,14 @@ function SayWordComponent(args: {model: SayWordModel}): React.JSX.Element {
     }
   }, [attempts])
 
+  function initInjections(){
+    if(!appProducer.current){
+      appProducer.current = InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN);
+    }
+  }
+
   function initData(){
-    const selectedLanguage = appProducer.getSelectedLanguage();
+    const selectedLanguage = appProducer.current?.getSelectedLanguage() || Languages.EN;
     const wordFromDictionary = dictionary.getWord(selectedLanguage, args.model.word);
     setWord(new WordCardModel({
       id: args.model.word,
@@ -62,13 +73,13 @@ function SayWordComponent(args: {model: SayWordModel}): React.JSX.Element {
     if(wordFromDictionary){
       AudioManager.playSound({
         text: "say the word",
-        language: appProducer.getSelectedLanguage(),
+        language: appProducer.current?.getSelectedLanguage() || Languages.EN,
         soundKey: ""
       }).then(() => {
         setTimeout(() => {
           AudioManager.playSound({
             text: wordFromDictionary.word,
-            language: appProducer.getSelectedLanguage(),
+            language: appProducer.current?.getSelectedLanguage() || Languages.EN,
             soundKey: ""
           });
         }, 400);
@@ -101,7 +112,7 @@ function SayWordComponent(args: {model: SayWordModel}): React.JSX.Element {
   }
 
   function nextButtonPressed() {
-      appProducer.setNextStep();
+    appProducer.current?.setNextStep();
   }
 
   const startAnimation = () => {

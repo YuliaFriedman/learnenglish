@@ -5,18 +5,20 @@
  * @format
  */
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AppState, View } from "react-native";
 import { GameContainerStyling } from "./GameContainer.styling";
 import { useSelector } from "react-redux";
 import { Logger } from "../../../../logger/Logger";
 import { GameModel } from "../../../app-data/models/GameModel";
 import { GameType } from "../../../app-data/models/GameType";
-import { appProducer } from "../../../app-data/store/AppProducer";
 import MatchTranslationComponent from "../match-translation/MatchTranslation.component";
 import NewWordsComponent from "../new-words/NewWords.component";
 import SayWordComponent from "../say-word/SayWord.component";
 import SelectTranslationComponent from "../select-translation/SelectTranslation.component";
+import { IAppProducer } from "../../../app-data/store/IAppProducer.ts";
+import InjectionManager from "../../../../core/services/InjectionManager.ts";
+import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
 
 function GameContainerComponent(): React.JSX.Element {
 
@@ -25,8 +27,10 @@ function GameContainerComponent(): React.JSX.Element {
   const [currentGameModel, setCurrentGameModel] = useState<GameModel|undefined>(undefined);
 
   const currentStepId = useSelector((state: AppState) => state.steps.currentStep);//appProducer.getCurrentStepId();
+  const appProducer = useRef<IAppProducer | null>(null);
 
   useEffect(() => {
+    initInjections();
     updateGameModel();
   },[]);
 
@@ -35,8 +39,14 @@ function GameContainerComponent(): React.JSX.Element {
     updateGameModel();
   }, [currentStepId]);
 
+  function initInjections(){
+    if(!appProducer.current){
+      appProducer.current = InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN);
+    }
+  }
+
   function updateGameModel(){
-    const currentStep = appProducer.getCurrentStep();
+    const currentStep = appProducer.current?.getCurrentStep();
     Logger.log(logSource, "step changed: current step = " + currentStep?.displayName, false, currentStep?.game);
     setCurrentGameModel(currentStep?.game);
   }

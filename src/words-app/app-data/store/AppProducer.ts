@@ -5,9 +5,9 @@ import { Category } from "../models/CategoryModel";
 import { StepModel } from "../models/StepModel";
 import { setAllSteps, setSelectedStep, SingleLanguageSteps } from "./reducers/StepsReducer";
 import { Logger } from "../../../logger/Logger";
+import { IAppProducer } from "./IAppProducer.ts";
 
-class AppProducer {
-  //dispatch = useAppDispatch();
+export class AppProducer implements IAppProducer{
 
   // selected category
 

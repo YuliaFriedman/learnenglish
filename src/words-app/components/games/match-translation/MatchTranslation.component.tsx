@@ -5,23 +5,25 @@
  * @format
  */
 
-import React, { LegacyRef, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { View } from "react-native";
 import { MatchTranslationModel } from "./MatchTranslationModel";
 import { Logger } from "../../../../logger/Logger";
 import { MatchTranslationStyling } from "./MatchTranslation.styling";
 import PrimaryButtonComponent from "../../common/primary-button/PrimaryButton.component.tsx";
 import { WordCardModel } from "../word-card/WordCardModel";
-import { appProducer } from "../../../app-data/store/AppProducer";
 import { dictionary } from "../../../app-data/levels/dictionary/Dictionary";
 import WordCardComponent from "../word-card/WordCard.component";
-import { AudioManager } from "../../../../sound/AudioManager";
 import { arrayUtil } from "../../../../utils/ArrayUtil";
 import DraggableComponent from "../../../../core/components/draggable/draggable.component";
-import DroppableComponent, { DroppableComponentProps, DroppableComponentType } from "../../../../core/components/droppable/droppable.component";
+import DroppableComponent, { DroppableComponentType } from "../../../../core/components/droppable/droppable.component";
 import SecondaryButtonComponent from "../../common/secondary-button/SecondaryButton.component.tsx";
 import { AnswerStatus } from "../../../app-data/models/AnswerStatus.ts";
 import { AppSoundsPlayer } from "../../../../services/AppSoundsPlayer";
+import { IAppProducer } from "../../../app-data/store/IAppProducer.ts";
+import InjectionManager from "../../../../core/services/InjectionManager.ts";
+import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
+import { Languages } from "../../../../app-data/language.ts";
 
 interface SolutionModel{
   sourceIndex: number;
@@ -40,7 +42,10 @@ function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.
   const [canContinue, setCanContinue] = useState(false);
   const droppableComponents = useRef<DroppableComponentType[]|null[]>([]);
 
+  const appProducer = useRef<IAppProducer | null>(null);
+
   useEffect(() => {
+    initInjections();
     initData();
   }, []);
 
@@ -49,6 +54,12 @@ function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.
     updateDataBySolution();
     setCanContinue(solutions.length == args.model.words.length);
   },[solutions]);
+
+  function initInjections(){
+    if(!appProducer.current){
+      appProducer.current = InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN);
+    }
+  }
 
   function updateDataBySolution(){
     if(words && words.length > 0){
@@ -73,8 +84,8 @@ function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.
   }
 
   function initData(){
-    const selectedLanguage = appProducer.getSelectedLanguage();
-    const selectedTranslation = appProducer.getSelectedTranslation();
+    const selectedLanguage = appProducer.current?.getSelectedLanguage() || Languages.EN;
+    const selectedTranslation = appProducer.current?.getSelectedTranslation() || Languages.EN;
     const wordsList:WordCardModel[] = [];
     const translationsList:WordCardModel[] = [];
 
@@ -122,7 +133,7 @@ function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.
   function nextButtonPressed() {
     if(checkSolutions()){
       AppSoundsPlayer.playCorrectSound();
-      appProducer.setNextStep();
+      appProducer.current?.setNextStep();
     }
     else{
       setCanContinue(false);

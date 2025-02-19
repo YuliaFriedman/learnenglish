@@ -1,13 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { Languages } from "../../../../app-data/language.ts";
 
 export interface LanguageState {
-  currentLanguage: string;
-  currentTranslation: string;
+  currentLanguage: Languages;
+  currentTranslation: Languages;
 }
 
 const initialState:LanguageState = {
-  currentLanguage: "en",
-  currentTranslation: "he"
+  currentLanguage: Languages.EN,
+  currentTranslation: Languages.HE
 }
 
 export const languageSlice = createSlice<LanguageState>({

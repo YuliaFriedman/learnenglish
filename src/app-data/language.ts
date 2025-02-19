@@ -1,6 +1,6 @@
-export const Languages = {
-  EN: "en",
-  HE: "he"
+export enum Languages {
+  EN = "en",
+  HE = "he"
 }
 
 export const LanguageManager = {
@@ -8,7 +8,7 @@ export const LanguageManager = {
   currentTranslation: Languages.HE,
   rtl: [Languages.HE],
 
-  isRtl(language: string){
+  isRtl(language: Languages){
     return this.rtl.indexOf(language) >= 0;
   }
 

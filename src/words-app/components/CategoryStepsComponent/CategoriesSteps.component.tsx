@@ -5,10 +5,9 @@
  * @format
  */
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import { CategoriesStepsStyling } from "./CategoriesSteps.styling";
-import { appProducer } from "../../app-data/store/AppProducer";
 import { StepModel, StepStatus } from "../../app-data/models/StepModel";
 import { Category } from "../../app-data/models/CategoryModel";
 import { Logger } from "../../../logger/Logger";
@@ -16,6 +15,9 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { GameType } from "../../app-data/models/GameType";
 import { navigatorService } from "../../../routing/AppNavigatorService";
 import { WordsAppPages } from "../../navigation/WordsAppPages";
+import { IAppProducer } from "../../app-data/store/IAppProducer.ts";
+import InjectionManager from "../../../core/services/InjectionManager.ts";
+import { DepInjectionsTokens } from "../../dependency-injection/DepInjectionTokens.ts";
 
 function CategoriesStepsComponent(): React.JSX.Element {
 
@@ -23,14 +25,21 @@ function CategoriesStepsComponent(): React.JSX.Element {
 
   const [currentCategory, setCurrentCategory] = useState<Category|undefined>(undefined);
   const [steps, setSteps] = useState<StepModel[]>([]);
+  const appProducer = useRef<IAppProducer | null>(null);
 
   useEffect(() => {
-    setCurrentCategory(appProducer.getCategory(appProducer.getSelectedCategory()));
-  }, [appProducer.getSelectedCategory()]);
+    if(!appProducer.current){
+      appProducer.current = InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN);
+    }
+  }, []);
+
+  useEffect(() => {
+    setCurrentCategory(appProducer.current?.getCategory(appProducer.current?.getSelectedCategory()));
+  }, [appProducer.current?.getSelectedCategory()]);
 
   useEffect(() => {
     if(currentCategory && currentCategory?.id) {
-      setSteps(appProducer.getCurrentSteps());
+      setSteps(appProducer.current?.getCurrentSteps() || []);
     }
   }, [currentCategory]);
 
@@ -95,7 +104,7 @@ function CategoriesStepsComponent(): React.JSX.Element {
   }
 
   function navigateToStep(step: StepModel){
-    appProducer.setCurrentStep(step.id);
+    appProducer.current?.setCurrentStep(step.id);
     navigatorService.navigate(WordsAppPages.game);
   }
 
