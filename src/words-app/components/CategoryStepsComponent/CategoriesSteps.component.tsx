@@ -57,7 +57,7 @@ function CategoriesStepsComponent(): React.JSX.Element {
 
   function createStepsGroups():StepModel[][]{
     Logger.log(logSource,"in createStepsGroups: category = " + currentCategory?.title + ", steps count = " + steps.length);
-    return steps.reduce((groups, item) => {
+    return steps.reduce((groups:StepModel[][], item) => {
       const stepIsTest = item.game.type === GameType.Test;
       const prevStepWasTest = groups.length > 0 ? groups[groups.length - 1][0].game.type === GameType.Test : false;
       const firstStep = groups.length == 0;
