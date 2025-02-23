@@ -1,6 +1,7 @@
 import { Chunk } from "./ChunkModel";
+import { Languages } from "../../app-data/language.ts";
 
-export class Sentence {
-  language: string;
+export interface Sentence {
+  language: Languages;
   chunks: Chunk[];
 }

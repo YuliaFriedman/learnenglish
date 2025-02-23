@@ -11,6 +11,7 @@ const initialState:LanguageState = {
   currentTranslation: Languages.HE
 }
 
+// @ts-ignore
 export const languageSlice = createSlice<LanguageState>({
   name: "language",
   initialState,

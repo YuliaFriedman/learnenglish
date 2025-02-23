@@ -1,11 +1,11 @@
-import store, { AppState, useAppDispatch } from "./Store";
-import { useSelector } from "react-redux";
-import { setCategoriesList, setSelectedCategory } from "./reducers/CategoriesReducer";
-import { Category } from "../models/CategoryModel";
+import store from "./Store";
+import { SelectedCategory, setCategoriesList, setSelectedCategory } from "./reducers/CategoriesReducer";
+import { Category, CategoryType } from "../models/CategoryModel";
 import { StepModel } from "../models/StepModel";
-import { setAllSteps, setSelectedStep, SingleLanguageSteps } from "./reducers/StepsReducer";
+import { setAllSteps, setSelectedStep } from "./reducers/StepsReducer";
 import { Logger } from "../../../logger/Logger";
 import { IAppProducer } from "./IAppProducer.ts";
+import { StepsModel } from "../models/AppDataModel.ts";
 
 export class AppProducer implements IAppProducer{
 
@@ -29,8 +29,8 @@ export class AppProducer implements IAppProducer{
     return store.getState().categories.categoriesList;
   }
 
-  getCategory = (id:string|null) => {
-    return store.getState().categories.categoriesList.find(category => category.id === id);
+  getCategory = (type: SelectedCategory) => {
+    return store.getState().categories.categoriesList.find(category => category.type === type);
   }
 
   setCategoriesList = (categories: Category[]) => {
@@ -39,21 +39,26 @@ export class AppProducer implements IAppProducer{
 
   // steps
 
-  setAllSteps = (steps: Record<string, SingleLanguageSteps>) => {
+  setAllSteps = (steps: StepsModel) => {
     Logger.log(this.logSource, "setting all steps = ", false, steps);
     store.dispatch(setAllSteps(steps));
   }
 
-  getStepsByCategory = (category: string|null): StepModel[] => {
+  getStepsByCategory = (category: SelectedCategory): StepModel[]|undefined => {
     if(category === null){
       return [];
     }
     const language = this.getSelectedLanguage();
     const translation = this.getSelectedTranslation();
-    return store.getState()?.steps?.allSteps[language + "-" + translation][category];
+    const allSteps = store.getState()?.steps?.allSteps;
+    // @ts-ignore
+    if(allSteps[language] && allSteps[language][translation]){
+      // @ts-ignore
+      return allSteps[language][translation][category];
+    }
   }
 
-  getCurrentSteps = (): StepModel[] => {
+  getCurrentSteps = (): StepModel[]|undefined => {
     return this.getStepsByCategory(this.getSelectedCategory());
   }
 
@@ -68,17 +73,19 @@ export class AppProducer implements IAppProducer{
   setNextStep = () => {
     const currentStepId = this.getCurrentStepId();
     const steps = this.getCurrentSteps();
-    const currentStepIndex = steps.findIndex(step => step.id === currentStepId);
-    // if last
-    if(currentStepIndex === steps.length - 1){
-      Logger.log(this.logSource, "IN setNextStep: this is last step " + currentStepIndex);
-      return false;
+    const currentStepIndex = steps?.findIndex(step => step.id === currentStepId);
+    if(steps && currentStepIndex && currentStepIndex >= 0) {
+      // if last
+      if (currentStepIndex === steps.length - 1) {
+        Logger.log(this.logSource, "IN setNextStep: this is last step " + currentStepIndex);
+        return false;
+      } else {
+        Logger.log(this.logSource, "IN setNextStep: Moving to step " + (currentStepIndex + 1), false, steps[currentStepIndex + 1]);
+        this.setCurrentStep(steps[currentStepIndex + 1].id);
+        return true;
+      }
     }
-    else{
-      Logger.log(this.logSource, "IN setNextStep: Moving to step " + (currentStepIndex + 1), false, steps[currentStepIndex + 1]);
-      this.setCurrentStep(steps[currentStepIndex + 1].id);
-      return true;
-    }
+    return false;
   }
 
   getCurrentStep = () => {
@@ -86,7 +93,7 @@ export class AppProducer implements IAppProducer{
   }
 
   getStepById = (id: number|null): StepModel|undefined => {
-    return this.getCurrentSteps().find(step => step.id === id);
+    return this.getCurrentSteps()?.find(step => step.id === id);
   }
 
   // language
@@ -99,5 +106,3 @@ export class AppProducer implements IAppProducer{
     return store.getState()?.language.currentTranslation;
   }
 }
-
-export const appProducer = new AppProducer();

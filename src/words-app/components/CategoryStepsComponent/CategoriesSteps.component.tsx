@@ -11,6 +11,7 @@ import { CategoriesStepsStyling } from "./CategoriesSteps.styling";
 import { StepModel, StepStatus } from "../../app-data/models/StepModel";
 import { Category } from "../../app-data/models/CategoryModel";
 import { Logger } from "../../../logger/Logger";
+// @ts-ignore
 import Icon from "react-native-vector-icons/FontAwesome";
 import { GameType } from "../../app-data/models/GameType";
 import { navigatorService } from "../../../routing/AppNavigatorService";
@@ -38,7 +39,7 @@ function CategoriesStepsComponent(): React.JSX.Element {
   }, [appProducer.current?.getSelectedCategory()]);
 
   useEffect(() => {
-    if(currentCategory && currentCategory?.id) {
+    if(currentCategory && currentCategory?.type) {
       setSteps(appProducer.current?.getCurrentSteps() || []);
     }
   }, [currentCategory]);

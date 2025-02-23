@@ -1,6 +1,6 @@
-import { Logger } from "../../../../logger/Logger";
 import { AnswerStatus } from "../../../app-data/models/AnswerStatus.ts";
 import { PartialWithRequiredProp } from "../../../../utils/Common-Types.ts";
+import { Languages } from "../../../../app-data/language.ts";
 
 export class WordCardModel {
   id: string = "";
@@ -9,8 +9,8 @@ export class WordCardModel {
   sound: string = "";
   shouldSayTheWord?: boolean = false;
   pressable?: boolean = true;
-  language: string = "";
-  translation?: string;
+  language: Languages = Languages.EN;
+  translation?: Languages;
   isSelected?: boolean = false;
   answerStatus: AnswerStatus = AnswerStatus.notChecked;
   showText?: boolean = true;

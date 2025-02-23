@@ -6,10 +6,17 @@ export interface CategoryStyle {
 }
 
 export interface Category {
-  id: string;
+  type: CategoryType;
   title: string;
   icon: string;
   progress: number;
   passedFinal: boolean;
   style?: CategoryStyle;
+}
+
+export enum CategoryType{
+  Colors = 'colors',
+  Animals = 'animals',
+  Vehicle = 'vehicle',
+  Body = 'body',
 }

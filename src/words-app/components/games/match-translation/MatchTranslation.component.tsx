@@ -208,6 +208,7 @@ function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.
             return <View key={"translation_" + i} style={[MatchTranslationStyling.singleMatchItem]}
                           >
               <DraggableComponent
+                // @ts-ignore
                 droppableComponents={droppableComponents.current}
                 onDrop={(targetIndex) => onDropToLayout(i, targetIndex)}>
                 <WordCardComponent model={word} />

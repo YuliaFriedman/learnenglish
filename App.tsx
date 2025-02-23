@@ -13,7 +13,6 @@ import { StoryActivity } from "./src/activities/story/StoryActivity";
 import { navigatorService, PageInfo } from "./src/routing/AppNavigatorService";
 import { AppStyles } from "./App.Styling";
 import { levels_en_he } from "./src/app-data/levels/en-he/Levels_en_he";
-import { AudioManager } from "./src/sound/AudioManager";
 import { Provider } from "react-redux";
 import store from "./src/store/Store";
 import { ViewProducer } from "./src/store/viewProducer";
@@ -31,7 +30,7 @@ function App(): React.JSX.Element {
   const [visiblePage, setVisiblePage] = useState<PageInfo|undefined>(navigatorService.getVisible());
 
   useEffect(() => {
-    AudioManager.init();
+    //AudioManager.init();
     const handleNavigation = (page:PageInfo) =>{
       Logger.log("App", "navigation changed: in page " + page.key);
       setVisiblePage(page);

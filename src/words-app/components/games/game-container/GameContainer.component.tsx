@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useRef, useState } from "react";
-import { AppState, View } from "react-native";
+import { View } from "react-native";
 import { GameContainerStyling } from "./GameContainer.styling";
 import { useSelector } from "react-redux";
 import { Logger } from "../../../../logger/Logger";
@@ -19,6 +19,7 @@ import SelectTranslationComponent from "../select-translation/SelectTranslation.
 import { IAppProducer } from "../../../app-data/store/IAppProducer.ts";
 import InjectionManager from "../../../../core/services/InjectionManager.ts";
 import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
+import { AppState } from "../../../app-data/store/Store.ts";
 
 function GameContainerComponent(): React.JSX.Element {
 

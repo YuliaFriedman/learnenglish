@@ -4,8 +4,9 @@ import {
   getSentenceBlockComponentStyle,
   SentenceBlockComponentStyleType
 } from "./SentenceBlockComponent.styling";
-import { LanguageManager } from "../../../app-data/language";
+import { LanguageManager, Languages } from "../../../app-data/language";
 import { useEffect } from "react";
+// @ts-ignore
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getTheme } from "../../../style/Theme";
 import { AudioManager } from "../../../sound/AudioManager";
@@ -70,17 +71,17 @@ export function SentenceBlockComponent(
     return !isLast && !nextIsSign;
   }
 
-  function playSound(sentence: Chunk[], language: string, triggerCompleteEvent: boolean = false){
-    const promise = AudioManager.playSound({soundKey: args.model.sound, text: sentence.map(item => item.words.join(" ")).join(" "), language});
-      if(triggerCompleteEvent) {
-        Logger.log("SentenceComponent", "In playSound: trigger event");
-        promise.then(() => {
-          Logger.log("SentenceComponent", "In playSound: play sound finished");
-          if (args.onVoiceCompleted) {
-            args.onVoiceCompleted(args.id);
-          }
-        });
-      }
+  function playSound(sentence: Chunk[], language: Languages, triggerCompleteEvent: boolean = false){
+    //const promise = AudioManager.playSound({soundKey: args.model.sound, text: sentence.map(item => item.words.join(" ")).join(" "), language});
+    //   if(triggerCompleteEvent) {
+    //     Logger.log("SentenceComponent", "In playSound: trigger event");
+    //     promise.then(() => {
+    //       Logger.log("SentenceComponent", "In playSound: play sound finished");
+    //       if (args.onVoiceCompleted) {
+    //         args.onVoiceCompleted(args.id);
+    //       }
+    //     });
+    //   }
   }
 
   return (

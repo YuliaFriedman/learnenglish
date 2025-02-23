@@ -7,11 +7,11 @@ import FastImage from "react-native-fast-image";
 
 export function SelectAnswerBlockComponent(model:SelectAnswerBlockModel){
   function playSound() {
-    AudioManager.playSound({
-      soundKey: "",
-      text: model.word,
-      language: model.language
-    });
+    // AudioManager.playSound({
+    //   soundKey: "",
+    //   text: model.word,
+    //   language: model.language
+    // });
   }
 
 

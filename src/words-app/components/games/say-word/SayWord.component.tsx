@@ -14,13 +14,14 @@ import PrimaryButtonComponent from "../../common/primary-button/PrimaryButton.co
 import { WordCardModel } from "../word-card/WordCardModel";
 import { dictionary } from "../../../app-data/levels/dictionary/Dictionary";
 import WordCardComponent from "../word-card/WordCard.component";
+// @ts-ignore
 import Icon from "react-native-vector-icons/FontAwesome";
 import { SpeechResults, SpeechToTextManager } from "../../../../sound/SpeechToTextManager";
-import { AudioManager } from "../../../../sound/AudioManager";
 import { IAppProducer } from "../../../app-data/store/IAppProducer.ts";
 import InjectionManager from "../../../../core/services/InjectionManager.ts";
 import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
 import { Languages } from "../../../../app-data/language.ts";
+import { IAudioManager } from "../../../../sound/IAudioManager.ts";
 
 function SayWordComponent(args: {model: SayWordModel}): React.JSX.Element {
 
@@ -35,6 +36,7 @@ function SayWordComponent(args: {model: SayWordModel}): React.JSX.Element {
   const maxNumOfAttempts = useRef(2);
 
   const appProducer = useRef<IAppProducer | null>(null);
+  const audioManager = useRef<IAudioManager | null>(null);
 
   useEffect(() => {
     initInjections();
@@ -57,6 +59,9 @@ function SayWordComponent(args: {model: SayWordModel}): React.JSX.Element {
     if(!appProducer.current){
       appProducer.current = InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN);
     }
+    if(!audioManager.current){
+      audioManager.current = InjectionManager.useInjection<IAudioManager>(DepInjectionsTokens.AUDIO_MANAGER_TOKEN);
+    }
   }
 
   function initData(){
@@ -71,13 +76,13 @@ function SayWordComponent(args: {model: SayWordModel}): React.JSX.Element {
     }));
 
     if(wordFromDictionary){
-      AudioManager.playSound({
+      audioManager.current?.playSound({
         text: "say the word",
         language: appProducer.current?.getSelectedLanguage() || Languages.EN,
         soundKey: ""
       }).then(() => {
         setTimeout(() => {
-          AudioManager.playSound({
+          audioManager.current?.playSound({
             text: wordFromDictionary.word,
             language: appProducer.current?.getSelectedLanguage() || Languages.EN,
             soundKey: ""

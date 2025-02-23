@@ -8,10 +8,7 @@ import { navigatorService, PageInfo } from "../routing/AppNavigatorService";
 import { Logger } from "../logger/Logger";
 import { Provider } from "react-redux";
 import store from "./app-data/store/Store";
-import { categories } from "./app-data/levels/Categories";
 import CategoriesStepsComponent from "./components/CategoryStepsComponent/CategoriesSteps.component";
-import { appDataInitializer } from "./app-data/store/AppDataInitializer";
-import { AudioManager } from "../sound/AudioManager";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import GameContainerComponent from "./components/games/game-container/GameContainer.component";
 import { initDependencyInjections } from "./dependency-injection/DepInjectionInitializer.ts";
@@ -19,6 +16,8 @@ import InjectionManager from "../core/services/InjectionManager.ts";
 import { Provider as InversifyProvider} from 'inversify-react';
 import { IAppProducer } from "./app-data/store/IAppProducer.ts";
 import { DepInjectionsTokens } from "./dependency-injection/DepInjectionTokens.ts";
+import { IAudioManager } from "../sound/IAudioManager.ts";
+import { IAppDataInitializer } from "./app-data/store/IAppDataInitializer.ts";
 
 export function WordsApp(){
 
@@ -29,13 +28,15 @@ export function WordsApp(){
   const [page,setPage] = useState(<></>);
 
   const appProducer = useRef<IAppProducer | null>(null);
+  const audioManager = useRef<IAudioManager | null>(null);
+  const appDataInitializer = useRef<IAppDataInitializer | null>(null);
 
   useEffect(() => {
     initDependencyInjections();
     initInjections();
     initData();
     navigationInitializer.init();
-    AudioManager.init();
+    audioManager.current?.init();
     const handleNavigation = (page:PageInfo) =>{
       setVisiblePage(page);
       Logger.log(logSource, "NAVIGATIONN CHANGED: in page " + page.key);
@@ -56,12 +57,22 @@ export function WordsApp(){
     if(!appProducer.current){
       appProducer.current = InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN);
     }
+
+    if(!audioManager.current){
+      audioManager.current = InjectionManager.useInjection<IAudioManager>(DepInjectionsTokens.AUDIO_MANAGER_TOKEN);
+    }
+
+    if(!appDataInitializer.current){
+      appDataInitializer.current = InjectionManager.useInjection<IAppDataInitializer>(DepInjectionsTokens.APP_DATA_INITIALIZER);
+    }
   }
 
   function initData(){
-    const appData = appDataInitializer.getData();
-    appProducer.current?.setCategoriesList(appData.categories);
-    appProducer.current?.setAllSteps(appData.steps);
+    const appData = appDataInitializer.current?.getData();
+    if(appData) {
+      appProducer.current?.setCategoriesList(appData.categories);
+      appProducer.current?.setAllSteps(appData.steps || {});
+    }
   }
 
   function buildPageAndTitle(){

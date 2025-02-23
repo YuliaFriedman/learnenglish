@@ -14,7 +14,7 @@ export interface CategoryCardProps {
 export function CategoryCard({category, onPress}: CategoryCardProps) {
   return (
 
-      <Pressable key={category.id} style={[CategoryCardStyling.CategoryCell, {shadowColor: category.style?.colors[0]}]} onPress={() => onPress && onPress()}>
+      <Pressable key={category.type} style={[CategoryCardStyling.CategoryCell, {shadowColor: category.style?.colors[0]}]} onPress={() => onPress && onPress()}>
         <TileOutfitComponent tileStyle={{
           colors: category.style?.colors,
           locations: category.style?.locations,

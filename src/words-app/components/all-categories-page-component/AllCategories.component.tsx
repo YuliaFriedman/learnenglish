@@ -56,7 +56,7 @@ function AllCategoriesComponent(): React.JSX.Element {
   }
 
   function categoryPressed(category:Category){
-    appProducer.current?.setSelectedCategory(category.id);
+    appProducer.current?.setSelectedCategory(category.type);
     navigatorService.navigate(WordsAppPages.steps);
   }
 

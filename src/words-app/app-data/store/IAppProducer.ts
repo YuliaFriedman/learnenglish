@@ -1,20 +1,19 @@
-import store from "./Store.ts";
-import { Logger } from "../../../logger/Logger.ts";
-import { Category } from "../models/CategoryModel.ts";
-import { setSelectedStep, SingleLanguageSteps } from "./reducers/StepsReducer.ts";
+import { Category, CategoryType } from "../models/CategoryModel.ts";
 import { StepModel } from "../models/StepModel.ts";
 import { Languages } from "../../../app-data/language.ts";
+import { StepsModel } from "../models/AppDataModel.ts";
+import { SelectedCategory } from "./reducers/CategoriesReducer.ts";
 
 export interface IAppProducer {
 
-  getSelectedCategory: () => string | null;
+  getSelectedCategory: () => SelectedCategory;
   setSelectedCategory: (selected: string) => void;
   getCategoriesList: () => Category[];
-  getCategory: (id:string|null) => Category | undefined;
+  getCategory: (type: SelectedCategory) => Category | undefined;
   setCategoriesList: (categories: Category[]) => void;
-  setAllSteps: (steps: Record<string, SingleLanguageSteps>) => void;
-  getStepsByCategory: (category: string|null) => StepModel[];
-  getCurrentSteps: () => StepModel[];
+  setAllSteps: (steps: StepsModel) => void;
+  getStepsByCategory: (category: SelectedCategory) => StepModel[]|undefined;
+  getCurrentSteps: () => StepModel[]|undefined;
   setCurrentStep: (step:number|null) => void;
   getCurrentStepId: () => number|null;
   setNextStep: () => boolean;

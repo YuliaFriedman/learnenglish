@@ -2,37 +2,27 @@ import Tts from 'react-native-tts';
 import { Languages } from "../app-data/language";
 import { Alert } from 'react-native';
 import { Logger } from "../logger/Logger";
+import { IAudioManager, SoundInfoToPlay, TtsCompletePromiseType } from "./IAudioManager.ts";
 
-type TtsCompletePromiseType = {
-  resolve: ((value: unknown) => void) | null;
-  reject: ((reason?: any) => void) | null;
-};
+export class AudioManager implements IAudioManager {
 
-export interface SoundInfoToPlay{
-  soundKey: string | undefined;
-  text:string;
-  language: string;
-}
+  logSource = "AudioManager";
 
-export const AudioManager = {
+  playWithTts = [Languages.EN];
 
-  logSource: "AudioManager",
-
-  playWithTts: [Languages.EN],
-
-  ttsCompletePromise: {resolve: null, reject: null} as TtsCompletePromiseType,
-  playList: undefined as SoundInfoToPlay[] | undefined,
-  currentPlayIndex: -1,
+  ttsCompletePromise = {resolve: null, reject: null} as TtsCompletePromiseType;
+  playList = undefined as SoundInfoToPlay[] | undefined;
+  currentPlayIndex = -1;
 
   init(){
     Tts.removeAllListeners('tts-finish');
     Tts.setDefaultRate(0.2);
-    Tts.addEventListener('tts-finish', () => AudioManager.ttsFinished());
+    Tts.addEventListener('tts-finish', () => this.ttsFinished());
     // Example usage
     //this.checkLanguageSupport('he-IL'); // Attempt to check Hebrew support
 
 
-  },
+  }
 
   /*checkLanguageSupport(languageCode){
     Tts.setDefaultLanguage(languageCode)
@@ -55,33 +45,33 @@ export const AudioManager = {
 
   ttsFinished(){
     // has more to play
-    Logger.log(AudioManager.logSource, "ttsFinished");
-    if(AudioManager.hasMoreSoundsToPlay()){
-      AudioManager.playNextSound();
+    Logger.log(this.logSource, "ttsFinished");
+    if(this.hasMoreSoundsToPlay()){
+      this.playNextSound();
     }
     else{
-      if(AudioManager.ttsCompletePromise && AudioManager.ttsCompletePromise.resolve){
-        AudioManager.ttsCompletePromise.resolve(null);
+      if(this.ttsCompletePromise && this.ttsCompletePromise.resolve){
+        this.ttsCompletePromise.resolve();
       }
-      AudioManager.resetData();
+      this.resetData();
     }
 
-  },
+  }
 
   resetData(){
-    AudioManager.ttsCompletePromise.resolve = null;
-    AudioManager.ttsCompletePromise.reject = null;
-    AudioManager.currentPlayIndex = -1;
-    AudioManager.playList = undefined;
+    this.ttsCompletePromise.resolve = null;
+    this.ttsCompletePromise.reject = null;
+    this.currentPlayIndex = -1;
+    this.playList = undefined;
 
-  },
+  }
 
-  playSound: (soundInfo: SoundInfoToPlay, savePromise:boolean = true) => {
-    return new Promise((resolve, reject) => {
-      if(AudioManager.playWithTts.indexOf(soundInfo.language) >= 0){
-        if(savePromise) {
-          AudioManager.ttsCompletePromise.reject = reject;
-          AudioManager.ttsCompletePromise.resolve = resolve;
+  playSound(soundInfo: SoundInfoToPlay, savePromise?:boolean):Promise<void>{
+    return new Promise<void>((resolve, reject) => {
+      if(this.playWithTts.indexOf(soundInfo.language) >= 0){
+        if(savePromise === undefined || savePromise) {
+          this.ttsCompletePromise.reject = reject;
+          this.ttsCompletePromise.resolve = resolve;
         }
         Tts.speak(soundInfo.text);
       }
@@ -89,25 +79,25 @@ export const AudioManager = {
 
       }
     });
-  },
+  }
 
-  PlaySoundGroup: (soundInfo: SoundInfoToPlay[]) => {
+  PlaySoundGroup(soundInfo: SoundInfoToPlay[]){
     if(soundInfo && soundInfo.length > 0){
-      AudioManager.playList = soundInfo;
-      return AudioManager.playNextSound();
+      this.playList = soundInfo;
+      return this.playNextSound();
     }
     else{
       return Promise.resolve();
     }
-  },
+  }
 
   playNextSound(){
-    Logger.log(AudioManager.logSource, "playNextSound");
-    if(AudioManager.hasMoreSoundsToPlay()) {
-      AudioManager.currentPlayIndex++;
-      const nextSound = AudioManager.playList ? AudioManager.playList[AudioManager.currentPlayIndex]:undefined;
+    Logger.log(this.logSource, "playNextSound");
+    if(this.hasMoreSoundsToPlay()) {
+      this.currentPlayIndex++;
+      const nextSound = this.playList ? this.playList[this.currentPlayIndex]:undefined;
       if(nextSound) {
-        return AudioManager.playSound(nextSound, AudioManager.currentPlayIndex === 0);
+        return this.playSound(nextSound, this.currentPlayIndex === 0);
       }
       else{
         return Promise.resolve();
@@ -116,9 +106,9 @@ export const AudioManager = {
     else{
       return Promise.resolve();
     }
-  },
+  }
 
   hasMoreSoundsToPlay(){
-    return AudioManager.playList && AudioManager.currentPlayIndex < AudioManager.playList.length - 1;
+    return this.playList && this.currentPlayIndex < this.playList.length - 1;
   }
 }

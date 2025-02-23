@@ -1,14 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { StepModel } from "../../models/StepModel";
 import { Logger } from "../../../../logger/Logger";
+import { StepsModel } from "../../models/AppDataModel.ts";
 
 const logSource = "StepsReducer";
 
-export type SingleLanguageSteps = Record<string, StepModel[]>;
-
 export interface StepsState {
   currentStep: number | null;
-  allSteps: Record<string, SingleLanguageSteps>;
+  allSteps: StepsModel;
 }
 
 const initialState:StepsState = {
@@ -16,6 +15,7 @@ const initialState:StepsState = {
   allSteps: {}
 }
 
+// @ts-ignore
 export const categoriesSlice = createSlice<StepsState>({
   name: "steps",
   initialState,

@@ -1,9 +1,9 @@
-import { Category, CategoryStyle } from "../models/CategoryModel";
+import { Category, CategoryStyle, CategoryType } from "../models/CategoryModel";
 import { ThemeManager } from "../../style/ThemeManager.ts";
 
 export const categories: Category[] = [
   {
-    id: "colors",
+    type: CategoryType.Colors,
     title: "Colors",
     icon: "ball",
     progress: 0,
@@ -11,7 +11,7 @@ export const categories: Category[] = [
     style: createStyle(ThemeManager.theme.categoryCard.card1)
   },
   {
-    id: "animals",
+    type: CategoryType.Animals,
     title: "Animals",
     icon: "ball",
     progress: 0,
@@ -19,7 +19,7 @@ export const categories: Category[] = [
     style: createStyle(ThemeManager.theme.categoryCard.card2)
   },
   {
-    id: "vehicle",
+    type: CategoryType.Vehicle,
     title: "Vehicle",
     icon: "ball",
     progress: 0,
@@ -27,7 +27,7 @@ export const categories: Category[] = [
     style: createStyle(ThemeManager.theme.categoryCard.card3)
   },
   {
-    id: "body",
+    type: CategoryType.Body,
     title: "body",
     icon: "ball",
     progress: 0,

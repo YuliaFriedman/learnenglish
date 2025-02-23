@@ -1,8 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Category } from "../../models/CategoryModel";
+import { Category, CategoryType } from "../../models/CategoryModel";
+
+export type SelectedCategory = CategoryType|null;
 
 export interface CategoriesState {
-  selectedCategory: string | null;
+  selectedCategory: SelectedCategory;
   categoriesList: Category[];
 }
 
@@ -11,6 +13,7 @@ const initialState:CategoriesState = {
   selectedCategory: null
 }
 
+// @ts-ignore
 export const categoriesSlice = createSlice<CategoriesState>({
   name: "categories",
   initialState,
