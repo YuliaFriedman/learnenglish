@@ -1,6 +1,6 @@
 import { ThemeManager } from "../../../style/ThemeManager.ts";
 import { StyleSheet } from "react-native";
-import { fromPercentToPixels, scaleFontSize } from "../../../../style/dimentions.ts";
+import { fromPercentToPixelsWidth, scaleFontSize } from "../../../../style/dimentions.ts";
 
 export const CategoryCardStyling = StyleSheet.create({
   CategoryCell: {
@@ -12,8 +12,8 @@ export const CategoryCardStyling = StyleSheet.create({
 
   image: {
 
-    height: fromPercentToPixels(20),
-    width: fromPercentToPixels(20),
+    height: fromPercentToPixelsWidth(20),
+    width: fromPercentToPixelsWidth(20),
     margin: "5%",
   },
 

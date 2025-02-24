@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { fromPercentToPixels } from "../../style/dimentions";
+import { fromPercentToPixelsWidth } from "../../style/dimentions";
 
 export const SaySentenceActivityComponentStyling = StyleSheet.create({
   host: {
@@ -11,6 +11,6 @@ export const SaySentenceActivityComponentStyling = StyleSheet.create({
     alignSelf: "center",
     display: "flex",
     flexDirection: "row",
-    margin: fromPercentToPixels(5),
+    margin: fromPercentToPixelsWidth(5),
   }
 });

@@ -19,6 +19,9 @@ import { WordsAppPages } from "../../navigation/WordsAppPages";
 import { IAppProducer } from "../../app-data/store/IAppProducer.ts";
 import InjectionManager from "../../../core/services/InjectionManager.ts";
 import { DepInjectionsTokens } from "../../dependency-injection/DepInjectionTokens.ts";
+import { StepProgressIcon } from "./StepProgressIcon.component.tsx";
+import { CategoriesStepComponent } from "./CategoriesStep.component.tsx";
+import { CategoriesExamStepComponent } from "./CategoriesExamStep.component.tsx";
 
 function CategoriesStepsComponent(): React.JSX.Element {
 
@@ -43,17 +46,6 @@ function CategoriesStepsComponent(): React.JSX.Element {
       setSteps(appProducer.current?.getCurrentSteps() || []);
     }
   }, [currentCategory]);
-
-  function getStarIcon(status:StepStatus) {
-    switch (status) {
-      case StepStatus.Idle:
-        return <Icon name="star-o" size={30} color="black"/>
-      case StepStatus.Skipped:
-        return <Icon name="star-half-empty" size={30} color="black"/>
-      case StepStatus.Completed:
-        return <Icon name="star" size={30} color="black"/>
-    }
-  }
 
   function createStepsGroups():StepModel[][]{
     Logger.log(logSource,"in createStepsGroups: category = " + currentCategory?.title + ", steps count = " + steps.length);
@@ -81,16 +73,12 @@ function CategoriesStepsComponent(): React.JSX.Element {
 
   function buildGroup(group: StepModel[]){
     return group.map((step,index) => {
-      return <Pressable style={CategoriesStepsStyling.step} key={step.id} onPress={() => navigateToStep(step)}>
-        <Text style={CategoriesStepsStyling.stepText}>{step.displayName}</Text>
-        <View style={CategoriesStepsStyling.starIcon}>
-          <Icon name="star" size={30} color="white"/>
-        </View>
-        <View style={CategoriesStepsStyling.starIcon}>
-          {getStarIcon(step.status)}
-        </View>
-      </Pressable>
-    })
+      return <CategoriesStepComponent
+        key={'step_' + index}
+        step={step}
+        onPress={() => navigateToStep(step)}
+        stepStyling={currentCategory?.style}></CategoriesStepComponent>
+    });
   }
 
   function buildExam(group: StepModel[]) {
@@ -98,9 +86,7 @@ function CategoriesStepsComponent(): React.JSX.Element {
       return <></>;
     }
     else{
-      return <Pressable onPress={() => navigateToStep(group[0])}  key={group[0].id}>
-        <Icon name="edit" size={50} color="black"/>
-      </Pressable>
+      return <CategoriesExamStepComponent group={group[0]} onPress={() => navigateToStep(group[0])}></CategoriesExamStepComponent>
     }
   }
 

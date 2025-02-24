@@ -36,6 +36,8 @@ export const Colors = {
 
   gray1: "#dddddd",
   gray2: "#888888",
-  gray3: "#555555"
+  gray3: "#555555",
+
+  transparent: "transparent"
 
 }

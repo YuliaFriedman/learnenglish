@@ -1,6 +1,6 @@
 import { getTheme } from "../../../style/Theme";
 import { StyleSheet,Dimensions } from "react-native";
-import { fromPercentToPixels } from "../../../style/dimentions";
+import { fromPercentToPixelsWidth } from "../../../style/dimentions";
 import NamedStyles = StyleSheet.NamedStyles;
 
 const theme = getTheme();
@@ -26,18 +26,18 @@ export const getSentenceBlockComponentStyle = (type: SentenceBlockComponentStyle
     {
       host: {
         borderStyle: "solid",
-        padding: fromPercentToPixels(4),
+        padding: fromPercentToPixelsWidth(4),
         ...(type === SentenceBlockComponentStyleType.Clean ? cleanStyle.host : {})
       },
       container: {
         backgroundColor: theme.sentenceBlock.background,
         borderWidth: 1,
         borderColor: theme.sentenceBlock.borderColor,
-        borderRadius: fromPercentToPixels(2),
+        borderRadius: fromPercentToPixelsWidth(2),
         display: "flex",
         flexDirection: "row",
-        padding: fromPercentToPixels(4),
-        margin: fromPercentToPixels(4),
+        padding: fromPercentToPixelsWidth(4),
+        margin: fromPercentToPixelsWidth(4),
         ...(type === SentenceBlockComponentStyleType.Clean ? cleanStyle.container : {})
       },
       rtlContainer: {

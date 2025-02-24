@@ -1,10 +1,10 @@
 import { StyleSheet } from "react-native";
-import { fromPercentToPixels } from "../../style/dimentions";
+import { fromPercentToPixelsWidth } from "../../style/dimentions";
 
 export const StoryActivityComponentStyling = StyleSheet.create({
   host: {
-    margin: fromPercentToPixels(4),
+    margin: fromPercentToPixelsWidth(4),
     display: "flex",
-    gap: fromPercentToPixels(4)
+    gap: fromPercentToPixelsWidth(4)
   }
 });

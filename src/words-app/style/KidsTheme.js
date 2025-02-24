@@ -59,7 +59,13 @@ export const KidsTheme = {
       end: {x: 1, y: 0.5},
       overlayColor: Colors.white,
       borderColor: Colors.gray3
-    }
+    },
+  },
+  examTileStyling: {
+    bgColors: [Colors.purple0, Colors.green2, Colors.blue3],
+    bgLocations: [0, 0.5, 1],
+    borderColor: Colors.green3,
+    overlayColor: Colors.transparent
   }
 }
 

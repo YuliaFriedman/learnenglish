@@ -1,21 +1,21 @@
 import { StyleSheet } from "react-native";
-import { fromPercentToPixels, scaleFontSize } from "../../../style/dimentions";
+import { fromPercentToPixelsWidth, scaleFontSize } from "../../../style/dimentions";
 
 export const AllCategoriesStyling = StyleSheet.create({
   host: {
     display: "flex",
     flexWrap: "wrap",
     flexDirection: "row",
-    margin: fromPercentToPixels(5),
+    margin: fromPercentToPixelsWidth(5),
     gap: 20,
     justifyContent: "center"
   },
 
   category: {
-    width: fromPercentToPixels(40),
+    width: fromPercentToPixelsWidth(40),
     alignItems: "center",
     backgroundColor: "blue",
-    borderRadius: fromPercentToPixels(5),
+    borderRadius: fromPercentToPixelsWidth(5),
     display: "flex",
     flexDirection: "column"
   },
@@ -25,7 +25,7 @@ export const AllCategoriesStyling = StyleSheet.create({
 
 
   text: {
-    marginBottom: fromPercentToPixels(5),
+    marginBottom: fromPercentToPixelsWidth(5),
     fontSize: scaleFontSize(20),
     color: "white"
   },
@@ -33,8 +33,8 @@ export const AllCategoriesStyling = StyleSheet.create({
   testContainer: {
     display: "flex",
     flexDirection: "row",
-    margin: fromPercentToPixels(5),
-    width: fromPercentToPixels(100) - fromPercentToPixels(10),
+    margin: fromPercentToPixelsWidth(5),
+    width: fromPercentToPixelsWidth(100) - fromPercentToPixelsWidth(10),
     flexWrap: "wrap"
   },
   column: {

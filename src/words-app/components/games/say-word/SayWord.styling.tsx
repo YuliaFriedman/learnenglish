@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { fromPercentToPixels } from "../../../../style/dimentions";
+import { fromPercentToPixelsWidth } from "../../../../style/dimentions";
 
 export const SayWordStyling = StyleSheet.create({
 

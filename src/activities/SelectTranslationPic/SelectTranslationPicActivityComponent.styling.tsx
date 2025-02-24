@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import { getTheme } from "../../style/Theme";
-import { fromPercentToPixels } from "../../style/dimentions";
+import { fromPercentToPixelsWidth } from "../../style/dimentions";
 
 const theme = getTheme();
 
@@ -9,13 +9,13 @@ export const SelectTranslationPicActivityComponentStyling = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     height: "100%",
-    padding: fromPercentToPixels(5),
+    padding: fromPercentToPixelsWidth(5),
   },
   question:{
     alignSelf: "center",
     display: "flex",
     flexDirection: "row",
-    margin: fromPercentToPixels(5),
+    margin: fromPercentToPixelsWidth(5),
   },
   answerRow: {
     flex: 1,
@@ -26,6 +26,6 @@ export const SelectTranslationPicActivityComponentStyling = StyleSheet.create({
     flex: 1,
     alignSelf: "center",
     display: "flex",
-    padding: fromPercentToPixels(5),
+    padding: fromPercentToPixelsWidth(5),
   }
 });

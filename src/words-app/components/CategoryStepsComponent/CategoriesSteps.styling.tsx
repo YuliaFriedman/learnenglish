@@ -25,10 +25,10 @@ export const CategoriesStepsStyling = StyleSheet.create({
     textAlign: "center"
   },
 
-  starIcon: {
+  progressIcon: {
     position: "absolute",
     top: -15,
-    left: -15,
-  }
+    left: -15
+  },
 
 })

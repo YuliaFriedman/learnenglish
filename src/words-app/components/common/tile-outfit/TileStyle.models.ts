@@ -1,13 +1,17 @@
-import { ReactElement } from "react";
 
 export interface TileStyle {
   colors?: string[];
   locations?: number[];
   borderColor?: string;
-  overlayColor?: string;
+  overlay: {
+    color: string|undefined;
+    pos: {
+      bottom: number;
+      right: number;
+    }
+  }
 }
 
 export interface TileOutfitProps{
-  children: ReactElement;
   tileStyle: TileStyle;
 }

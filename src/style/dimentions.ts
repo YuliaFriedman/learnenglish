@@ -11,6 +11,6 @@ export const scaleFontSize = (size) => {
   return Math.round((size * width) / baseWidth);
 };
 
-export const fromPercentToPixels = (percent) => {
+export const fromPercentToPixelsWidth = (percent:number) => {
   return (width/100)*percent;
 }
