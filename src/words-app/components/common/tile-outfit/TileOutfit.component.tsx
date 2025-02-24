@@ -8,7 +8,7 @@ import { Colors } from "../../../../style/Colors";
 import { StyleSheet, View } from "react-native";
 import { ThemeManager } from "../../../style/ThemeManager.ts";
 
-export function TileOutfitComponent({ borderColor,colors, locations, overlay }: TileStyle){
+export function TileOutfitComponent({ borderColor,colors, locations, overlay, start, end }: TileStyle){
   const style = tileOutfitStyle(borderColor);
   console.log("colors: " + colors + ",color length: " + colors?.length);
   console.log("positions: " + locations + ",locations length: " + locations?.length);
@@ -19,17 +19,20 @@ export function TileOutfitComponent({ borderColor,colors, locations, overlay }: 
 
         colors={colors || ThemeManager.theme.categoryCard.defaultTileStyle.bgColors}
         locations={locations || ThemeManager.theme.categoryCard.defaultTileStyle.bgLocations}
-        start={ThemeManager.theme.categoryCard.defaultTileStyle.start}
-        end={ThemeManager.theme.categoryCard.defaultTileStyle.end}
+        start={start || ThemeManager.theme.categoryCard.defaultTileStyle.start}
+        end={end || ThemeManager.theme.categoryCard.defaultTileStyle.end}
       >
-        <View style={style.contentWrapper}>
+        { overlay ?
+          <View style={style.contentWrapper}>
             <DecorOverlayArcComponent
               styling={{
                 color: overlay.color,
                 bottomPos: overlay.pos.bottom,
                 rightPos: overlay.pos.right
               }} />
-        </View></LinearGradient>
+          </View> : <></>
+        }
+        </LinearGradient>
     </View>
   )
 }

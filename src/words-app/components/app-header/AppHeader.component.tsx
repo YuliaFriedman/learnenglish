@@ -15,6 +15,7 @@ import { WordsAppPages } from "../../navigation/WordsAppPages";
 import { Logger } from "../../../logger/Logger";
 import LinearGradient from "react-native-linear-gradient";
 import { ThemeManager } from "../../style/ThemeManager.ts";
+import { IconButton } from "../../../core/components/icon-button/IconButton.tsx";
 
 
 function AppHeaderComponent(model : AppHeaderModel): React.JSX.Element {
@@ -36,7 +37,9 @@ function AppHeaderComponent(model : AppHeaderModel): React.JSX.Element {
         end={ThemeManager.theme.header.bg.end}
       >
         <View style={AppHeaderStyling.host}>
-          <View style={AppHeaderStyling.leftPart}><Pressable onPress={navigateHome} style={AppHeaderStyling.homeButton}><Text>Home</Text></Pressable></View>
+          <View style={AppHeaderStyling.leftPart}>
+            <IconButton style={AppHeaderStyling.homeButton} onPress={navigateHome} icon="home" size={30}></IconButton>
+          </View>
           <Text style={AppHeaderStyling.title}>{model.title}</Text>
           <View style={AppHeaderStyling.rightPart}></View>
         </View>

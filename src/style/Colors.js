@@ -2,6 +2,7 @@ export const Colors = {
 
   white: '#ffffff',
 
+  blueTransparent: 'rgba(156,228,238,0.18)',
   blue1: '#8dcbfb',
   blue2: '#7aafe3',
   blue3: '#0081f1',
@@ -30,14 +31,15 @@ export const Colors = {
 
   red1: "#e37a7a",
 
+  orangeTransparent: "rgba(238,205,156,0.18)",
   orange1: '#ecbe8d',
   orange2: '#e89c2f',
   orange3: '#d1830c',
 
+  gray0: "#eeeeee",
   gray1: "#dddddd",
   gray2: "#888888",
   gray3: "#555555",
 
-  transparent: "transparent"
-
+  transparent: "transparent",
 }

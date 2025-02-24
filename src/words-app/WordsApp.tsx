@@ -18,6 +18,9 @@ import { IAppProducer } from "./app-data/store/IAppProducer.ts";
 import { DepInjectionsTokens } from "./dependency-injection/DepInjectionTokens.ts";
 import { IAudioManager } from "../sound/IAudioManager.ts";
 import { IAppDataInitializer } from "./app-data/store/IAppDataInitializer.ts";
+import { ThemeManager } from "./style/ThemeManager.ts";
+import { TileOutfitComponent } from "./components/common/tile-outfit/TileOutfit.component.tsx";
+import LinearGradient from "react-native-linear-gradient";
 
 export function WordsApp(){
 
@@ -111,6 +114,13 @@ export function WordsApp(){
               <AppHeaderComponent title={title}></AppHeaderComponent>
             </View>
             <View style={WordsAppStyling.content}>
+              <LinearGradient
+                style={WordsAppStyling.contentBG}
+                colors={ThemeManager.theme.content.bgColors}
+                locations={ThemeManager.theme.content.bgLocations}
+                start={ThemeManager.theme.content.start}
+                end={ThemeManager.theme.content.end}
+              ></LinearGradient>
               {page}
             </View>
           </View>

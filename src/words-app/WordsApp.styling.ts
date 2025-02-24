@@ -6,6 +6,7 @@ export const WordsAppStyling = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     height: "100%",
+    position: "relative"
   },
 
   header:{
@@ -13,7 +14,14 @@ export const WordsAppStyling = StyleSheet.create({
   },
 
   content:{
+    position: "relative",
     backgroundColor: ThemeManager.theme.content.bg,
     flex: 1
+  },
+
+  contentBG: {
+    position: "absolute",
+    height: "100%",
+    width: "100%",
   }
 });

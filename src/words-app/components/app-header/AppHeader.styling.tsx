@@ -18,7 +18,7 @@ export const AppHeaderStyling = StyleSheet.create({
   innerWrapper: {
     borderBottomColor: Colors.orange1,
     borderBottomWidth: 1,
-    paddingVertical: 15,
+    paddingVertical: 10,
   },
 
   host: {
@@ -43,7 +43,6 @@ export const AppHeaderStyling = StyleSheet.create({
   },
 
   homeButton: {
-    backgroundColor: "green",
     alignSelf: "flex-start"
   }
 })

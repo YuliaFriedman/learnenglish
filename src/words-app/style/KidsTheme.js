@@ -14,7 +14,27 @@ export const KidsTheme = {
     shadowColor: Colors.orange3,
   },
   content: {
-    bg: Colors.white
+    bg: Colors.white,
+    bgColors: [
+      Colors.blueTransparent, Colors.gray0,
+      Colors.blueTransparent, Colors.gray0,
+      Colors.blueTransparent, Colors.gray0,
+      Colors.blueTransparent, Colors.gray0,
+      Colors.blueTransparent, Colors.gray0,
+      Colors.blueTransparent, Colors.gray0
+    ],
+    bgLocations: [
+      0, 0.09,
+      0.1, 0.19,
+      0.2, 0.29,
+      0.3, 0.39,
+      0.4, 0.49,
+      0.5, 0.1
+    ],
+    borderColor: Colors.green3,
+    overlayColor: Colors.transparent,
+    start: {x: 0, y: 1},
+    end: {x: 1, y: 0},
   },
   categoryCard:{
     outerBg: Colors.orange2,
