@@ -74,7 +74,8 @@ export class AppProducer implements IAppProducer{
     const currentStepId = this.getCurrentStepId();
     const steps = this.getCurrentSteps();
     const currentStepIndex = steps?.findIndex(step => step.id === currentStepId);
-    if(steps && currentStepIndex && currentStepIndex >= 0) {
+
+    if(steps && currentStepIndex != undefined && currentStepIndex >= 0) {
       // if last
       if (currentStepIndex === steps.length - 1) {
         Logger.log(this.logSource, "IN setNextStep: this is last step " + currentStepIndex);

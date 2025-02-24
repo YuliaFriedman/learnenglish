@@ -22,6 +22,7 @@ import InjectionManager from "../../../../core/services/InjectionManager.ts";
 import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
 import { Languages } from "../../../../app-data/language.ts";
 import { IAudioManager } from "../../../../sound/IAudioManager.ts";
+import { IconButton } from "../../../../core/components/icon-button/IconButton.tsx";
 
 function SayWordComponent(args: {model: SayWordModel}): React.JSX.Element {
 
@@ -93,6 +94,7 @@ function SayWordComponent(args: {model: SayWordModel}): React.JSX.Element {
   }
 
   function micPressed(){
+    Logger.log(logSource, "mic pressed");
     stopAnimation();
     SpeechToTextManager.start();
   }
@@ -107,11 +109,12 @@ function SayWordComponent(args: {model: SayWordModel}): React.JSX.Element {
 
   function speechResultsHandler(results:SpeechResults){
     let hasWordInResults = word?.word && results && results.values && results.values.indexOf(word.word) >= 0;
-    Logger.log(logSource, "has word in results: " + hasWordInResults, false, results);
+    Logger.log(logSource, "has word in results: " + hasWordInResults + ", word = " + word?.word, false, results);
     if(hasWordInResults){
       setCanContinue(true);
     }
     else{
+      setCanContinue(false);
       setAttempts(attempts => attempts + 1);
     }
   }
@@ -150,7 +153,7 @@ function SayWordComponent(args: {model: SayWordModel}): React.JSX.Element {
       <View style={SayWordStyling.spaceView}></View>
       <View style={SayWordStyling.wordContainer}>{word ? <WordCardComponent model={word} ></WordCardComponent> : <></>}</View>
       <Animated.View style={[SayWordStyling.micContainer, { transform: [{ scale: scaleValue }] }]}>
-        <Pressable  onPress={micPressed} disabled={isListening}><Icon  name="microphone" size={30} color="white"/></Pressable>
+        <IconButton icon="microphone" size={30} onPress={micPressed} disabled={isListening} iconColor="white"></IconButton>
       </Animated.View>
       <View style={SayWordStyling.nextContainer}><PrimaryButtonComponent onPress={nextButtonPressed} disabled={!canContinue}>Next</PrimaryButtonComponent></View>
     </View>

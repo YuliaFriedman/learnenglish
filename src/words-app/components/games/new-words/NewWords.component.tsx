@@ -30,10 +30,11 @@ function NewWordsComponent(args: {model: NewWordsModel}): React.JSX.Element {
   );
   let selectedLanguage = useRef<Languages>(Languages.EN);
 
-  const appProducer = useRef<IAppProducer | null>(null);
+  const appProducer = useRef<IAppProducer>(
+    InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN)
+  );
 
   useEffect(() => {
-    initInjections();
     selectedLanguage.current = appProducer.current?.getSelectedLanguage() || Languages.EN;
     setNextWordToSpeak(0);
   },[]);
@@ -42,12 +43,6 @@ function NewWordsComponent(args: {model: NewWordsModel}): React.JSX.Element {
     let newWords = args.model.words.map((word,i) => createWordModel(word, false));
     setWords(newWords);
   }, [buttonDisabled]);
-
-  function initInjections(){
-    if(!appProducer.current){
-      appProducer.current = InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN);
-    }
-  }
 
   function setNextWordToSpeak(index: number) {
     Logger.log(logSource, "In setNextWordToSpeak: index = " + index);

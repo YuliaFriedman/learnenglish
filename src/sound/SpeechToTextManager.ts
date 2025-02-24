@@ -50,6 +50,7 @@ export const SpeechToTextManager = {
   },
 
   start: () => {
+    console.log("starting void to text");
     Voice.start('en-US').then(
       () => {
         console.log("voice started successfully");
