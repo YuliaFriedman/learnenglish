@@ -14,8 +14,5 @@ export interface SoundInfoToPlay{
 }
 
 export interface IAudioManager {
-
-  init: () => void;
   playSound: (soundInfo: SoundInfoToPlay, savePromise?:boolean) => Promise<void>;
-
 }

@@ -14,7 +14,7 @@ export class AudioManager implements IAudioManager {
   playList = undefined as SoundInfoToPlay[] | undefined;
   currentPlayIndex = -1;
 
-  init(){
+  constructor(){
     Tts.removeAllListeners('tts-finish');
     Tts.setDefaultRate(0.2);
     Tts.addEventListener('tts-finish', () => this.ttsFinished());
@@ -66,10 +66,10 @@ export class AudioManager implements IAudioManager {
 
   }
 
-  playSound(soundInfo: SoundInfoToPlay, savePromise?:boolean):Promise<void>{
+  playSound(soundInfo: SoundInfoToPlay, savePromise:boolean = true):Promise<void>{
     return new Promise<void>((resolve, reject) => {
       if(this.playWithTts.indexOf(soundInfo.language) >= 0){
-        if(savePromise === undefined || savePromise) {
+        if(savePromise) {
           this.ttsCompletePromise.reject = reject;
           this.ttsCompletePromise.resolve = resolve;
         }

@@ -21,7 +21,6 @@ export function CategoriesStepComponent({step, onPress, stepStyling}: Categories
 
   useEffect(() => {
     initInjections();
-    console.log("selected category: " + selectedCategory.current);
   }, []);
 
   function initInjections(){

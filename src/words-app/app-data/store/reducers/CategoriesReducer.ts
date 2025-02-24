@@ -22,7 +22,6 @@ export const categoriesSlice = createSlice<CategoriesState>({
       state.selectedCategory = payload;
     },
     setCategoriesList: (state: CategoriesState, {payload}) => {
-      console.log("@@@ In setCategoriesList",payload);
       state.categoriesList = payload;
     }
   }

@@ -39,7 +39,7 @@ export function WordsApp(){
     initInjections();
     initData();
     navigationInitializer.init();
-    audioManager.current?.init();
+    //audioManager.current?.init();
     const handleNavigation = (page:PageInfo) =>{
       setVisiblePage(page);
       Logger.log(logSource, "NAVIGATIONN CHANGED: in page " + page.key);

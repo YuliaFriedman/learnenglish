@@ -12,7 +12,6 @@ interface CategoriesExamStepProps {
 }
 
 export function CategoriesExamStepComponent({group, onPress}: CategoriesExamStepProps){
-  console.log("theme: " + JSON.stringify(ThemeManager.theme.examTileStyling));
 
   return(
     <Pressable onPress={() => onPress(group)} style={examTileStyling.host}>

@@ -10,8 +10,7 @@ import { ThemeManager } from "../../../style/ThemeManager.ts";
 
 export function TileOutfitComponent({ borderColor,colors, locations, overlay, start, end }: TileStyle){
   const style = tileOutfitStyle(borderColor);
-  console.log("colors: " + colors + ",color length: " + colors?.length);
-  console.log("positions: " + locations + ",locations length: " + locations?.length);
+
   return (
     <View style={style.host}>
       <LinearGradient

@@ -14,7 +14,7 @@ class InjectionManager{
 
   addInjection<T>(token: string, injectable: new (...args: any[]) => T){
     if(!this._container.isBound(token)) {
-      this._container.bind<T>(token).to(injectable);
+      this._container.bind<T>(token).to(injectable).inSingletonScope();
     }
   }
 
