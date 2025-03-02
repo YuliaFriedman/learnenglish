@@ -1,4 +1,4 @@
-import { KidsTheme } from "./KidsTheme";
+import { KidsTheme } from "./KidsTheme.ts";
 
 class AppThemeManager{
 

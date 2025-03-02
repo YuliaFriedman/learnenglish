@@ -2,24 +2,20 @@ import {
   DecorOverlayArcComponent
 } from "../../../../core/components/decor-overlay-arc/DecorOverlayArcComponent.tsx";
 import React, { ReactElement } from "react";
-import LinearGradient from "react-native-linear-gradient";
-import { TileOutfitProps, TileStyle } from "./TileStyle.models.ts";
+import { TileStyle } from "./TileStyle.models.ts";
 import { Colors } from "../../../../style/Colors";
 import { StyleSheet, View } from "react-native";
 import { ThemeManager } from "../../../style/ThemeManager.ts";
+import { GradientLayout } from "../../../../core/components/gradient-layout/GradientLayout.tsx";
 
-export function TileOutfitComponent({ borderColor,colors, locations, overlay, start, end }: TileStyle){
+export function TileOutfitComponent({ borderColor,colors, locations, overlay, start, end, additionalStyle }: TileStyle){
   const style = tileOutfitStyle(borderColor);
 
   return (
-    <View style={style.host}>
-      <LinearGradient
+    <View style={[style.host, additionalStyle]}>
+      <GradientLayout
         style={style.innerWrapper}
-
-        colors={colors || ThemeManager.theme.categoryCard.defaultTileStyle.bgColors}
-        locations={locations || ThemeManager.theme.categoryCard.defaultTileStyle.bgLocations}
-        start={start || ThemeManager.theme.categoryCard.defaultTileStyle.start}
-        end={end || ThemeManager.theme.categoryCard.defaultTileStyle.end}
+        model={Object.assign({}, ThemeManager.theme.categoryCard.defaultTileStyle, { colors, locations, start, end })}
       >
         { overlay ?
           <View style={style.contentWrapper}>
@@ -30,8 +26,7 @@ export function TileOutfitComponent({ borderColor,colors, locations, overlay, st
                 rightPos: overlay.pos.right
               }} />
           </View> : <></>
-        }
-        </LinearGradient>
+        }</GradientLayout>
     </View>
   )
 }
@@ -61,6 +56,7 @@ const tileOutfitStyle = (borderColor?: string) => StyleSheet.create({
     display: "flex",
     height: "100%",
     width: "100%",
+    overflow: "hidden"
   },
 
   contentWrapper: {

@@ -1,36 +1,26 @@
 import { StyleSheet } from "react-native";
+import { ThemeManager } from "../../../style/ThemeManager.ts";
 
-export const WordCardStyling = StyleSheet.create({
+export const WordCardStyling = (cardStyle: any, background: string) => StyleSheet.create({
   host:{
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    padding: "10%",
-    borderRadius: 5,
-    borderColor: "blue",
-    borderWidth: 2,
+    borderRadius: 20,
     flex: 1,
-
-  },
-
-  selectedWordCard: {
-    backgroundColor: "#eeeeff"
-  },
-
-  incorrectWordCard: {
-    backgroundColor: "#ffeeee"
-  },
-
-  correctWordCard: {
-    backgroundColor: "green"
+    backgroundColor: 'white',
+    ...ThemeManager.theme.shadow(cardStyle.shadow)
   },
 
   imageContainer:{
     width: '100%',  // or any desired width
     height: undefined,    // define a height
     overflow: 'hidden',
-    alignItems: "center"
+    alignItems: "center",
+    marginTop: "5%",
+    flex: 1,
+    padding: "15%"
   },
 
   invisibleImg: {
@@ -39,14 +29,18 @@ export const WordCardStyling = StyleSheet.create({
 
   img: {
     width: '100%',
-    height: '100%',
     maxWidth: '100%',
     maxHeight: '100%',
     aspectRatio: 1, // Adjust this value to match your image's aspect ratio
     resizeMode: 'contain',
  },
   text: {
-    marginBottom: "10%",
+    marginBottom: "5%",
     fontSize:20,
-  }
+  },
+
+  innerContainer: {
+    borderRadius: 18,
+    backgroundColor: background
+  },
 })

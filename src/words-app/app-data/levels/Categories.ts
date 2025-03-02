@@ -38,8 +38,8 @@ export const categories: Category[] = [
 
 function createStyle(themeStyle: any):CategoryStyle {
   return {
-    colors: themeStyle.bgColors,
-    locations: themeStyle.bgLocations,
+    colors: themeStyle.colors,
+    locations: themeStyle.locations,
     borderColor: themeStyle.borderColor,
     overlayColor: themeStyle.overlayColor
   }

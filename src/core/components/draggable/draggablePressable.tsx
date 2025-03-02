@@ -67,6 +67,6 @@ export function DraggablePressable({onPress, children}:DraggableProps){
 const styles = StyleSheet.create({
   host: {
     height: "100%",
-    width: "100%",
+    width: "100%"
   }
 });

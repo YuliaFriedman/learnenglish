@@ -21,6 +21,10 @@ import { IAppDataInitializer } from "./app-data/store/IAppDataInitializer.ts";
 import { ThemeManager } from "./style/ThemeManager.ts";
 import { TileOutfitComponent } from "./components/common/tile-outfit/TileOutfit.component.tsx";
 import LinearGradient from "react-native-linear-gradient";
+import RadialGradient from "react-native-radial-gradient";
+import { getScreenDimensions } from "../style/dimentions.ts";
+import { DecorOverlayArcComponent } from "../core/components/decor-overlay-arc/DecorOverlayArcComponent.tsx";
+import { GradientLayout } from "../core/components/gradient-layout/GradientLayout.tsx";
 
 export function WordsApp(){
 
@@ -91,11 +95,11 @@ export function WordsApp(){
           newPage = <CategoriesStepsComponent></CategoriesStepsComponent>;
           const selectedCategoryId = appProducer.current?.getSelectedCategory();
           const selectedCategory = selectedCategoryId ? appProducer.current?.getCategory(selectedCategoryId) : null;
-          newTitle = selectedCategory ? selectedCategory.title : "Words App";
+          newTitle = selectedCategory ? "Words App - " + selectedCategory.title : "Words App";
           break;
         case WordsAppPages.game:
           newPage = <GameContainerComponent></GameContainerComponent>
-          newTitle = "Game";
+          newTitle = "Words App - " + "Game";
           break;
       }
     }
@@ -104,7 +108,7 @@ export function WordsApp(){
     setPage(newPage);
   }
 
-
+const screenDimensions = getScreenDimensions();
   return (
     <InversifyProvider container={InjectionManager.container}>
       <Provider store={store}>
@@ -114,13 +118,16 @@ export function WordsApp(){
               <AppHeaderComponent title={title}></AppHeaderComponent>
             </View>
             <View style={WordsAppStyling.content}>
-              <LinearGradient
+              <GradientLayout
                 style={WordsAppStyling.contentBG}
-                colors={ThemeManager.theme.content.bgColors}
-                locations={ThemeManager.theme.content.bgLocations}
-                start={ThemeManager.theme.content.start}
-                end={ThemeManager.theme.content.end}
-              ></LinearGradient>
+                model={ThemeManager.theme.content.bg1}
+              ></GradientLayout>
+
+              <GradientLayout
+                style={WordsAppStyling.contentBG}
+                model={ ThemeManager.theme.content.bg2}
+              ></GradientLayout>
+
               {page}
             </View>
           </View>

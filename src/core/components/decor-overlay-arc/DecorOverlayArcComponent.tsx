@@ -17,8 +17,6 @@ export interface DecorOverlayArcWrapperProps{
 export function DecorOverlayArcComponent({styling}:DecorOverlayArcWrapperProps){
   const style = DecorOVerlayArcWrapperStyling(styling)
 
-  console.log("DecorOverlayArcWrapperComponent", styling);
-
   return (
     <View style={style.decorOverlayWrapper}>
       <RadialGradient style={style.arc}

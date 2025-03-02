@@ -21,7 +21,7 @@ export const NewWordsStyling = StyleSheet.create({
     flexWrap: "wrap",
     gap: 30,
     justifyContent: "center",
-    margin: "10%"
+     margin: "5%"
   },
 
   wordCard: {

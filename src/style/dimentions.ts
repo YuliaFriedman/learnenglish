@@ -14,3 +14,7 @@ export const scaleFontSize = (size: number) => {
 export const fromPercentToPixelsWidth = (percent:number) => {
   return (width/100)*percent;
 }
+
+export const getScreenDimensions = () => {
+  return {width, height};
+}

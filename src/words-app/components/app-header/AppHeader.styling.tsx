@@ -10,13 +10,13 @@ export const AppHeaderStyling = StyleSheet.create({
     shadowColor: ThemeManager.theme.header.shadowColor,
     shadowOffset: { width: 0, height: 4 },
     shadowRadius: 6,
-    shadowOpacity: 0.5,
+    shadowOpacity: 1,
     elevation: 10,
     overflow: "hidden"
   },
 
   innerWrapper: {
-    borderBottomColor: Colors.orange1,
+    borderBottomColor: ThemeManager.theme.header.innerBorder,
     borderBottomWidth: 1,
     paddingVertical: 10,
   },

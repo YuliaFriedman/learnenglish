@@ -1,5 +1,7 @@
+import { StyleProp, ViewStyle } from "react-native";
 
 export interface TileStyle {
+  additionalStyle?: StyleProp<ViewStyle>;
   colors?: string[];
   locations?: number[];
   borderColor?: string;

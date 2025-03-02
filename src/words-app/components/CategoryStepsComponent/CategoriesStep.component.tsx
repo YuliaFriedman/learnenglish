@@ -46,10 +46,11 @@ export function CategoriesStepComponent({step, onPress, stepStyling}: Categories
 
 const CategoriesStepStyling = StyleSheet.create({
   step: {
-    width: "20%",
+    width: "22%",
     borderRadius: 5,
     position: "relative",
-    margin: 10
+    margin: 5,
+    marginBottom: 20
   },
 
   contentWrapper: {
@@ -60,7 +61,10 @@ const CategoriesStepStyling = StyleSheet.create({
     textAlign: "center",
     color: "white",
     marginTop: 10,
-    marginBottom: 10
+    marginBottom: 10,
+    fontSize: 15,
+    fontWeight: "bold"
+
   },
 
   progressIcon: {

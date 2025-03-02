@@ -16,6 +16,7 @@ import { Logger } from "../../../logger/Logger";
 import LinearGradient from "react-native-linear-gradient";
 import { ThemeManager } from "../../style/ThemeManager.ts";
 import { IconButton } from "../../../core/components/icon-button/IconButton.tsx";
+import { GradientLayout } from "../../../core/components/gradient-layout/GradientLayout.tsx";
 
 
 function AppHeaderComponent(model : AppHeaderModel): React.JSX.Element {
@@ -29,13 +30,7 @@ function AppHeaderComponent(model : AppHeaderModel): React.JSX.Element {
 
   return (
     <View style={AppHeaderStyling.headerBorder}>
-      <LinearGradient
-        style={AppHeaderStyling.innerWrapper}
-        colors={ThemeManager.theme.header.bg.colors}
-        locations={ThemeManager.theme.header.bg.locations}
-        start={ThemeManager.theme.header.bg.start}
-        end={ThemeManager.theme.header.bg.end}
-      >
+      <GradientLayout model={ThemeManager.theme.header.bg} style={AppHeaderStyling.innerWrapper}>
         <View style={AppHeaderStyling.host}>
           <View style={AppHeaderStyling.leftPart}>
             <IconButton style={AppHeaderStyling.homeButton} onPress={navigateHome} icon="home" size={30}></IconButton>
@@ -43,7 +38,7 @@ function AppHeaderComponent(model : AppHeaderModel): React.JSX.Element {
           <Text style={AppHeaderStyling.title}>{model.title}</Text>
           <View style={AppHeaderStyling.rightPart}></View>
         </View>
-      </LinearGradient>
+      </GradientLayout>
     </View>
   );
 }

@@ -30,7 +30,6 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
   const [translations,setTranslations] = useState<WordCardModel[]>([]);
   const [word, setWord] = useState<WordTextCardModel|undefined>(undefined);
   const appProducer = useRef<IAppProducer | null>(null);
-  Logger.log(logSource, ">>>>>>>>> In MatchTranslationComponent");
 
   useEffect(() => {
     initInjections();
@@ -44,8 +43,8 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
   }
 
   function initData(){
-    let selectedLanguage: string = "";
-    let selectedTranslation: string = "";
+    let selectedLanguage: Languages = Languages.EN;
+    let selectedTranslation: Languages = Languages.EN;
     if(args.model.source){
       selectedLanguage = appProducer.current?.getSelectedLanguage() || Languages.EN;
       selectedTranslation = appProducer.current?.getSelectedTranslation() || Languages.EN;

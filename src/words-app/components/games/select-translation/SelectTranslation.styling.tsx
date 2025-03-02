@@ -5,7 +5,8 @@ export const SelectTranslationStyling = StyleSheet.create({
   host:{
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
+    height: "100%",
   },
 
   cardContainer: {
@@ -14,29 +15,20 @@ export const SelectTranslationStyling = StyleSheet.create({
     flexWrap: "wrap",
     gap: 30,
     justifyContent: "center",
-    margin: "10%"
+    marginLeft: '5%',
+    marginRight: '5%',
+    flex: 1,
+    alignContent: "center",
   },
 
   wordCard: {
     width: "40%",
     height: "37%"
-    //borderRadius: 5,
-   // borderColor: "blue",
-    //borderWidth: 2,
-    //padding: 10,
-    //position: "relative"
-
   },
 
-  /*selectedWordCard: {
-    backgroundColor: "#eeeeff"
-  },*/
-
-  /*incorrectWordCard: {
-    backgroundColor: "#ffeeee"
-  },*/
-
   next: {
+    marginTop: "10%",
+    marginBottom: "10%",
     alignSelf: "center"
   }
 
