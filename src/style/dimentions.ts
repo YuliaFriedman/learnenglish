@@ -15,6 +15,10 @@ export const fromPercentToPixelsWidth = (percent:number) => {
   return (width/100)*percent;
 }
 
+export const fromPercentToPixelsHeight = (percent:number) => {
+  return (height/100)*percent;
+}
+
 export const getScreenDimensions = () => {
   return {width, height};
 }

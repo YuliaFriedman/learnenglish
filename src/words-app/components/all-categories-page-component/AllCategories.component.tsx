@@ -34,7 +34,7 @@ function AllCategoriesComponent(): React.JSX.Element {
 
   useEffect(() => {
     buildCategoriesView();
-  }, appProducer.current?.getCategoriesList());
+  }, [appProducer.current?.getCategoriesList()]);
 
   function initInjections(){
     if(!appProducer.current){

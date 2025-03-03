@@ -36,10 +36,10 @@ export function GradientBorder({model, style, innerStyle, children}: GradientBor
 
 const gradientBorderStyle = StyleSheet.create({
   innerContainer: {
-    flex: 1,
+    //flex: 1,
     margin: 2, // <-- Border Width
-    justifyContent: "center",
-    alignItems: "center",
+    //justifyContent: "center",
+    //alignItems: "center",
     overflow: "hidden"
   },
 });

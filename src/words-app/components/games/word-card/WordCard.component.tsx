@@ -83,28 +83,28 @@ function WordCardComponent({ model, onSpeakStarted, onSpeakCompleted, onPressed 
 
   function getCardBorder(){
     if(model?.answerStatus === AnswerStatus.wrong){
-      return ThemeManager.theme.games.card.borderColorWrong;
+      return ThemeManager.theme.games.selectableCard.borderColorWrong;
     }
     if(model?.answerStatus === AnswerStatus.correct){
-      return ThemeManager.theme.games.card.borderColorCorrect;
+      return ThemeManager.theme.games.selectableCard.borderColorCorrect;
     }
     if(model?.isSelected){
-      return ThemeManager.theme.games.card.borderColorSelected;
+      return ThemeManager.theme.games.selectableCard.borderColorSelected;
     }
-    return ThemeManager.theme.games.card.borderColors;
+    return model.selectable ? ThemeManager.theme.games.selectableCard.borderColors : ThemeManager.theme.games.card.borderColors;
   }
 
   function getCardBackground() {
     if(model?.answerStatus === AnswerStatus.wrong){
-      return ThemeManager.theme.games.card.backgroundColorWrong;
+      return ThemeManager.theme.games.selectableCard.backgroundColorWrong;
     }
     if(model?.answerStatus === AnswerStatus.correct){
-      return ThemeManager.theme.games.card.backgroundColorCorrect;
+      return ThemeManager.theme.games.selectableCard.backgroundColorCorrect;
     }
     if(model?.isSelected){
-      return ThemeManager.theme.games.card.backgroundColorSelected;
+      return ThemeManager.theme.games.selectableCard.backgroundColorSelected;
     }
-    return ThemeManager.theme.games.card.backgroundColor;
+    return model.selectable ?  ThemeManager.theme.games.selectableCard.backgroundColor : ThemeManager.theme.games.card.backgroundColor;
   }
 
   const wordCardStyling = WordCardStyling(ThemeManager.theme.games.card, backgroundColor);

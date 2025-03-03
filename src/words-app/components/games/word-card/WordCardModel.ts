@@ -9,6 +9,7 @@ export class WordCardModel {
   sound: string = "";
   shouldSayTheWord?: boolean = false;
   pressable?: boolean = true;
+  selectable?: boolean = false;
   language: Languages = Languages.EN;
   translation?: Languages;
   isSelected?: boolean = false;

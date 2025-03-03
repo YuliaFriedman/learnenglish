@@ -41,6 +41,9 @@ export const WordCardStyling = (cardStyle: any, background: string) => StyleShee
 
   innerContainer: {
     borderRadius: 18,
-    backgroundColor: background
+    backgroundColor: background,
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 })

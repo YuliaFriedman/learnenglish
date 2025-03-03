@@ -26,7 +26,7 @@ export const NewWordsStyling = StyleSheet.create({
 
   wordCard: {
     width: "40%",
-    height: "35%",
+    height: "40%",
   },
 
 })

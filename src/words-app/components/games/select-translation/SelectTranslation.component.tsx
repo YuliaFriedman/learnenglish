@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useRef, useState } from "react";
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import { SelectTranslationModel } from "./SelectTranslationModel";
 import { Logger } from "../../../../logger/Logger";
 import { SelectTranslationStyling } from "./SelectTranslation.styling";
@@ -22,6 +22,7 @@ import InjectionManager from "../../../../core/services/InjectionManager.ts";
 import { IAppProducer } from "../../../app-data/store/IAppProducer.ts";
 import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
 import { Languages } from "../../../../app-data/language.ts";
+import { SpacingRow } from "../../../../core/components/spacing-row/SpacingRow.tsx";
 
 function SelectTranslationComponent(args: {model: SelectTranslationModel}): React.JSX.Element {
 
@@ -61,6 +62,7 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
         shouldSayTheWord: false,
         pressable: true,
         language: selectedTranslation,
+        selectable: true
       });
     });
     setTranslations(newWords);
@@ -80,7 +82,8 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
         return {
           ...tran,
           answerStatus: AnswerStatus.notChecked,
-          isSelected: i === index
+          isSelected: i === index,
+          selectable: true,
         }
       })
     });
@@ -111,9 +114,10 @@ function isCorrectAnswer(){
 
   return (
     <View style={SelectTranslationStyling.host}>
-      <View>
-        {word ? <WordTextCardComponent model={word}></WordTextCardComponent> : <></>}
+      <View style={SelectTranslationStyling.header}>
+          {word ? <WordTextCardComponent style={SelectTranslationStyling.questionCard} model={word}></WordTextCardComponent> : <></>}
       </View>
+      <SpacingRow flex={1}></SpacingRow>
       <View style={SelectTranslationStyling.cardContainer}>
       {
         translations.map((translation, i) => {

@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useRef, useState } from "react";
-import { Image, Pressable, Text, View } from "react-native";
+import { Image, Pressable, Text, View, ViewStyle } from "react-native";
 import { WordTextCardModel } from "./WordTextCardModel";
 import { Logger } from "../../../../logger/Logger";
 import { WordTextCardStyling } from "./WordTextCard.styling";
@@ -16,16 +16,19 @@ import InjectionManager from "../../../../core/services/InjectionManager.ts";
 import { IAppProducer } from "../../../app-data/store/IAppProducer.ts";
 import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
 import { IAudioManager } from "../../../../sound/IAudioManager.ts";
+import { ThemeManager } from "../../../style/ThemeManager.ts";
+import { GradientBorder } from "../../../../core/components/gradient-border/GradienBorder.tsx";
 
 export interface WordTextCardComponentProps {
   model: WordTextCardModel;
-  onSpeakStarted?: () => void,
-  onSpeakCompleted?: () => void,
-  onPressed?: () => void
+  onSpeakStarted?: () => void;
+  onSpeakCompleted?: () => void;
+  onPressed?: () => void;
+  style?: ViewStyle;
 }
 
 
-function WordTextCardComponent({model, onSpeakStarted, onSpeakCompleted, onPressed}: WordTextCardComponentProps): React.JSX.Element {
+function WordTextCardComponent({model, onSpeakStarted, onSpeakCompleted, onPressed, style}: WordTextCardComponentProps): React.JSX.Element {
 
   const logSource = "WordTextCardComponent";
   const audioManager = useRef<IAudioManager | null>(null);
@@ -75,11 +78,22 @@ function WordTextCardComponent({model, onSpeakStarted, onSpeakCompleted, onPress
     }
   }
 
+  const wordTextCardStyling = WordTextCardStyling(ThemeManager.theme.games.textCard.backgroundColor);
+
   return (
-    <Pressable style={WordTextCardStyling.host} onPress={buttonPressed}>
-      {model?.showMic && <Icon name="microphone" size={30} color="blue"/>}
-      <Text style={WordTextCardStyling.text}>{model.word}</Text>
-    </Pressable>
+    <Pressable onPress={buttonPressed}>
+      <GradientBorder style={wordTextCardStyling.host} innerStyle={wordTextCardStyling.innerContainer}
+        model={{
+          colors: ThemeManager.theme.games.textCard.borderColors,
+          start:ThemeManager.theme.games.textCard.borderStart,
+          end:ThemeManager.theme.games.textCard.borderEnd
+        }}>
+        <View style={[wordTextCardStyling.contentWrapper,style]}>
+          { model?.showMic && <Icon name="microphone" size={30} color="blue"/> }
+          <Text numberOfLines={1} style={wordTextCardStyling.text}>{model.word}</Text>
+        </View>
+      </GradientBorder>
+     </Pressable>
 
   );
 }

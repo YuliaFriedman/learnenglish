@@ -85,12 +85,17 @@ export const KidsTheme = {
   },
   games: {
     card: {
-      colors: [Colors.white, Colors.white],
-      locations: [0, 1],
-
-      borderColors: [Colors.purple11, Colors.blue4],
+      borderColors: [Colors.white, Colors.white],
       borderStart:{ x: 0, y: 0 },
       borderEnd:{ x: 1, y: 0 },
+      backgroundColor: Colors.white,
+
+      overlayColor: Colors.white,
+      shadow: Colors.black
+    },
+
+    selectableCard: {
+      borderColors: [Colors.purple11, Colors.blue4],
       borderColorSelected: [Colors.orange3, Colors.orange3],
       borderColorCorrect: [Colors.green3, Colors.green3],
       borderColorWrong: [Colors.red2, Colors.red2],
@@ -99,9 +104,27 @@ export const KidsTheme = {
       backgroundColorSelected: Colors.beige0,
       backgroundColorCorrect: Colors.green00,
       backgroundColorWrong: Colors.red0,
+    },
 
-      overlayColor: Colors.white,
-      shadow: Colors.black
+    textCard: {
+      borderColors: [Colors.purple11, Colors.blue4],
+      borderColorSelected: [Colors.orange3, Colors.orange3],
+      borderColorCorrect: [Colors.green3, Colors.green3],
+      borderColorWrong: [Colors.red2, Colors.red2],
+
+      backgroundColor: Colors.white,
+      backgroundColorSelected: Colors.beige0,
+      backgroundColorCorrect: Colors.green00,
+      backgroundColorWrong: Colors.red0,
+    },
+
+    selectTranslation: {
+      header:{
+        shadowColor: Colors.black,
+        borderBottomColor: Colors.purple0,
+        backgroundColor: Colors.lightPurple3
+      }
+
     }
   },
   buttons: {
