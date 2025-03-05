@@ -3,16 +3,13 @@ import { GameType } from "../../../models/GameType";
 
 export const ColorsSteps: StepModel[] = [
   {
-    id: 1,
-    displayName: "1",
+    id: 2,
+    displayName: "2",
     status: StepStatus.Idle,
     game: {
-      type:  GameType.SelectTranslation,
+      type:  GameType.SayWord,
       data: {
-        source: true,
-        word: "red",
-        translations: ["red", "green", "blue", "yellow"],
-        answer: 0
+        word: "red"
       }
     }
   },
@@ -27,18 +24,23 @@ export const ColorsSteps: StepModel[] = [
       }
     }
   },
-
   {
-    id: 2,
-    displayName: "2",
+    id: 1,
+    displayName: "1",
     status: StepStatus.Idle,
     game: {
-      type:  GameType.SayWord,
+      type:  GameType.SelectTranslation,
       data: {
-        word: "red"
+        source: true,
+        word: "red",
+        translations: ["red", "green", "blue", "yellow"],
+        answer: 0
       }
     }
   },
+
+
+
   {
     id: 3,
     displayName: "3",

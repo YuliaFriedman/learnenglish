@@ -23,6 +23,9 @@ import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionT
 import { Languages } from "../../../../app-data/language.ts";
 import { IAudioManager } from "../../../../sound/IAudioManager.ts";
 import { IconButton } from "../../../../core/components/icon-button/IconButton.tsx";
+import { SpeechButton } from "../../common/speech-button/SpeechButton.tsx";
+import { SpacingRow } from "../../../../core/components/spacing-row/SpacingRow.tsx";
+import { SpeechConfirmedButton } from "../../common/speech-button/SpeechConfirmedButton.tsx";
 
 function SayWordComponent(args: {model: SayWordModel}): React.JSX.Element {
 
@@ -30,9 +33,6 @@ function SayWordComponent(args: {model: SayWordModel}): React.JSX.Element {
 
   const [word, setWord] = useState<WordCardModel|undefined>(undefined);
   const [canContinue, setCanContinue] = useState(false);
-  let [isListening, setIsListening] = useState(false);
-  const scaleValue = useRef(new Animated.Value(1)).current;
-  const animationRef = useRef<Animated.CompositeAnimation | null>(null);
   const [attempts, setAttempts] = useState(0);
   const maxNumOfAttempts = useRef(2);
 
@@ -42,12 +42,6 @@ function SayWordComponent(args: {model: SayWordModel}): React.JSX.Element {
   useEffect(() => {
     initInjections();
     initData();
-    SpeechToTextManager.init(speechStartHandler, speechEndHandler, speechResultsHandler);
-    startAnimation();
-    return () => {
-      SpeechToTextManager.destroy();
-      stopAnimation();
-    };
   }, []);
 
   useEffect(() => {
@@ -78,7 +72,7 @@ function SayWordComponent(args: {model: SayWordModel}): React.JSX.Element {
 
     if(wordFromDictionary){
       audioManager.current?.playSound({
-        text: "say the word",
+        text: "Press the microphone button and say the word",
         language: appProducer.current?.getSelectedLanguage() || Languages.EN,
         soundKey: ""
       }).then(() => {
@@ -93,22 +87,12 @@ function SayWordComponent(args: {model: SayWordModel}): React.JSX.Element {
     }
   }
 
-  function micPressed(){
-    Logger.log(logSource, "mic pressed");
-    stopAnimation();
-    SpeechToTextManager.start();
-  }
-
-  function speechStartHandler() {
-    setIsListening(true);
-  }
-
-  function speechEndHandler(){
-    setIsListening(false);
-  }
-
   function speechResultsHandler(results:SpeechResults){
-    let hasWordInResults = word?.word && results && results.values && results.values.indexOf(word.word) >= 0;
+    Logger.log(logSource, `Speech completed: word = ${JSON.stringify(word)}`);
+    let hasWordInResults = !word?.word || resultsContainWord(word.word, results);
+    // && results?.values && results?.values.some(val =>
+    //   val && val.toLowerCase().includes(word.word.toLowerCase())
+    // );
     Logger.log(logSource, "has word in results: " + hasWordInResults + ", word = " + word?.word, false, results);
     if(hasWordInResults){
       setCanContinue(true);
@@ -119,43 +103,25 @@ function SayWordComponent(args: {model: SayWordModel}): React.JSX.Element {
     }
   }
 
+  function resultsContainWord(word:string, results: SpeechResults){
+    if(results && results.values){
+      return results?.values.some(val => val && val.toLowerCase().includes(word.toLowerCase()));
+    }
+    else{
+      return false;
+    }
+  }
+
   function nextButtonPressed() {
     appProducer.current?.setNextStep();
   }
 
-  const startAnimation = () => {
-    // Start looping animation
-    animationRef.current = Animated.loop(
-      Animated.sequence([
-        Animated.timing(scaleValue, {
-          toValue: 1.05, // Scale up
-          duration: 500,
-          useNativeDriver: true,
-        }),
-        Animated.timing(scaleValue, {
-          toValue: 1, // Scale back down
-          duration: 200,
-          useNativeDriver: true,
-        }),
-      ])
-    );
-    animationRef.current?.start();
-  };
-
-  const stopAnimation = () => {
-    if (animationRef.current) {
-      animationRef.current?.stop();
-    }
-  };
-
   return (
     <View style={SayWordStyling.host}>
-      <View style={SayWordStyling.spaceView}></View>
-      <View style={SayWordStyling.wordContainer}>{word ? <WordCardComponent model={word} ></WordCardComponent> : <></>}</View>
-      <Animated.View style={[SayWordStyling.micContainer, { transform: [{ scale: scaleValue }] }]}>
-        <IconButton icon="microphone" size={30} onPress={micPressed} disabled={isListening} iconColor="white"></IconButton>
-      </Animated.View>
-      <View style={SayWordStyling.nextContainer}><PrimaryButtonComponent onPress={nextButtonPressed} disabled={!canContinue}>Next</PrimaryButtonComponent></View>
+      <View style={SayWordStyling.wordContainer}>{word ? <WordCardComponent style={SayWordStyling.wordStyling} model={word} ></WordCardComponent> : <></>}</View>
+      { word && !canContinue && <SpeechButton style={SayWordStyling.micStyling} onSpeechCompleted={speechResultsHandler}></SpeechButton> }
+      {canContinue && <SpeechConfirmedButton style={SayWordStyling.micStyling}></SpeechConfirmedButton>}
+      <PrimaryButtonComponent onPress={nextButtonPressed} disabled={!canContinue}>Next</PrimaryButtonComponent>
     </View>
   );
 }

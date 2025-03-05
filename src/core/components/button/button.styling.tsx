@@ -6,14 +6,14 @@ export const ButtonStyling = StyleSheet.create({
       padding: 10,
       paddingLeft: 20,
       paddingRight: 20,
+      alignItems: "center"
     },
-  
+
     hostDisabled: {
       opacity: 0.5,
     },
-  
+
     text: {
       color: "white"
     }
   })
-  

@@ -20,7 +20,6 @@ export const WordTextCardStyling = (background: string) => StyleSheet.create({
  },
 
   text: {
-    marginLeft: 10,
-    fontSize:20
+    marginLeft: 20,
   }
 })

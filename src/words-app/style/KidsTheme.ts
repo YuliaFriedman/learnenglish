@@ -91,7 +91,9 @@ export const KidsTheme = {
       backgroundColor: Colors.white,
 
       overlayColor: Colors.white,
-      shadow: Colors.black
+      shadow: Colors.black,
+
+      textColor: Colors.orange3
     },
 
     selectableCard: {
@@ -125,6 +127,14 @@ export const KidsTheme = {
         backgroundColor: Colors.lightPurple3
       }
 
+    },
+
+    sayTheWord: {
+      cardWrapper: {
+        shadowColor: Colors.black,
+        borderColor: Colors.purple0,
+        backgroundColor: Colors.lightPurple3
+      }
     }
   },
   buttons: {
@@ -135,6 +145,13 @@ export const KidsTheme = {
         start: {x: 0, y: 0.5},
         end: {x: 1, y:  0.5}
       },
+      color: Colors.white
+    },
+    speechButton: {
+      backgroundColor: Colors.orange3
+    },
+    speechConfirmButton: {
+      backgroundColor: Colors.green3
     }
   },
   shadow: (color: string) => {

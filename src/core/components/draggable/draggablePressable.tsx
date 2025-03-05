@@ -1,13 +1,14 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, ViewStyle } from "react-native";
 import { ReactElement, useRef, useState } from "react";
 import { GestureResponderEvent } from "react-native/Libraries/Types/CoreEventTypes";
 
 export interface DraggableProps<T = {}> {
   onPress?: () => void;
   children: ReactElement<T>;
+  style?: ViewStyle;
 }
 
-export function DraggablePressable({onPress, children}:DraggableProps){
+export function DraggablePressable({onPress, children, style}:DraggableProps){
   const [isDragging, setIsDragging] = useState(false);
   const touchStart = useRef({ x: 0, y: 0 }); // Reference for the initial touch position
   const [dragThreshold] = useState(2); // Set a threshold for detecting drag
@@ -53,7 +54,7 @@ export function DraggablePressable({onPress, children}:DraggableProps){
   };
 
   return (
-    <View style={styles.host}
+    <View style={[styles.host, style]}
       onStartShouldSetResponder={onStartShouldSetResponder}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}>

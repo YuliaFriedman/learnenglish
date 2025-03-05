@@ -1,46 +1,44 @@
 import { StyleSheet } from "react-native";
-import { fromPercentToPixelsWidth } from "../../../../style/dimentions";
+import { ThemeManager } from "../../../style/ThemeManager.ts";
 
 export const SayWordStyling = StyleSheet.create({
 
   host: {
     alignSelf: "center",
-    display: "flex",
     flexDirection: "column",
-    width: "35%",
-    maxWidth: 150,
     flex: 1,
     justifyContent: "space-between",
+    width: "100%"
   },
 
   wordContainer: {
-    width: "100%",
-    height: "30%",
-    alignSelf: "center"
-  },
-
-  micContainer: {
+    width: "80%",
+    height: "40%",
+    margin: "10%",
     alignSelf: "center",
-    marginTop:20,
-    backgroundColor: "green",
-    borderRadius: 200,
-    width: 50,
-    height: 50,
-    display: "flex",
     alignItems: "center",
-    justifyContent: "center",
+    padding: 30,
+    backgroundColor: ThemeManager.theme.games.sayTheWord.cardWrapper.backgroundColor,
+    borderWidth: 2,
+    borderColor: ThemeManager.theme.games.sayTheWord.cardWrapper.borderColor,
+    borderRadius: 10,
+    ...ThemeManager.theme.shadow(ThemeManager.theme.games.sayTheWord.cardWrapper.shadowColor)
   },
 
-  spaceView: {
-    flex: 1
+  wordStyling: {
+    width: "100%",
+    maxWidth: 150
+  },
+
+  micStyling: {
+    marginVertical: 30
   },
 
   nextContainer: {
     alignSelf: "center",
     marginTop: 20,
     flex: 1,
-    display: "flex",
-    justifyContent: "flex-end"
+    justifyContent: "center"
   },
 
   next: {

@@ -1,8 +1,10 @@
 import { StyleSheet } from "react-native";
+import { ThemeManager } from "../../../style/ThemeManager.ts";
 
 export const PrimaryButtonStyling = StyleSheet.create({
   textStyle: {
-    color: 'white'
+    color: ThemeManager.theme.buttons.primary.color,
+    fontSize: 20
   },
 
   buttonStyle:{
@@ -10,6 +12,8 @@ export const PrimaryButtonStyling = StyleSheet.create({
   },
 
   buttonWrapperStyle: {
+    margin: "10%",
+    padding: 3,
     borderRadius: 5
   }
 })

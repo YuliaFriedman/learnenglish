@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useRef, useState } from "react";
-import { Image, Pressable, Text, View } from "react-native";
+import { Image, Pressable, Text, View, ViewStyle } from "react-native";
 import { WordCardModel } from "./WordCardModel";
 import { Logger } from "../../../../logger/Logger";
 import { images } from "../../../app-data/ImagesManager";
@@ -20,15 +20,17 @@ import { TileOutfitComponent } from "../../common/tile-outfit/TileOutfit.compone
 import { ThemeManager } from "../../../style/ThemeManager.ts";
 import LinearGradient from "react-native-linear-gradient";
 import { GradientBorder } from "../../../../core/components/gradient-border/GradienBorder.tsx";
+import { CardText } from "../../common/card-text/CardText.tsx";
 
 export interface WordCardComponentProps {
   model: WordCardModel;
+  style?: ViewStyle;
   onSpeakStarted?: () => void,
   onSpeakCompleted?: () => void,
   onPressed?: () => void
 }
 
-function WordCardComponent({ model, onSpeakStarted, onSpeakCompleted, onPressed }:WordCardComponentProps): React.JSX.Element {
+function WordCardComponent({ model, style, onSpeakStarted, onSpeakCompleted, onPressed }:WordCardComponentProps): React.JSX.Element {
 
   const logSource = "WordCardComponent";
   const audioManager = useRef<IAudioManager>(
@@ -112,14 +114,14 @@ function WordCardComponent({ model, onSpeakStarted, onSpeakCompleted, onPressed 
   return (
 
 
-       <DraggablePressable onPress={buttonPressed}>
+       <DraggablePressable  style={style} onPress={buttonPressed}>
          <GradientBorder
            model={{
              colors: borderColor,
              start:ThemeManager.theme.games.card.borderStart,
              end:ThemeManager.theme.games.card.borderEnd
             }}
-            style={wordCardStyling.host}
+            style={[wordCardStyling.host]}
             innerStyle={wordCardStyling.innerContainer}>
             <View
               style={[
@@ -133,7 +135,7 @@ function WordCardComponent({ model, onSpeakStarted, onSpeakCompleted, onPressed 
                 resizeMode={"center"}
               />
             </View>
-            {model?.showText && <Text style={wordCardStyling.text}>{model.word}</Text>}
+            {model?.showText && <CardText style={wordCardStyling.text}>{model.word}</CardText>}
          </GradientBorder>
       </DraggablePressable>
 

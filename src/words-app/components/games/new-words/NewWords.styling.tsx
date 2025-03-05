@@ -1,18 +1,21 @@
 import { StyleSheet } from "react-native";
+import { fromPercentToPixelsHeight, fromPercentToPixelsWidth } from "../../../../style/dimentions.ts";
 
 export const NewWordsStyling = StyleSheet.create({
 
   host:{
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
+    justifyContent: "space-evenly",
     alignItems: "center",
     alignContent: "center",
     height: "100%",
   },
 
   next: {
-    alignSelf: "center"
+    alignSelf: "center",
+    alignContent: "center",
+    marginVertical: 20,
   },
 
   cardContainer: {
@@ -21,12 +24,13 @@ export const NewWordsStyling = StyleSheet.create({
     flexWrap: "wrap",
     gap: 30,
     justifyContent: "center",
-     margin: "5%"
+    alignContent: "center",
+    margin: fromPercentToPixelsWidth(5)
   },
 
   wordCard: {
     width: "40%",
-    height: "40%",
+    height: fromPercentToPixelsHeight(30),
   },
 
 })

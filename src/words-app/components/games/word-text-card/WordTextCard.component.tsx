@@ -18,6 +18,7 @@ import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionT
 import { IAudioManager } from "../../../../sound/IAudioManager.ts";
 import { ThemeManager } from "../../../style/ThemeManager.ts";
 import { GradientBorder } from "../../../../core/components/gradient-border/GradienBorder.tsx";
+import { CardText } from "../../common/card-text/CardText.tsx";
 
 export interface WordTextCardComponentProps {
   model: WordTextCardModel;
@@ -90,7 +91,7 @@ function WordTextCardComponent({model, onSpeakStarted, onSpeakCompleted, onPress
         }}>
         <View style={[wordTextCardStyling.contentWrapper,style]}>
           { model?.showMic && <Icon name="microphone" size={30} color="blue"/> }
-          <Text numberOfLines={1} style={wordTextCardStyling.text}>{model.word}</Text>
+          <CardText style={wordTextCardStyling.text}>{model.word}</CardText>
         </View>
       </GradientBorder>
      </Pressable>

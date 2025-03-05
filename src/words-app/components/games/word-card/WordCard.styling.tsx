@@ -36,7 +36,6 @@ export const WordCardStyling = (cardStyle: any, background: string) => StyleShee
  },
   text: {
     marginBottom: "5%",
-    fontSize:20,
   },
 
   innerContainer: {

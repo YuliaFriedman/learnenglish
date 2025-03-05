@@ -11,7 +11,7 @@ export interface SpeechResults {
 
 export const SpeechToTextManager = {
 
-  onSpeechStart: (e:SpeechStartEvent) => {} ,
+  onSpeechStart: (e:SpeechStartEvent) => {},
   onSpeechEnd: (e:SpeechEndEvent) => {},
   onSpeechResults: (e:SpeechResults) => {},
 
@@ -61,7 +61,7 @@ export const SpeechToTextManager = {
   },
 
   destroy: () => {
-    Voice.destroy().then(Voice.removeAllListeners);
+    Voice.destroy().then(() => Voice.removeAllListeners());
     SpeechToTextManager.onSpeechStart = () => {};
     SpeechToTextManager.onSpeechEnd = () => {};
     SpeechToTextManager.onSpeechResults = () => {};
