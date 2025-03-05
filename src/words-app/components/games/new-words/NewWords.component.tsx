@@ -114,9 +114,7 @@ function NewWordsComponent(args: {model: NewWordsModel}): React.JSX.Element {
           ))
         }
       </View>
-      <View style={NewWordsStyling.next}>
-        <PrimaryButtonComponent onPress={nextButtonPressed} disabled={buttonDisabled}>Next</PrimaryButtonComponent>
-      </View>
+      <PrimaryButtonComponent onPress={nextButtonPressed} disabled={buttonDisabled}>Next</PrimaryButtonComponent>
     </View>
   );
 }

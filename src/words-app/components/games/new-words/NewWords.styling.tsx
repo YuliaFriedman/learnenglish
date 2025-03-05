@@ -7,8 +7,6 @@ export const NewWordsStyling = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-evenly",
-    alignItems: "center",
-    alignContent: "center",
     height: "100%",
   },
 

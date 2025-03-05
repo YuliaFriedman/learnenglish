@@ -2,17 +2,7 @@ import { StepModel, StepStatus } from "../../../models/StepModel";
 import { GameType } from "../../../models/GameType";
 
 export const ColorsSteps: StepModel[] = [
-  {
-    id: 2,
-    displayName: "2",
-    status: StepStatus.Idle,
-    game: {
-      type:  GameType.SayWord,
-      data: {
-        word: "red"
-      }
-    }
-  },
+
   {
     id: 0,
     displayName: "0",
@@ -39,7 +29,17 @@ export const ColorsSteps: StepModel[] = [
     }
   },
 
-
+  {
+    id: 2,
+    displayName: "2",
+    status: StepStatus.Idle,
+    game: {
+      type:  GameType.SayWord,
+      data: {
+        word: "red"
+      }
+    }
+  },
 
   {
     id: 3,

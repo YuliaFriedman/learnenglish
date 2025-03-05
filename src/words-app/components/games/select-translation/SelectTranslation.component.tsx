@@ -129,9 +129,7 @@ function isCorrectAnswer(){
         })
       }
       </View>
-      <View style={SelectTranslationStyling.next}>
-        <PrimaryButtonComponent onPress={nextButtonPressed}>Next</PrimaryButtonComponent>
-      </View>
+      <PrimaryButtonComponent onPress={nextButtonPressed}>Next</PrimaryButtonComponent>
     </View>
   );
 }
