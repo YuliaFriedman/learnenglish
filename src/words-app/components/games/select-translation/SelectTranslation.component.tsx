@@ -23,8 +23,9 @@ import { IAppProducer } from "../../../app-data/store/IAppProducer.ts";
 import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
 import { Languages } from "../../../../app-data/language.ts";
 import { SpacingRow } from "../../../../core/components/spacing-row/SpacingRow.tsx";
+import { GameModel } from "../models/GameModel.ts";
 
-function SelectTranslationComponent(args: {model: SelectTranslationModel}): React.JSX.Element {
+function SelectTranslationComponent({model, onCompleted}: GameModel<SelectTranslationModel>): React.JSX.Element {
 
   const logSource = "SelectTranslationComponent";
 
@@ -46,7 +47,7 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
   function initData(){
     let selectedLanguage: Languages = Languages.EN;
     let selectedTranslation: Languages = Languages.EN;
-    if(args.model.source){
+    if(model.source){
       selectedLanguage = appProducer.current?.getSelectedLanguage() || Languages.EN;
       selectedTranslation = appProducer.current?.getSelectedTranslation() || Languages.EN;
     }
@@ -55,7 +56,7 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
       selectedTranslation = appProducer.current?.getSelectedLanguage() || Languages.EN;
     }
 
-    let newWords = args.model.translations.map((word,i) => {
+    let newWords = model.translations.map((word,i) => {
       return new WordCardModel({
         id: word,
         ...dictionary.getWord(selectedTranslation, word),
@@ -68,8 +69,8 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
     setTranslations(newWords);
 
     setWord(new WordTextCardModel({
-      id: args.model.word,
-      ...dictionary.getWord(selectedLanguage, args.model.word),
+      id: model.word,
+      ...dictionary.getWord(selectedLanguage, model.word),
       pressable: true,
       shouldSayTheWord: false,
       language: selectedLanguage,
@@ -92,7 +93,9 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
   function nextButtonPressed() {
     if(isCorrectAnswer()){
       AppSoundsPlayer.playCorrectSound();
-      appProducer.current?.setNextStep();
+      if(onCompleted){
+        onCompleted();
+      }
     }
     else{
       AppSoundsPlayer.playWrongAnswer();
@@ -109,7 +112,7 @@ function SelectTranslationComponent(args: {model: SelectTranslationModel}): Reac
 
 function isCorrectAnswer(){
   const selectedIndex = translations.findIndex(item => item.isSelected);
-  return selectedIndex === args.model.answer;
+  return selectedIndex === model.answer;
 }
 
   return (

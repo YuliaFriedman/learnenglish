@@ -18,15 +18,16 @@ import InjectionManager from "../../../../core/services/InjectionManager.ts";
 import { IAppProducer } from "../../../app-data/store/IAppProducer.ts";
 import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
 import { Languages } from "../../../../app-data/language.ts";
+import { GameModel } from "../models/GameModel.ts";
 
-function NewWordsComponent(args: {model: NewWordsModel}): React.JSX.Element {
+function NewWordsComponent({model, onCompleted}: GameModel<NewWordsModel>): React.JSX.Element {
 
   const logSource = "NewWordsComponent";
 
   const [buttonDisabled,setButtonDisabled] = useState(true);
   const [words,setWords] = useState<WordCardModel[]>([]);
   const [scaleAnimations, setScaleAnimations] = useState(() =>
-    args.model.words.map(() => new Animated.Value(1))
+    model.words.map(() => new Animated.Value(1))
   );
   let selectedLanguage = useRef<Languages>(Languages.EN);
 
@@ -40,14 +41,14 @@ function NewWordsComponent(args: {model: NewWordsModel}): React.JSX.Element {
   },[]);
 
   useEffect(() => {
-    let newWords = args.model.words.map((word,i) => createWordModel(word, false));
+    let newWords = model.words.map((word,i) => createWordModel(word, false));
     setWords(newWords);
   }, [buttonDisabled]);
 
   function setNextWordToSpeak(index: number) {
     Logger.log(logSource, "In setNextWordToSpeak: index = " + index);
     setTimeout(() => {
-      let newWords = args.model.words.map((word,i) => createWordModel(word, index === i));
+      let newWords = model.words.map((word,i) => createWordModel(word, index === i));
       setWords(newWords);
     }, 600);
   }
@@ -64,9 +65,9 @@ function NewWordsComponent(args: {model: NewWordsModel}): React.JSX.Element {
   }
 
   function wordSpeakCompleted(index: number){
-    Logger.log(logSource, "In wordSpeakCompleted for index " + index + ", buttonDisabled = " + buttonDisabled + ", words.length = " + args.model.words.length);
+    Logger.log(logSource, "In wordSpeakCompleted for index " + index + ", buttonDisabled = " + buttonDisabled + ", words.length = " + model.words.length);
     if(buttonDisabled){
-      if(index === args.model.words.length -1){
+      if(index === model.words.length -1){
         setButtonDisabled(false);
       }
       else{
@@ -81,7 +82,9 @@ function NewWordsComponent(args: {model: NewWordsModel}): React.JSX.Element {
   }
 
   function nextButtonPressed() {
-    appProducer.current?.setNextStep();
+    if(onCompleted){
+      onCompleted();
+    }
   }
 
   function animateWordScale(index: number) {

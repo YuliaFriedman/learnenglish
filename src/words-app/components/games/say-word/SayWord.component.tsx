@@ -26,8 +26,9 @@ import { IconButton } from "../../../../core/components/icon-button/IconButton.t
 import { SpeechButton } from "../../common/speech-button/SpeechButton.tsx";
 import { SpacingRow } from "../../../../core/components/spacing-row/SpacingRow.tsx";
 import { SpeechConfirmedButton } from "../../common/speech-button/SpeechConfirmedButton.tsx";
+import { GameModel } from "../models/GameModel.ts";
 
-function SayWordComponent(args: {model: SayWordModel}): React.JSX.Element {
+function SayWordComponent({model, onCompleted}: GameModel<SayWordModel>): React.JSX.Element {
 
   const logSource = "SayWordComponent";
 
@@ -61,9 +62,9 @@ function SayWordComponent(args: {model: SayWordModel}): React.JSX.Element {
 
   function initData(){
     const selectedLanguage = appProducer.current?.getSelectedLanguage() || Languages.EN;
-    const wordFromDictionary = dictionary.getWord(selectedLanguage, args.model.word);
+    const wordFromDictionary = dictionary.getWord(selectedLanguage, model.word);
     setWord(new WordCardModel({
-      id: args.model.word,
+      id: model.word,
       ...wordFromDictionary,
       pressable: true,
       shouldSayTheWord: false,
@@ -113,7 +114,9 @@ function SayWordComponent(args: {model: SayWordModel}): React.JSX.Element {
   }
 
   function nextButtonPressed() {
-    appProducer.current?.setNextStep();
+    if(onCompleted){
+      onCompleted();
+    }
   }
 
   return (

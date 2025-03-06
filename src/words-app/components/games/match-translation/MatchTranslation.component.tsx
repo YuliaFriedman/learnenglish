@@ -24,6 +24,7 @@ import { IAppProducer } from "../../../app-data/store/IAppProducer.ts";
 import InjectionManager from "../../../../core/services/InjectionManager.ts";
 import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
 import { Languages } from "../../../../app-data/language.ts";
+import { GameModel } from "../models/GameModel.ts";
 
 interface SolutionModel{
   sourceIndex: number;
@@ -31,7 +32,7 @@ interface SolutionModel{
   status: AnswerStatus;
 }
 
-function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.JSX.Element {
+function MatchTranslationComponent({model, onCompleted}: GameModel<MatchTranslationModel>): React.JSX.Element {
 
   const logSource = "MatchTranslationComponent";
 
@@ -52,7 +53,7 @@ function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.
 
   useEffect(() => {
     updateDataBySolution();
-    setCanContinue(solutions.length == args.model.words.length);
+    setCanContinue(solutions.length == model.words.length);
   },[solutions]);
 
   function initInjections(){
@@ -90,7 +91,7 @@ function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.
     const translationsList:WordCardModel[] = [];
 
     // init words
-    args?.model?.words.forEach((word) => {
+    model?.words.forEach((word) => {
       const dictionaryWord = dictionary.getWord(selectedLanguage, word);
       wordsList.push(new WordCardModel({
         id: word,
@@ -133,7 +134,9 @@ function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.
   function nextButtonPressed() {
     if(checkSolutions()){
       AppSoundsPlayer.playCorrectSound();
-      appProducer.current?.setNextStep();
+      if(onCompleted){
+        onCompleted();
+      }
     }
     else{
       setCanContinue(false);
@@ -144,8 +147,8 @@ function MatchTranslationComponent(args: {model: MatchTranslationModel}): React.
   function checkSolutions(){
     let allAnswersCorrect = true;
     solutions.forEach(solution => {
-      const sourceWordIndex = args.model.words.indexOf(words[solution.sourceIndex].id);
-      const targetWordIndex = args.model.words.indexOf(words[solution.targetIndex].id);
+      const sourceWordIndex = model.words.indexOf(words[solution.sourceIndex].id);
+      const targetWordIndex = model.words.indexOf(words[solution.targetIndex].id);
       allAnswersCorrect = allAnswersCorrect && sourceWordIndex === targetWordIndex;
       setWords(currentWords => {
         const result = [...currentWords];

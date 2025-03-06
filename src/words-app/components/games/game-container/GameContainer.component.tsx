@@ -52,21 +52,25 @@ function GameContainerComponent(): React.JSX.Element {
     setCurrentGameModel(currentStep?.game);
   }
 
+  function goToNextGame(){
+    appProducer.current?.setNextStep();
+  }
+
   let game = <></>;
 
   if(currentGameModel){
     switch (currentGameModel.type) {
       case GameType.NewWord:
-        game = <NewWordsComponent model={currentGameModel.data}></NewWordsComponent>;
+        game = <NewWordsComponent model={currentGameModel.data} onCompleted={goToNextGame}></NewWordsComponent>;
         break;
       case GameType.SelectTranslation:
-        game = <SelectTranslationComponent model={currentGameModel.data}></SelectTranslationComponent>;
+        game = <SelectTranslationComponent model={currentGameModel.data} onCompleted={goToNextGame}></SelectTranslationComponent>;
         break;
       case GameType.SayWord:
-        game = <SayWordComponent model={currentGameModel.data}></SayWordComponent>;
+        game = <SayWordComponent model={currentGameModel.data} onCompleted={goToNextGame}></SayWordComponent>;
         break;
       case GameType.MatchTranslation:
-        game = <MatchTranslationComponent model={currentGameModel.data}></MatchTranslationComponent>;
+        game = <MatchTranslationComponent model={currentGameModel.data} onCompleted={goToNextGame}></MatchTranslationComponent>;
         break;
     }
   }
