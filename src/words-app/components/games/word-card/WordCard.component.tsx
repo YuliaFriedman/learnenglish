@@ -121,7 +121,7 @@ function WordCardComponent({ model, style, onSpeakStarted, onSpeakCompleted, onP
              start:ThemeManager.theme.games.card.borderStart,
              end:ThemeManager.theme.games.card.borderEnd
             }}
-            style={[wordCardStyling.host]}
+            style={wordCardStyling.host}
             innerStyle={wordCardStyling.innerContainer}>
             <View
               style={[

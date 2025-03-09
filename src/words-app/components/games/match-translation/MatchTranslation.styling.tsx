@@ -48,7 +48,7 @@ export const MatchTranslationStyling = StyleSheet.create({
 
   wordCard: {
     width: "40%",
-    height: "30%",
+    height: "40%",
     backgroundColor: "red"
   },
 
@@ -66,12 +66,12 @@ export const MatchTranslationStyling = StyleSheet.create({
     marginTop: 20,
     display: "flex",
     flexDirection: "row",
-    justifyContent: "flex-end",
-    gap: 5
+    gap: 20,
+    padding: 20
   },
 
-  next: {
-    alignSelf: "center"
-  },
+  footerButtonStyle: {
+    flex: 1
+  }
 
 })

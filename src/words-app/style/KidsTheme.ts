@@ -147,6 +147,15 @@ export const KidsTheme = {
       },
       color: Colors.white
     },
+    secondary: {
+      bg: {
+        colors: [Colors.gray11, Colors.gray2],
+        locations: [0, 1],
+        start: {x: 0, y: 0.5},
+        end: {x: 1, y:  0.5}
+      },
+      color: Colors.white
+    },
     speechButton: {
       backgroundColor: Colors.orange3
     },

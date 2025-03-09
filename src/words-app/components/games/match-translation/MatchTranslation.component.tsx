@@ -43,10 +43,9 @@ function MatchTranslationComponent({model, onCompleted}: GameModel<MatchTranslat
   const [canContinue, setCanContinue] = useState(false);
   const droppableComponents = useRef<DroppableComponentType[]|null[]>([]);
 
-  const appProducer = useRef<IAppProducer | null>(null);
+  const appProducer = useRef<IAppProducer>(InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN));
 
   useEffect(() => {
-    initInjections();
     initData();
   }, []);
 
@@ -55,12 +54,6 @@ function MatchTranslationComponent({model, onCompleted}: GameModel<MatchTranslat
     updateDataBySolution();
     setCanContinue(solutions.length == model.words.length);
   },[solutions]);
-
-  function initInjections(){
-    if(!appProducer.current){
-      appProducer.current = InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN);
-    }
-  }
 
   function updateDataBySolution(){
     if(words && words.length > 0){
@@ -222,8 +215,8 @@ function MatchTranslationComponent({model, onCompleted}: GameModel<MatchTranslat
       </View>
 
       <View style={MatchTranslationStyling.nextContainer}>
-        <SecondaryButtonComponent onPress={resetMatch} disabled={solutions.length == 0}>Reset</SecondaryButtonComponent>
-        <PrimaryButtonComponent onPress={nextButtonPressed} disabled={!canContinue}>Next</PrimaryButtonComponent>
+        <SecondaryButtonComponent wrapperStyle={MatchTranslationStyling.footerButtonStyle} onPress={resetMatch} disabled={solutions.length == 0}>Reset</SecondaryButtonComponent>
+        <PrimaryButtonComponent wrapperStyle={MatchTranslationStyling.footerButtonStyle} onPress={nextButtonPressed} disabled={!canContinue}>Next</PrimaryButtonComponent>
       </View>
     </View>
   );

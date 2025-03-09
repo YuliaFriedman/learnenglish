@@ -65,6 +65,7 @@ export const Colors = {
   transparentGray: "rgba(200, 200, 200 ,0.5)",
   gray0: "#eeeeee",
   gray1: "#dddddd",
+  gray11: "#b5b5b5",
   gray2: "#888888",
   gray3: "#555555",
 

@@ -44,11 +44,9 @@ export const SelectTranslationStyling = StyleSheet.create({
   },
 
   next: {
-    alignSelf: "center",
-    alignItems: "center",
-    flex: 3,
-    width: "100%",
-    justifyContent: "center",
+    width: '80%',
+    marginLeft: '10%',
+    marginVertical: 40
  },
 
 })

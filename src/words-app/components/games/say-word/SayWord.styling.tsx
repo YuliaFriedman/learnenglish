@@ -42,7 +42,9 @@ export const SayWordStyling = StyleSheet.create({
   },
 
   next: {
-    alignSelf: "center"
-  }
+    width: '80%',
+    marginLeft: '10%',
+    marginVertical: 40
+  },
 
 })

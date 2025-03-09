@@ -11,9 +11,8 @@ export const NewWordsStyling = StyleSheet.create({
   },
 
   next: {
-    alignSelf: "center",
-    alignContent: "center",
-    marginVertical: 20,
+    width: '80%',
+    marginLeft: '10%'
   },
 
   cardContainer: {

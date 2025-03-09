@@ -124,7 +124,7 @@ function SayWordComponent({model, onCompleted}: GameModel<SayWordModel>): React.
       <View style={SayWordStyling.wordContainer}>{word ? <WordCardComponent style={SayWordStyling.wordStyling} model={word} ></WordCardComponent> : <></>}</View>
       { word && !canContinue && <SpeechButton style={SayWordStyling.micStyling} onSpeechCompleted={speechResultsHandler}></SpeechButton> }
       {canContinue && <SpeechConfirmedButton style={SayWordStyling.micStyling}></SpeechConfirmedButton>}
-      <PrimaryButtonComponent onPress={nextButtonPressed} disabled={!canContinue}>Next</PrimaryButtonComponent>
+      <PrimaryButtonComponent wrapperStyle={SayWordStyling.next} onPress={nextButtonPressed} disabled={!canContinue}>Next</PrimaryButtonComponent>
     </View>
   );
 }

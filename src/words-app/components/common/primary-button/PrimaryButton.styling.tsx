@@ -12,7 +12,7 @@ export const PrimaryButtonStyling = StyleSheet.create({
   },
 
   buttonWrapperStyle: {
-    margin: "10%",
+    //marginVertical: "10%",
     padding: 3,
     borderRadius: 5
   }

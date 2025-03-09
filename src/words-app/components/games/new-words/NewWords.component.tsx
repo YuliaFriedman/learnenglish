@@ -117,7 +117,7 @@ function NewWordsComponent({model, onCompleted}: GameModel<NewWordsModel>): Reac
           ))
         }
       </View>
-      <PrimaryButtonComponent onPress={nextButtonPressed} disabled={buttonDisabled}>Next</PrimaryButtonComponent>
+      <PrimaryButtonComponent wrapperStyle={NewWordsStyling.next} onPress={nextButtonPressed} disabled={buttonDisabled}>Next</PrimaryButtonComponent>
     </View>
   );
 }

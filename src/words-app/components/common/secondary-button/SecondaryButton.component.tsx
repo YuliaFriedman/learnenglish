@@ -6,21 +6,31 @@
  */
 
 import React, { useEffect, useState } from "react";
-import { SecondaryButtonModel } from "./SecondaryButtonModel.ts";
 import { SecondaryButtonStyling } from "./SecondaryButton.styling.tsx";
 import ButtonComponent from "../../../../core/components/button/button.component";
+import { ThemeManager } from "../../../style/ThemeManager.ts";
+import { GradientLayout } from "../../../../core/components/gradient-layout/GradientLayout.tsx";
+import { ButtonModel } from "../../../../core/components/button/buttonModel.ts";
+import { ViewStyle } from "react-native";
+import { StyleProp } from "react-native/Libraries/StyleSheet/StyleSheet";
 
-function SecondaryButtonComponent(model: SecondaryButtonModel): React.JSX.Element {
+interface SecondaryButtonComponentModel extends ButtonModel{
+  wrapperStyle?: StyleProp<ViewStyle>;
+}
 
-  const logSource = "NextButtonComponent";
+function SecondaryButtonComponent(model: SecondaryButtonComponentModel): React.JSX.Element {
+
+  const logSource = "SecondaryButtonComponent";
 
   useEffect(() => {
 
   }, []);
 
   return (
-    <ButtonComponent {...model} style={{buttonStyle: SecondaryButtonStyling.nextButton, textStyle: SecondaryButtonStyling.textStyle }}>
-    </ButtonComponent>
+    <GradientLayout style={[SecondaryButtonStyling.buttonWrapperStyle, model.wrapperStyle]} model={ThemeManager.theme.buttons.secondary.bg}>
+      <ButtonComponent {...model} style={{buttonStyle: SecondaryButtonStyling.nextButton, textStyle: SecondaryButtonStyling.textStyle }}>
+      </ButtonComponent>
+    </GradientLayout>
   );
 }
 
