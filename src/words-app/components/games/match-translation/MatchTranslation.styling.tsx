@@ -1,5 +1,7 @@
 import { StyleSheet } from "react-native";
 import { fromPercentToPixelsWidth } from "../../../../style/dimentions";
+import { ThemeManager } from "../../../style/ThemeManager.ts";
+import { Colors } from "../../../../style/Colors";
 
 export const MatchTranslationStyling = StyleSheet.create({
 
@@ -23,13 +25,15 @@ export const MatchTranslationStyling = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     gap: 10,
-    height: "10%",
-    marginBottom: "10%"
+    height: "15%",
+    margin: '5%'
   },
 
   singleMatchItem: {
     flex: 1,
-    backgroundColor: "yellow"
+    backgroundColor: Colors.lightPurple4,
+    borderRadius: 20,
+    borderWidth: 0
   },
 
   droppedMatchItem: {
@@ -42,23 +46,24 @@ export const MatchTranslationStyling = StyleSheet.create({
     flexWrap: "wrap",
     gap: 30,
     justifyContent: "center",
+    alignContent: 'center',
     margin: "10%",
-    flex: 1
+    flex: 1,
   },
 
   wordCard: {
     width: "40%",
     height: "40%",
-    backgroundColor: "red"
   },
 
-  dropHighlight: {
-    backgroundColor: "yellow"
+  droppableStyle: {
+    borderRadius: 20,
+    borderWidth: 1,
+    ...ThemeManager.theme.shadow(ThemeManager.theme.games.matchTranslation.highlight.shadow)
   },
 
-  draggedLayout: {
-    borderColor: "red",
-    backgroundColor: "red"
+  answerStyle: {
+    backgroundColor: ThemeManager.theme.games.matchTranslation.answer.backgroundColor,
   },
 
   nextContainer: {

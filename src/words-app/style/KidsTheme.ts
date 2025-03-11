@@ -135,6 +135,33 @@ export const KidsTheme = {
         borderColor: Colors.purple0,
         backgroundColor: Colors.lightPurple3
       }
+    },
+
+    matchTranslation: {
+      card: {
+        borderColors: [Colors.transparent, Colors.transparent],
+        backgroundColor: Colors.transparent,
+        shadow: Colors.transparent,
+      },
+      highlight: {
+        borderColor: Colors.gray11,
+        backgroundColor: Colors.gray1,
+        shadow: Colors.black,
+      },
+      highlightOnDrag: {
+        borderColor: Colors.gray11,
+        backgroundColor: Colors.gray0
+      },
+      cardWithAnswer: {
+        borderColors: [Colors.purple11, Colors.blue4],
+        backgroundColor: Colors.white,
+        shadow: Colors.transparent
+      },
+      answer: {
+        borderColors: [Colors.transparent, Colors.transparent],
+        backgroundColor: Colors.lightPurple3,
+        shadow: Colors.transparent
+      }
     }
   },
   buttons: {
@@ -163,7 +190,10 @@ export const KidsTheme = {
       backgroundColor: Colors.green3
     }
   },
-  shadow: (color: string) => {
+  shadow: (color: string, innerShadow: boolean = false) => {
+    if(!color || color === Colors.transparent){
+      return {};
+    }
     return {
       // iOS shadow
       shadowColor: color,
@@ -174,7 +204,7 @@ export const KidsTheme = {
       shadowOpacity: 0.25,
       shadowRadius: 3.84,
       // Android shadow
-      elevation: 5,
+      elevation: innerShadow ? -5 : 5,
     }
   }
 }

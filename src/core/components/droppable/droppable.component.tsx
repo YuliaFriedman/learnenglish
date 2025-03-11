@@ -1,7 +1,7 @@
 import { forwardRef, ReactElement, useImperativeHandle, useRef } from "react";
-import { Animated, LayoutChangeEvent, LayoutRectangle, View } from "react-native";
+import { Animated, LayoutChangeEvent, LayoutRectangle, View, ViewStyle } from "react-native";
 import { Logger } from "../../../logger/Logger.ts";
-import { AnimatedInterpolation } from "react-native/Libraries/Animated/Animated";
+import { StyleProp } from "react-native/Libraries/StyleSheet/StyleSheet";
 
 export interface DroppableHighlightSetting {
     cssProperty: string;
@@ -21,9 +21,13 @@ export type DroppableComponentProps<T = {}> = {
     children: ReactElement<T>;
     highlightSettings: DroppableHighlightSetting[];
     canDrop: boolean;
+    onDrag?: () => void;
+    onNoDrag?: () => void;
+    onDrop?: () => void;
+    style?: StyleProp<ViewStyle>;
 }
 
-const DroppableComponent = forwardRef<DroppableComponentType, DroppableComponentProps>(({children, highlightSettings, canDrop}: DroppableComponentProps, ref) => {
+const DroppableComponent = forwardRef<DroppableComponentType, DroppableComponentProps>(({children, highlightSettings, canDrop, onDrag, onNoDrag, onDrop, style}: DroppableComponentProps, ref) => {
 
     const logSource = "DroppableComponentProps";
 
@@ -38,21 +42,30 @@ const DroppableComponent = forwardRef<DroppableComponentType, DroppableComponent
        });
     };
 
-    const onDrag = () => {
+    const onDragInner = () => {
         if(canDrop){
             updateTargetHighlight(1);
         }
-    }
-
-    const onNoDrag = () => {
-        if(canDrop){
-            updateTargetHighlight(0);
+        if(onDrag){
+            onDrag();
         }
     }
 
-    const onDrop = () => {
+    const onNoDragInner = () => {
         if(canDrop){
             updateTargetHighlight(0);
+        }
+        if(onNoDrag){
+            onNoDrag();
+        }
+    }
+
+    const onDropInner = () => {
+        if(canDrop){
+            updateTargetHighlight(0);
+        }
+        if(onDrop){
+            onDrop();
         }
     }
 
@@ -61,10 +74,10 @@ const DroppableComponent = forwardRef<DroppableComponentType, DroppableComponent
     }
 
     useImperativeHandle(ref, () => ({
-        onDrag,
+        onDrag: onDragInner,
         getLayout,
-        onNoDrag,
-        onDrop,
+        onNoDrag: onNoDragInner,
+        onDrop: onDropInner,
         canDrop
     }));
 
@@ -77,22 +90,23 @@ const DroppableComponent = forwardRef<DroppableComponentType, DroppableComponent
     }
 
     function getDropBG(){
-        let results:{[key: string]:AnimatedInterpolation } = {};
+        let results:{[key: string]:Animated.AnimatedInterpolation<any> } = {};
         highlightSettings.forEach(settings => {
             results[settings.cssProperty] = dropZoneColors.current.interpolate({
                 inputRange: [0, 1],
                 outputRange: [settings.defaultValue, settings.value]
             });
         });
-
+        Logger.log(logSource, "getDropBG: " + JSON.stringify(results));
         return results;
     }
 
 
     return <Animated.View
             onLayout={handleLayout()}
+            // @ts-ignore
             ref={(viewRef) => dropRefs.current = viewRef}
-            style={[getDropBG()]}>
+            style={[style, getDropBG()]}>
             {children}
         </Animated.View>
 });

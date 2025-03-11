@@ -18,26 +18,42 @@ import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionT
 import { IAudioManager } from "../../../../sound/IAudioManager.ts";
 import { TileOutfitComponent } from "../../common/tile-outfit/TileOutfit.component.tsx";
 import { ThemeManager } from "../../../style/ThemeManager.ts";
-import LinearGradient from "react-native-linear-gradient";
 import { GradientBorder } from "../../../../core/components/gradient-border/GradienBorder.tsx";
 import { CardText } from "../../common/card-text/CardText.tsx";
+import { Colors } from "../../../../style/Colors";
+
+export interface CardStyle {
+  borderColors: string[];
+  borderColorSelected: string[];
+  borderColorCorrect: string[];
+  borderColorWrong: string[];
+
+  backgroundColor: string;
+  backgroundColorSelected: string;
+  backgroundColorCorrect: string;
+  backgroundColorWrong: string;
+
+  shadow: string;
+}
 
 export interface WordCardComponentProps {
   model: WordCardModel;
   style?: ViewStyle;
+  cardStyle?: Partial<CardStyle>;
   onSpeakStarted?: () => void,
   onSpeakCompleted?: () => void,
   onPressed?: () => void
 }
 
-function WordCardComponent({ model, style, onSpeakStarted, onSpeakCompleted, onPressed }:WordCardComponentProps): React.JSX.Element {
+function WordCardComponent({ model, style, onSpeakStarted, onSpeakCompleted, onPressed, cardStyle }:WordCardComponentProps): React.JSX.Element {
 
   const logSource = "WordCardComponent";
   const audioManager = useRef<IAudioManager>(
     InjectionManager.useInjection<IAudioManager>(DepInjectionsTokens.AUDIO_MANAGER_TOKEN)
   );
-  const [borderColor, setBorderColor] = useState(ThemeManager.theme.games.card.borderColors);
-  const [backgroundColor, setBackgroundColor] = useState(ThemeManager.theme.games.card.borderColors);
+  const [borderColor, setBorderColor] = useState(getCardBorder(cardStyle));
+  const [backgroundColor, setBackgroundColor] = useState<string>(getCardBackground(cardStyle));
+  const [currentCardStyle, setCurrentCardStyle] = useState<CardStyle>(ThemeManager.theme.games.card)
 
   useEffect(() => {
     if(model?.shouldSayTheWord){
@@ -46,10 +62,22 @@ function WordCardComponent({ model, style, onSpeakStarted, onSpeakCompleted, onP
   }, [model?.shouldSayTheWord]);
 
   useEffect(() => {
-    Logger.log(logSource, "status has changed " + model?.word + " status = " + model?.answerStatus);
+    const currentStyle = calculateStyle();
+    Logger.log(logSource, `(${model.word}) current style = ${JSON.stringify(currentStyle)}`);
+    setCurrentCardStyle(currentStyle);
+  }, [cardStyle]);
+
+  useEffect(() => {
     setBorderColor(getCardBorder());
-    setBackgroundColor(getCardBackground());
-  }, [model?.answerStatus, model?.isSelected])
+    const bg = getCardBackground();
+    Logger.log(logSource, `(${model.word}) new bg = ${bg}`);
+    // @ts-ignore
+    setBackgroundColor(bg);
+  }, [model?.answerStatus, model?.isSelected, currentCardStyle])
+
+  function calculateStyle(){
+    return Object.assign({}, model?.selectable ? ThemeManager.theme.games.selectableCard : ThemeManager.theme.games.card, cardStyle);
+  }
 
   function playSound(){
     if(model){
@@ -83,33 +111,47 @@ function WordCardComponent({ model, style, onSpeakStarted, onSpeakCompleted, onP
     }
   }
 
-  function getCardBorder(){
-    if(model?.answerStatus === AnswerStatus.wrong){
-      return ThemeManager.theme.games.selectableCard.borderColorWrong;
+  function getCardBorder(style?:Partial<CardStyle>){
+    const styleToUse = currentCardStyle || style;
+    const defaultBorder = [Colors.transparent, Colors.transparent];
+
+    if (!styleToUse) {
+      return defaultBorder;
     }
-    if(model?.answerStatus === AnswerStatus.correct){
-      return ThemeManager.theme.games.selectableCard.borderColorCorrect;
+
+    if (model?.answerStatus === AnswerStatus.wrong) {
+      return styleToUse.borderColorWrong ?? defaultBorder;
     }
-    if(model?.isSelected){
-      return ThemeManager.theme.games.selectableCard.borderColorSelected;
+    if (model?.answerStatus === AnswerStatus.correct) {
+      return styleToUse.borderColorCorrect ?? defaultBorder;
     }
-    return model.selectable ? ThemeManager.theme.games.selectableCard.borderColors : ThemeManager.theme.games.card.borderColors;
+    if (model?.isSelected) {
+      return styleToUse.borderColorSelected ?? defaultBorder;
+    }
+    return styleToUse.borderColors ?? defaultBorder;
   }
 
-  function getCardBackground() {
-    if(model?.answerStatus === AnswerStatus.wrong){
-      return ThemeManager.theme.games.selectableCard.backgroundColorWrong;
+  function getCardBackground(style?:Partial<CardStyle>):string {
+    const styleToUse = currentCardStyle || style;
+    const defaultBg = Colors.transparent;
+    if (!styleToUse) {
+      return defaultBg;
     }
-    if(model?.answerStatus === AnswerStatus.correct){
-      return ThemeManager.theme.games.selectableCard.backgroundColorCorrect;
+
+    if (model?.answerStatus === AnswerStatus.wrong) {
+      return styleToUse.backgroundColorWrong ?? defaultBg;
     }
-    if(model?.isSelected){
-      return ThemeManager.theme.games.selectableCard.backgroundColorSelected;
+    if (model?.answerStatus === AnswerStatus.correct) {
+      return styleToUse.backgroundColorCorrect ?? defaultBg;
     }
-    return model.selectable ?  ThemeManager.theme.games.selectableCard.backgroundColor : ThemeManager.theme.games.card.backgroundColor;
+    if (model?.isSelected) {
+      return styleToUse.backgroundColorSelected ?? defaultBg;
+    }
+    return styleToUse.backgroundColor ?? defaultBg;
   }
 
-  const wordCardStyling = WordCardStyling(ThemeManager.theme.games.card, backgroundColor);
+  Logger.log(logSource, `(${model.word}) background = ${backgroundColor}`);
+  const wordCardStyling = WordCardStyling(currentCardStyle, backgroundColor);
 
   return (
 

@@ -1,17 +1,28 @@
-import { Animated, LayoutChangeEvent, LayoutRectangle, PanResponder, PanResponderGestureState, Text, View } from "react-native";
+import {
+  Animated,
+  LayoutChangeEvent,
+  LayoutRectangle,
+  PanResponder,
+  PanResponderGestureState,
+  Text,
+  View,
+  ViewStyle
+} from "react-native";
 import { cloneElement, isValidElement, ReactElement, useRef, useState } from "react";
 import { draggableStyle } from "./draggable.style.tsx";
 import { Logger } from "../../../logger/Logger.ts";
 import { DroppableComponentType } from "../droppable/droppable.component.tsx";
+import { StyleProp } from "react-native/Libraries/StyleSheet/StyleSheet";
 
 export type DraggableComponentProps<T = {}> = {
   children: ReactElement<T>; // Ensure children accept `isDragging` as a prop
   droppableComponents: DroppableComponentType[];
   onDrag?: (layoutIndex: number|undefined) => void;
   onDrop?: (layoutIndex: number) => void;
+  style?: StyleProp<ViewStyle>;
 };
 
-const DraggableComponent = <T,>({ children, onDrop, droppableComponents }: DraggableComponentProps<T>): JSX.Element => {
+const DraggableComponent = <T,>({ children, onDrop, droppableComponents, style }: DraggableComponentProps<T>): JSX.Element => {
 
   const logSource = "DraggableComponentProps";
 
@@ -27,9 +38,10 @@ const DraggableComponent = <T,>({ children, onDrop, droppableComponents }: Dragg
 
       onPanResponderGrant: () => {
         setIsDragging(true);
-        //@ts-ignore
         pan.setOffset({
+          //@ts-ignore
           x: pan.x._value,
+          //@ts-ignore
           y: pan.y._value,
         });
 
@@ -52,11 +64,9 @@ const DraggableComponent = <T,>({ children, onDrop, droppableComponents }: Dragg
         setIsDragging(false);
         pan.flattenOffset();
 
-        let dropped = false;
         const lauoutToDropIndex = droppableComponents.findIndex((dc, i) => isInsideLayout(dc.getLayout(), gestureState, i));
 
         if(lauoutToDropIndex != undefined && lauoutToDropIndex >= 0 && droppableComponents[lauoutToDropIndex].canDrop){
-          dropped = true;
           if(onDrop){
             onDrop(lauoutToDropIndex);
             droppableComponents[lauoutToDropIndex].onDrop();
@@ -86,7 +96,7 @@ const DraggableComponent = <T,>({ children, onDrop, droppableComponents }: Dragg
   return (
     <Animated.View
 
-      style={[pan.getLayout(), draggableStyle.draggable]}
+      style={[pan.getLayout(), draggableStyle.draggable, style]}
       {...panResponder.panHandlers}
     >
 

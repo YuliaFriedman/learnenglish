@@ -17,6 +17,7 @@ export const Colors = {
   lightPurple1: 'rgba(216,214,230,0.43)',
   lightPurple2: '#e5e2ec',
   lightPurple3: '#cfc9dd',
+  lightPurple4: '#b5abc6',
 
   purple0: '#d18ff8',
   purple1: '#b666df',
@@ -61,6 +62,8 @@ export const Colors = {
   brown2: '#b68955',
   brown3: '#ac7640',
   brown4: '#985f06',
+
+  grayBrown1: "#e8e0d8",
 
   transparentGray: "rgba(200, 200, 200 ,0.5)",
   gray0: "#eeeeee",

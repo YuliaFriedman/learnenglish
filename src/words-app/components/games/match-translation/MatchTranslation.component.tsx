@@ -13,7 +13,7 @@ import { MatchTranslationStyling } from "./MatchTranslation.styling";
 import PrimaryButtonComponent from "../../common/primary-button/PrimaryButton.component.tsx";
 import { WordCardModel } from "../word-card/WordCardModel";
 import { dictionary } from "../../../app-data/levels/dictionary/Dictionary";
-import WordCardComponent from "../word-card/WordCard.component";
+import WordCardComponent, { CardStyle } from "../word-card/WordCard.component";
 import { arrayUtil } from "../../../../utils/ArrayUtil";
 import DraggableComponent from "../../../../core/components/draggable/draggable.component";
 import DroppableComponent, { DroppableComponentType } from "../../../../core/components/droppable/droppable.component";
@@ -25,6 +25,7 @@ import InjectionManager from "../../../../core/services/InjectionManager.ts";
 import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
 import { Languages } from "../../../../app-data/language.ts";
 import { GameModel } from "../models/GameModel.ts";
+import { ThemeManager } from "../../../style/ThemeManager.ts";
 
 interface SolutionModel{
   sourceIndex: number;
@@ -42,8 +43,11 @@ function MatchTranslationComponent({model, onCompleted}: GameModel<MatchTranslat
   const [dropableProps, setDropableProps] = useState<{canDrop:boolean}[]>([]);
   const [canContinue, setCanContinue] = useState(false);
   const droppableComponents = useRef<DroppableComponentType[]|null[]>([]);
+  const [cardsStyle,setCardsStyle] = useState<Partial<CardStyle>[]>([]);
 
   const appProducer = useRef<IAppProducer>(InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN));
+  Logger.log(logSource, `${JSON.stringify(ThemeManager.theme.games.matchTranslation.card)}`)
+
 
   useEffect(() => {
     initData();
@@ -53,6 +57,7 @@ function MatchTranslationComponent({model, onCompleted}: GameModel<MatchTranslat
   useEffect(() => {
     updateDataBySolution();
     setCanContinue(solutions.length == model.words.length);
+    updateCardsStyleBySolutions();
   },[solutions]);
 
   function updateDataBySolution(){
@@ -112,8 +117,18 @@ function MatchTranslationComponent({model, onCompleted}: GameModel<MatchTranslat
         currentList.push({ canDrop: true });
         return currentList;
       });
+
+      // set cards style
+      setCardsStyle(currentList => {
+        currentList.push(getDefaultCardStyle());
+        return currentList;
+      })
     });
     playInstructions();
+  }
+
+  function getDefaultCardStyle(){
+    return {...ThemeManager.theme.games.matchTranslation.card};
   }
 
   function playInstructions(){
@@ -177,17 +192,36 @@ function MatchTranslationComponent({model, onCompleted}: GameModel<MatchTranslat
     });
   }
 
+  function updateCardsStyleBySolutions(){
+    setCardsStyle(currentList => {
+      const newCardStyleList = currentList.map(item => getDefaultCardStyle());
+      solutions.forEach(solution => {
+        newCardStyleList[solution.targetIndex] = ThemeManager.theme.games.matchTranslation.cardWithAnswer;
+      });
+      console.log("newCardStyleList: " + JSON.stringify(newCardStyleList));
+      return newCardStyleList;
+    });
+  }
+
   return (
     <View style={MatchTranslationStyling.host}>
       <View style={MatchTranslationStyling.cardRow}>
         {
           words.map((word, i) => {
             return <View style={[MatchTranslationStyling.wordCard]} key={"words_" + i}>
-              <DroppableComponent  {...dropableProps[i]} ref={(ref) => droppableComponents.current[i] = ref}
-              highlightSettings={[{cssProperty: "backgroundColor", defaultValue: MatchTranslationStyling.wordCard.backgroundColor, value: MatchTranslationStyling.dropHighlight.backgroundColor}]}>
-                <View style={{height: "100%"}}>
-                  <WordCardComponent model={word} ></WordCardComponent>
-                </View>
+              <DroppableComponent  {...dropableProps[i]}
+                                   ref={(ref) => droppableComponents.current[i] = ref}
+                                   style={[MatchTranslationStyling.droppableStyle]}
+                                  highlightSettings={[
+                                    {cssProperty: "backgroundColor", defaultValue: ThemeManager.theme.games.matchTranslation.highlight.backgroundColor, value: ThemeManager.theme.games.matchTranslation.highlightOnDrag.backgroundColor },
+                                    {
+                                      cssProperty: "borderColor",
+                                      defaultValue: ThemeManager.theme.games.matchTranslation.highlight.borderColor,
+                                      value: ThemeManager.theme.games.matchTranslation.highlightOnDrag.borderColor
+                                    },
+                                  ]}
+              >
+                <WordCardComponent cardStyle={cardsStyle.length >= i ? cardsStyle[i] : undefined} model={word} ></WordCardComponent>
               </DroppableComponent>
             </View>
           })
@@ -197,18 +231,16 @@ function MatchTranslationComponent({model, onCompleted}: GameModel<MatchTranslat
       <View style={MatchTranslationStyling.translationsRow}>
         {translations.map((word, i) => {
           if(solutions.find(item => item.sourceIndex === i)){
-            return <View key={"translation_" + i} style={[MatchTranslationStyling.singleMatchItem,]}>
-            </View>
+            return <View key={"translation_" + i} style={[MatchTranslationStyling.singleMatchItem]}></View>
           }
           else{
-            return <View key={"translation_" + i} style={[MatchTranslationStyling.singleMatchItem]}
-                          >
-              <DraggableComponent
-                // @ts-ignore
-                droppableComponents={droppableComponents.current}
-                onDrop={(targetIndex) => onDropToLayout(i, targetIndex)}>
-                <WordCardComponent model={word} />
-              </DraggableComponent>
+            return <View key={"translation_" + i} style={[MatchTranslationStyling.singleMatchItem]}>
+                <DraggableComponent
+                  // @ts-ignore
+                  droppableComponents={droppableComponents.current}
+                  onDrop={(targetIndex) => onDropToLayout(i, targetIndex)}>
+                  <WordCardComponent cardStyle={ThemeManager.theme.games.matchTranslation.answer} model={word} />
+                </DraggableComponent>
               </View>
           }
         })}
