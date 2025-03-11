@@ -76,7 +76,7 @@ function WordCardComponent({ model, style, onSpeakStarted, onSpeakCompleted, onP
   }, [model?.answerStatus, model?.isSelected, currentCardStyle])
 
   function calculateStyle(){
-    return Object.assign({}, model?.selectable ? ThemeManager.theme.games.selectableCard : ThemeManager.theme.games.card, cardStyle);
+    return Object.assign({...ThemeManager.theme.games.card}, model?.selectable ? ThemeManager.theme.games.selectableCard : {}, cardStyle);
   }
 
   function playSound(){

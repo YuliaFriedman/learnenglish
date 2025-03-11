@@ -86,9 +86,14 @@ export const KidsTheme = {
   games: {
     card: {
       borderColors: [Colors.white, Colors.white],
+      borderColorCorrect: [Colors.green3, Colors.green3],
+      borderColorWrong: [Colors.red2, Colors.red2],
       borderStart:{ x: 0, y: 0 },
       borderEnd:{ x: 1, y: 0 },
+
       backgroundColor: Colors.white,
+      backgroundColorCorrect: Colors.green00,
+      backgroundColorWrong: Colors.red0,
 
       overlayColor: Colors.white,
       shadow: Colors.black,
@@ -99,13 +104,9 @@ export const KidsTheme = {
     selectableCard: {
       borderColors: [Colors.purple11, Colors.blue4],
       borderColorSelected: [Colors.orange3, Colors.orange3],
-      borderColorCorrect: [Colors.green3, Colors.green3],
-      borderColorWrong: [Colors.red2, Colors.red2],
 
       backgroundColor: Colors.white,
       backgroundColorSelected: Colors.beige0,
-      backgroundColorCorrect: Colors.green00,
-      backgroundColorWrong: Colors.red0,
     },
 
     textCard: {
