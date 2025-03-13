@@ -4,6 +4,9 @@ import React from "react";
 import { Category } from "../../../app-data/models/CategoryModel.ts";
 import { CategoryCardStyling } from "./CategoryCard.styling.tsx";
 import { TileOutfitComponent } from "../../common/tile-outfit/TileOutfit.component.tsx";
+import {
+  PressableWithAnimation
+} from "../../../../core/components/animations/pressable-with-animatin/PressableWithAnimation.tsx";
 
 export interface CategoryCardProps {
   category: Category;
@@ -13,8 +16,10 @@ export interface CategoryCardProps {
 
 export function CategoryCard({category, onPress}: CategoryCardProps) {
   return (
-
-      <Pressable key={category.type} style={[CategoryCardStyling.CategoryCell, {shadowColor: category.style?.colors[0]}]} onPress={() => onPress && onPress()}>
+    <PressableWithAnimation
+      key={category.type}
+      style={[CategoryCardStyling.CategoryCell, {shadowColor: category.style?.colors[0]}]}
+      onPress={() => onPress && onPress()}>
         <TileOutfitComponent colors={category.style?.colors} locations={category.style?.locations} borderColor={category.style?.borderColor}
           overlay={{ color: category.style?.overlayColor, pos: { bottom: 60, right: 60 }}} ></TileOutfitComponent>
         <View>
@@ -26,9 +31,7 @@ export function CategoryCard({category, onPress}: CategoryCardProps) {
           </View>
           <Text style={CategoryCardStyling.cardText}>{category.title}</Text>
         </View>
-      </Pressable>
-
-
+    </PressableWithAnimation>
 
   );
 }

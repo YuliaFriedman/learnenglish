@@ -48,9 +48,9 @@ const tileOutfitStyle = (borderColor?: string) => StyleSheet.create({
   },
 
   innerWrapper: {
-    borderRightColor: Colors.white,
+    borderRightColor: Colors.$gray_0,
     borderRightWidth: 1,
-    borderBottomColor: Colors.white,
+    borderBottomColor: Colors.$gray_0,
     borderBottomWidth: 1,
     borderRadius: 11,
     display: "flex",

@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import { fromPercentToPixelsHeight, fromPercentToPixelsWidth } from "../../../../style/dimentions.ts";
+import { ThemeManager } from "../../../style/ThemeManager.ts";
 
 export const NewWordsStyling = StyleSheet.create({
 
@@ -27,7 +28,7 @@ export const NewWordsStyling = StyleSheet.create({
 
   wordCard: {
     width: "40%",
-    height: fromPercentToPixelsHeight(30),
+    height: fromPercentToPixelsHeight(25),
   },
 
 })

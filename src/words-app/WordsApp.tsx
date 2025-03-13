@@ -93,19 +93,24 @@ export function WordsApp(){
           break;
         case WordsAppPages.steps:
           newPage = <CategoriesStepsComponent></CategoriesStepsComponent>;
-          const selectedCategoryId = appProducer.current?.getSelectedCategory();
-          const selectedCategory = selectedCategoryId ? appProducer.current?.getCategory(selectedCategoryId) : null;
-          newTitle = selectedCategory ? "Words App - " + selectedCategory.title : "Words App";
+          let selectedCategory = getSelectedCategory();
+          newTitle = selectedCategory ? selectedCategory.title : "Words App";
           break;
         case WordsAppPages.game:
           newPage = <GameContainerComponent></GameContainerComponent>
-          newTitle = "Words App - " + "Game";
+          selectedCategory = getSelectedCategory();
+          newTitle = selectedCategory ? selectedCategory.title : "Words App";
           break;
       }
     }
 
     setTitle(newTitle);
     setPage(newPage);
+  }
+
+  function getSelectedCategory(){
+    const selectedCategoryId = appProducer.current?.getSelectedCategory();
+    return selectedCategoryId ? appProducer.current?.getCategory(selectedCategoryId) : null;
   }
 
 const screenDimensions = getScreenDimensions();

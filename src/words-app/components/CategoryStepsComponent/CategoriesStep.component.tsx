@@ -1,5 +1,5 @@
 import { CategoriesStepsStyling } from "./CategoriesSteps.styling.tsx";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { StepProgressIcon } from "./StepProgressIcon.component.tsx";
 import React, { useEffect, useRef } from "react";
 import { StepModel } from "../../app-data/models/StepModel.ts";
@@ -8,6 +8,9 @@ import InjectionManager from "../../../core/services/InjectionManager.ts";
 import { IAppProducer } from "../../app-data/store/IAppProducer.ts";
 import { DepInjectionsTokens } from "../../dependency-injection/DepInjectionTokens.ts";
 import { CategoryStyle } from "../../app-data/models/CategoryModel.ts";
+import {
+  PressableWithAnimation
+} from "../../../core/components/animations/pressable-with-animatin/PressableWithAnimation.tsx";
 
 export interface CategoriesStepProps {
   step: StepModel;
@@ -33,14 +36,14 @@ export function CategoriesStepComponent({step, onPress, stepStyling}: Categories
 
 
   return(
-    <Pressable style={CategoriesStepStyling.step} key={step.id} onPress={() => onPress()}>
-      <TileOutfitComponent colors={stepStyling?.colors} locations={stepStyling?.locations} borderColor={stepStyling?.borderColor}
-        overlay={{ color: stepStyling?.overlayColor, pos: { bottom: 85, right: 73 }}}></TileOutfitComponent>
-      <View>
-        <Text style={CategoriesStepStyling.stepText}>{step.displayName}</Text>
-        <StepProgressIcon step={step}  style={CategoriesStepStyling.progressIcon}></StepProgressIcon>
-      </View>
-    </Pressable>
+    <PressableWithAnimation style={CategoriesStepStyling.step} key={step.id} onPress={() => onPress()}>
+        <TileOutfitComponent colors={stepStyling?.colors} locations={stepStyling?.locations} borderColor={stepStyling?.borderColor}
+          overlay={{ color: stepStyling?.overlayColor, pos: { bottom: 85, right: 73 }}}></TileOutfitComponent>
+        <View>
+          <Text style={CategoriesStepStyling.stepText}>{step.displayName}</Text>
+          <StepProgressIcon step={step}  style={CategoriesStepStyling.progressIcon}></StepProgressIcon>
+        </View>
+    </PressableWithAnimation>
   );
 }
 

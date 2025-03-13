@@ -18,7 +18,6 @@ export const MatchTranslationStyling = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     flex: 1,
-    backgroundColor: "pink"
   },
 
   translationsRow: {
@@ -31,7 +30,7 @@ export const MatchTranslationStyling = StyleSheet.create({
 
   singleMatchItem: {
     flex: 1,
-    backgroundColor: Colors.lightPurple4,
+    backgroundColor: ThemeManager.theme.games.matchTranslation.answer.placeholderBg,
     borderRadius: 20,
     borderWidth: 0
   },

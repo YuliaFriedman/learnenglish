@@ -7,13 +7,7 @@ export const PrimaryButtonStyling = StyleSheet.create({
     fontSize: 20
   },
 
-  buttonStyle:{
-    backgroundColor: "transparent"
-  },
-
-  buttonWrapperStyle: {
-    //marginVertical: "10%",
-    padding: 3,
-    borderRadius: 5
+  disabled: {
+    opacity: 0.8
   }
 })

@@ -24,11 +24,13 @@ import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionT
 import { Languages } from "../../../../app-data/language.ts";
 import { SpacingRow } from "../../../../core/components/spacing-row/SpacingRow.tsx";
 import { GameModel } from "../models/GameModel.ts";
+import { IShakeView, ShakeView } from "../../../../core/components/animations/shake/ShakeView.component.tsx";
 
 function SelectTranslationComponent({model, onCompleted}: GameModel<SelectTranslationModel>): React.JSX.Element {
 
   const logSource = "SelectTranslationComponent";
 
+  const incorrectCardRefs = useRef<Array<IShakeView>>([]);
   const [translations,setTranslations] = useState<WordCardModel[]>([]);
   const [word, setWord] = useState<WordTextCardModel|undefined>(undefined);
   const appProducer = useRef<IAppProducer | null>(null);
@@ -93,8 +95,18 @@ function SelectTranslationComponent({model, onCompleted}: GameModel<SelectTransl
   function nextButtonPressed() {
     if(isCorrectAnswer()){
       AppSoundsPlayer.playCorrectSound();
+      setTranslations(currentTranslations => {
+        return currentTranslations.map((tran, i) => {
+          return {
+            ...tran,
+            answerStatus: tran.isSelected ? AnswerStatus.correct : AnswerStatus.notChecked
+          }
+        })
+      });
       if(onCompleted){
-        onCompleted();
+        setTimeout(() => {
+          onCompleted();
+        }, 500);
       }
     }
     else{
@@ -107,6 +119,8 @@ function SelectTranslationComponent({model, onCompleted}: GameModel<SelectTransl
           }
         })
       });
+      const selectedIndex = translations.findIndex(item => item.isSelected);
+      incorrectCardRefs.current[selectedIndex]?.shake();
     }
   }
 
@@ -126,7 +140,12 @@ function isCorrectAnswer(){
         translations.map((translation, i) => {
           return (
             <View key={"translation_" + i} style={[SelectTranslationStyling.wordCard]}>
+              <ShakeView
+                // @ts-ignore
+                ref={ref => incorrectCardRefs.current[i] = ref}
+              >
                 <WordCardComponent onPressed={() => translationPressed(i)} model={translation} ></WordCardComponent>
+              </ShakeView>
             </View>
           )
         })

@@ -26,6 +26,7 @@ import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionT
 import { Languages } from "../../../../app-data/language.ts";
 import { GameModel } from "../models/GameModel.ts";
 import { ThemeManager } from "../../../style/ThemeManager.ts";
+import { IShakeView, ShakeView } from "../../../../core/components/animations/shake/ShakeView.component.tsx";
 
 interface SolutionModel{
   sourceIndex: number;
@@ -44,7 +45,7 @@ function MatchTranslationComponent({model, onCompleted}: GameModel<MatchTranslat
   const [canContinue, setCanContinue] = useState(false);
   const droppableComponents = useRef<DroppableComponentType[]|null[]>([]);
   const [cardsStyle,setCardsStyle] = useState<Partial<CardStyle>[]>([]);
-
+  const incorrectCardRefs = useRef<Array<IShakeView>>([]);
   const appProducer = useRef<IAppProducer>(InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN));
   Logger.log(logSource, `${JSON.stringify(ThemeManager.theme.games.matchTranslation.card)}`)
 
@@ -140,7 +141,9 @@ function MatchTranslationComponent({model, onCompleted}: GameModel<MatchTranslat
   }
 
   function nextButtonPressed() {
-    if(checkSolutions()){
+    const wrongAnswers = checkSolutions();
+    Logger.log(logSource, `wrong answers = ${JSON.stringify(wrongAnswers)}`);
+    if(wrongAnswers.length == 0){
       AppSoundsPlayer.playCorrectSound();
       if(onCompleted){
         onCompleted();
@@ -149,26 +152,40 @@ function MatchTranslationComponent({model, onCompleted}: GameModel<MatchTranslat
     else{
       setCanContinue(false);
       AppSoundsPlayer.playWrongAnswer();
+      words.forEach((word, index) => {
+        if (wrongAnswers.indexOf(index) >= 0) {
+          Logger.log(logSource, `shaking ${word}`);
+          incorrectCardRefs.current[index]?.shake();
+        }
+      });
+
+      setTimeout(() => {
+        setSolutions(currentSolutions =>
+          currentSolutions.filter(solution =>
+            wrongAnswers.indexOf(solution.targetIndex) === -1
+          )
+        );
+      }, 800);
     }
   }
 
-  function checkSolutions(){
-    let allAnswersCorrect = true;
+  function checkSolutions():number[]{
+    const wrongAnswers:number[] = [];
     solutions.forEach(solution => {
       const sourceWordIndex = model.words.indexOf(words[solution.sourceIndex].id);
       const targetWordIndex = model.words.indexOf(words[solution.targetIndex].id);
-      allAnswersCorrect = allAnswersCorrect && sourceWordIndex === targetWordIndex;
-      setWords(currentWords => {
-        const result = [...currentWords];
-        result[solution.sourceIndex] = {
-          ...result[solution.sourceIndex],
-          answerStatus: sourceWordIndex === targetWordIndex ? AnswerStatus.correct : AnswerStatus.wrong
-        }
-        return result;
-      })
-
+      if(sourceWordIndex !== targetWordIndex){
+        wrongAnswers.push(solution.sourceIndex);
+      }
     });
-    return allAnswersCorrect;
+    setWords(currentWords => {
+      const result = [...currentWords];
+      result.forEach((word, index) => {
+        word.answerStatus = wrongAnswers.indexOf(index) >= 0 ? AnswerStatus.wrong : AnswerStatus.correct;
+      });
+      return result;
+    })
+    return wrongAnswers;
   }
 
   function resetMatch(){
@@ -208,7 +225,12 @@ function MatchTranslationComponent({model, onCompleted}: GameModel<MatchTranslat
       <View style={MatchTranslationStyling.cardRow}>
         {
           words.map((word, i) => {
-            return <View style={[MatchTranslationStyling.wordCard]} key={"words_" + i}>
+            return <ShakeView
+              // @ts-ignore
+              ref={ref => incorrectCardRefs.current[i] = ref}
+              key={"words_" + i}
+              style={MatchTranslationStyling.wordCard}
+            >
               <DroppableComponent  {...dropableProps[i]}
                                    ref={(ref) => droppableComponents.current[i] = ref}
                                    style={[MatchTranslationStyling.droppableStyle]}
@@ -223,7 +245,7 @@ function MatchTranslationComponent({model, onCompleted}: GameModel<MatchTranslat
               >
                 <WordCardComponent cardStyle={cardsStyle.length >= i ? cardsStyle[i] : undefined} model={word} ></WordCardComponent>
               </DroppableComponent>
-            </View>
+            </ShakeView>
           })
         }
       </View>

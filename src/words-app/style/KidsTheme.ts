@@ -4,195 +4,216 @@ import { Colors } from "../../style/Colors";
 export const KidsTheme = {
   header: {
     bg: {
-      colors: [Colors.bluePurple1, Colors.purple11],
+      colors: [Colors.$bluePurple_400, Colors.$purple_400],
       locations: [0, 1],
       start: {x: 0, y: 0.5},
       end: {x: 1, y:  0.5}
     },
-    bottomBorder: Colors.transparent,
-    textColor: Colors.white,
-    shadowColor: Colors.purple3,
-    innerBorder: Colors.bluePurple1
+    bottomBorder: Colors.$transparent,
+    textColor: Colors.$gray_0,
+    shadowColor: Colors.$violet_gray_light_300,
+    innerBorder: Colors.$bluePurple_400
   },
   content: {
     bg1: {
-      colors: [ Colors.lightPurple1, Colors.transparent, Colors.lightPurple1],
+      colors: [ Colors.$violet_gray_50, Colors.$transparent, Colors.$violet_gray_50],
       locations: [0, 0.8, 0.81],
       start: {x: 1, y: 0},
       end: {x: 0, y: 1}
     },
     bg2: {
-      colors: [Colors.lightPurple1, Colors.transparent, Colors.lightPurple1],
+      colors: [Colors.$violet_gray_50, Colors.$transparent, Colors.$violet_gray_50],
       locations: [0, 0.7, 0.71],
       start: {x: 1, y: 0},
       end: {x: 0, y: 1}
     },
-    borderColor: Colors.green3,
-    overlayColor: Colors.transparent,
+    borderColor: Colors.$lime_900,
+    overlayColor: Colors.$transparent,
 
 
   },
   categoryCard:{
-    outerBg: Colors.orange2,
-    textColor: Colors.white,
+    outerBg: Colors.$orange_400,
+    textColor: Colors.$gray_0,
     defaultCardStyle: {
-      colors: [Colors.gray1, Colors.gray2],
+      colors: [Colors.$gray_250, Colors.$gray_550],
       locations: [0, 1],
       start: {x: 0, y: 0.5},
       end: {x: 1, y: 0.5},
-      overlayColor: Colors.white,
-      borderColor: Colors.gray3
+      overlayColor: Colors.$gray_0,
+      borderColor: Colors.$gray_800
     },
     card1: {
-      colors: [Colors.green1, Colors.green2],
+      colors: [Colors.$lime_400, Colors.$lime_600],
       locations: [0, 1],
-      borderColor: Colors.green3,
-      overlayColor: Colors.green0
+      borderColor: Colors.$lime_900,
+      overlayColor: Colors.$green_50
     },
     card2: {
-      colors: [Colors.blue2, Colors.blue3],
+      colors: [Colors.$navy_200, Colors.$navy_500],
       locations: [0, 1],
-      borderColor: Colors.blue4,
-      overlayColor: Colors.blue1
+      borderColor: Colors.$navy_600,
+      overlayColor: Colors.$navy_200
     },
     card3: {
-      colors: [Colors.purple1, Colors.purple2],
+      colors: [Colors.$purple_300, Colors.$purple_500],
       locations: [0, 1],
-      borderColor: Colors.purple3,
-      overlayColor: Colors.purple0
+      borderColor: Colors.$purple_600,
+      overlayColor: Colors.$purple_200
     },
     card4: {
-      colors: [Colors.turquoise1, Colors.turquoise2],
+      colors: [Colors.$teal_300, Colors.$teal_400],
       locations: [0, 1],
-      borderColor: Colors.turquoise3,
-      overlayColor: Colors.turquoise0
+      borderColor: Colors.$teal_500,
+      overlayColor: Colors.$teal_200
     },
 
     defaultTileStyle: {
-      colors: [Colors.gray1, Colors.gray2],
+      colors: [Colors.$gray_250, Colors.$gray_550],
       locations: [0, 1],
       start: {x: 0, y: 0.5},
       end: {x: 1, y: 0.5},
-      overlayColor: Colors.white,
-      borderColor: Colors.gray3
+      overlayColor: Colors.$gray_0,
+      borderColor: Colors.$gray_800
     },
   },
   examTileStyling: {
-    colors: [Colors.purple0, Colors.green2, Colors.blue3],
+    colors: [Colors.$purple_200, Colors.$lime_600, Colors.$navy_500],
     locations: [0, 0.5, 1],
-    borderColor: Colors.green3,
-    overlayColor: Colors.transparent
+    borderColor: Colors.$lime_900,
+    overlayColor: Colors.$transparent
   },
   games: {
     card: {
-      borderColors: [Colors.white, Colors.white],
-      borderColorCorrect: [Colors.green3, Colors.green3],
-      borderColorWrong: [Colors.red2, Colors.red2],
+      borderColors: [Colors.$violet_gray_150, Colors.$violet_gray_150],
+      borderColorCorrect: [Colors.$lime_600, Colors.$lime_600],
+      borderColorWrong: [Colors.$red_400, Colors.$red_400],
       borderStart:{ x: 0, y: 0 },
       borderEnd:{ x: 1, y: 0 },
 
-      backgroundColor: Colors.white,
-      backgroundColorCorrect: Colors.green00,
-      backgroundColorWrong: Colors.red0,
+      backgroundColor: Colors.$gray_0,
+      backgroundColorCorrect: Colors.$lime_50,
+      backgroundColorWrong: Colors.$red_light_100,
 
-      overlayColor: Colors.white,
-      shadow: Colors.black,
+      overlayColor: Colors.$gray_0,
+      shadow: Colors.$gray_1000,
 
-      textColor: Colors.orange3
+      textColor: Colors.$orange_650
     },
 
     selectableCard: {
-      borderColors: [Colors.purple11, Colors.blue4],
-      borderColorSelected: [Colors.orange3, Colors.orange3],
+      borderColors: [Colors.$purple_400, Colors.$navy_600],
+      borderColorSelected: [Colors.$orange_650, Colors.$orange_650],
 
-      backgroundColor: Colors.white,
-      backgroundColorSelected: Colors.beige0,
+      backgroundColor: Colors.$gray_0,
+      backgroundColorSelected: Colors.$beige_50,
     },
 
     textCard: {
-      borderColors: [Colors.purple11, Colors.blue4],
-      borderColorSelected: [Colors.orange3, Colors.orange3],
-      borderColorCorrect: [Colors.green3, Colors.green3],
-      borderColorWrong: [Colors.red2, Colors.red2],
+      borderColors: [Colors.$purple_400, Colors.$navy_600],
+      borderColorSelected: [Colors.$orange_650, Colors.$orange_650],
+      borderColorCorrect: [Colors.$lime_900, Colors.$lime_900],
+      borderColorWrong: [Colors.$red_700, Colors.$red_700],
 
-      backgroundColor: Colors.white,
-      backgroundColorSelected: Colors.beige0,
-      backgroundColorCorrect: Colors.green00,
-      backgroundColorWrong: Colors.red0,
+      backgroundColor: Colors.$gray_0,
+      backgroundColorSelected: Colors.$beige_50,
+      backgroundColorCorrect: Colors.$green_500,
+      backgroundColorWrong: Colors.$red_light_100,
     },
 
     selectTranslation: {
       header:{
-        shadowColor: Colors.black,
-        borderBottomColor: Colors.purple0,
-        backgroundColor: Colors.lightPurple3
+        shadowColor: Colors.$gray_1000,
+        borderBottomColor: Colors.$purple_200,
+        backgroundColor: Colors.$violet_gray_250
       }
 
     },
 
     sayTheWord: {
       cardWrapper: {
-        shadowColor: Colors.black,
-        borderColor: Colors.purple0,
-        backgroundColor: Colors.lightPurple3
+        shadowColor: Colors.$gray_1000,
+        borderColor: Colors.$purple_200,
+        backgroundColor: Colors.$violet_gray_250
       }
     },
 
     matchTranslation: {
       card: {
-        borderColors: [Colors.transparent, Colors.transparent],
-        backgroundColor: Colors.transparent,
-        shadow: Colors.transparent,
+        borderColors: [Colors.$transparent, Colors.$transparent],
+        backgroundColor: Colors.$transparent,
+        shadow: Colors.$transparent,
       },
       highlight: {
-        borderColor: Colors.gray11,
-        backgroundColor: Colors.gray1,
-        shadow: Colors.black,
+        borderColor: Colors.$gray_250,
+        backgroundColor: Colors.$gray_250,
+        shadow: Colors.$gray_1000,
       },
       highlightOnDrag: {
-        borderColor: Colors.gray11,
-        backgroundColor: Colors.gray0
+        borderColor: Colors.$gray_250,
+        backgroundColor: Colors.$gray_200
       },
       cardWithAnswer: {
-        borderColors: [Colors.purple11, Colors.blue4],
-        backgroundColor: Colors.white,
-        shadow: Colors.transparent
+        borderColors: [Colors.$purple_400, Colors.$navy_600],
+        backgroundColor: Colors.$gray_0,
+        shadow: Colors.$transparent
       },
       answer: {
-        borderColors: [Colors.transparent, Colors.transparent],
-        backgroundColor: Colors.lightPurple3,
-        shadow: Colors.transparent
+        borderColors: [Colors.$transparent, Colors.$transparent],
+        backgroundColor: Colors.$violet_gray_250,
+        shadow: Colors.$transparent,
+        placeholderBg: Colors.$violet_gray_500
       }
     }
   },
   buttons: {
-    primary: {
+      defaultButton: {
       bg: {
-        colors: [Colors.bluePurple1, Colors.purple11],
+        colors: [Colors.$green_500, Colors.$green_300],
         locations: [0, 1],
         start: {x: 0, y: 0.5},
         end: {x: 1, y:  0.5}
       },
-      color: Colors.white
+    },
+    primary: {
+      bg: {
+        colors: [Colors.$green_500, Colors.$green_300],
+        locations: [0, 1],
+        start: {x: 0, y: 0.5},
+        end: {x: 1, y:  0.5}
+      },
+      pressed: {
+        colors: [Colors.$green_600, Colors.$green_400],
+        locations: [0, 1],
+        start: {x: 0, y: 0.5},
+        end: {x: 1, y:  0.5}
+      },
+      color: Colors.$gray_0
     },
     secondary: {
       bg: {
-        colors: [Colors.gray11, Colors.gray2],
+        colors: [Colors.$gray_450, Colors.$gray_350],
         locations: [0, 1],
         start: {x: 0, y: 0.5},
         end: {x: 1, y:  0.5}
       },
-      color: Colors.white
+      pressed: {
+        colors: [Colors.$gray_550, Colors.$gray_450],
+        locations: [0, 1],
+        start: {x: 0, y: 0.5},
+        end: {x: 1, y:  0.5}
+      },
+      color: Colors.$gray_0
     },
     speechButton: {
-      backgroundColor: Colors.orange3
+      backgroundColor: Colors.$orange_650
     },
     speechConfirmButton: {
-      backgroundColor: Colors.green3
+      backgroundColor: Colors.$lime_900
     }
   },
   shadow: (color: string, innerShadow: boolean = false) => {
-    if(!color || color === Colors.transparent){
+    if(!color || color === Colors.$transparent){
       return {};
     }
     return {

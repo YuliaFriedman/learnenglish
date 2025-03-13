@@ -21,6 +21,7 @@ import { ThemeManager } from "../../../style/ThemeManager.ts";
 import { GradientBorder } from "../../../../core/components/gradient-border/GradienBorder.tsx";
 import { CardText } from "../../common/card-text/CardText.tsx";
 import { Colors } from "../../../../style/Colors";
+import { animationStyles } from "../../../../core/styles/animations.tsx";
 
 export interface CardStyle {
   borderColors: string[];
@@ -63,14 +64,12 @@ function WordCardComponent({ model, style, onSpeakStarted, onSpeakCompleted, onP
 
   useEffect(() => {
     const currentStyle = calculateStyle();
-    Logger.log(logSource, `(${model.word}) current style = ${JSON.stringify(currentStyle)}`);
     setCurrentCardStyle(currentStyle);
   }, [cardStyle]);
 
   useEffect(() => {
     setBorderColor(getCardBorder());
     const bg = getCardBackground();
-    Logger.log(logSource, `(${model.word}) new bg = ${bg}`);
     // @ts-ignore
     setBackgroundColor(bg);
   }, [model?.answerStatus, model?.isSelected, currentCardStyle])
@@ -100,6 +99,7 @@ function WordCardComponent({ model, style, onSpeakStarted, onSpeakCompleted, onP
   }
 
   function buttonPressed(){
+    Logger.log(logSource, `WordCard pressed ${model?.word}`);
     if(model?.pressable){
       playSound();
       if(onPressed){
@@ -113,7 +113,7 @@ function WordCardComponent({ model, style, onSpeakStarted, onSpeakCompleted, onP
 
   function getCardBorder(style?:Partial<CardStyle>){
     const styleToUse = currentCardStyle || style;
-    const defaultBorder = [Colors.transparent, Colors.transparent];
+    const defaultBorder = [Colors.$transparent, Colors.$transparent];
 
     if (!styleToUse) {
       return defaultBorder;
@@ -133,7 +133,7 @@ function WordCardComponent({ model, style, onSpeakStarted, onSpeakCompleted, onP
 
   function getCardBackground(style?:Partial<CardStyle>):string {
     const styleToUse = currentCardStyle || style;
-    const defaultBg = Colors.transparent;
+    const defaultBg = Colors.$transparent;
     if (!styleToUse) {
       return defaultBg;
     }
@@ -155,15 +155,18 @@ function WordCardComponent({ model, style, onSpeakStarted, onSpeakCompleted, onP
 
   return (
 
-
-       <DraggablePressable  style={style} onPress={buttonPressed}>
+       <DraggablePressable  style={[style]} onPress={buttonPressed}>
+         {(state) => (
          <GradientBorder
            model={{
              colors: borderColor,
              start:ThemeManager.theme.games.card.borderStart,
              end:ThemeManager.theme.games.card.borderEnd
             }}
-            style={wordCardStyling.host}
+            style={[
+              wordCardStyling.host,
+              model?.pressable && state.pressed && animationStyles.pressed
+            ]}
             innerStyle={wordCardStyling.innerContainer}>
             <View
               style={[
@@ -179,8 +182,8 @@ function WordCardComponent({ model, style, onSpeakStarted, onSpeakCompleted, onP
             </View>
             {model?.showText && <CardText style={wordCardStyling.text}>{model.word}</CardText>}
          </GradientBorder>
+         )}
       </DraggablePressable>
-
   );
 }
 

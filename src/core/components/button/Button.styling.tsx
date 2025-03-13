@@ -1,16 +1,17 @@
 import { StyleSheet } from "react-native";
 
 export const ButtonStyling = StyleSheet.create({
-    host:{
-      backgroundColor: "blue",
+
+    inner: {
       padding: 10,
       paddingLeft: 20,
       paddingRight: 20,
-      alignItems: "center"
+      borderRadius: 5,
+      alignItems: "center",
     },
 
     hostDisabled: {
-      opacity: 0.5,
+      opacity: 0.7,
     },
 
     text: {

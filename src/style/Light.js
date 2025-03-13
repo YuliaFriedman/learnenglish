@@ -6,15 +6,15 @@ export const LightTheme = {
     },
     header: {
       bg: Colors.blue1,
-      color: Colors.white,
-      backButtonColor: Colors.white
+      color: Colors.$gray_0,
+      backButtonColor: Colors.$gray_0
     },
     storyLine: {
       nextButtonColor: Colors.green2
     },
     sentenceBlock: {
       borderColor: Colors.blue1,
-      background: Colors.white,
+      background: Colors.$gray_0,
       voiceIconColor: Colors.blue1
     },
     chunkText: {
@@ -32,7 +32,7 @@ export const LightTheme = {
     },
     SelectAnswerBlockVoice: {
       voiceIconColor: Colors.blue1,
-      background: Colors.white,
+      background: Colors.$gray_0,
       borderColor: Colors.blue1
     }
 }
