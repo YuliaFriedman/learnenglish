@@ -140,7 +140,7 @@ export const KidsTheme = {
 
     matchTranslation: {
       card: {
-        borderColors: [Colors.$transparent, Colors.$transparent],
+        borderColors: [Colors.$gray_50, Colors.$gray_50],
         backgroundColor: Colors.$transparent,
         shadow: Colors.$transparent,
       },

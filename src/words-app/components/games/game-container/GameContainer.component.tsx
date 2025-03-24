@@ -19,19 +19,23 @@ import SelectTranslationComponent from "../select-translation/SelectTranslation.
 import { IAppProducer } from "../../../app-data/store/IAppProducer.ts";
 import InjectionManager from "../../../../core/services/InjectionManager.ts";
 import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
-import { AppState } from "../../../app-data/store/Store.ts";
+import { currentGameSelector, currentStepIdSelector } from "../../../app-data/store/AppSelectors.ts";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { RoutesListValues } from "../../../app-data/models/routeValues.ts";
+import { NoGame } from "../no-game/no-game.component.tsx";
+
+const GameStack = createNativeStackNavigator();
 
 function GameContainerComponent(): React.JSX.Element {
 
   const logSource = "GameContainer";
 
   const [currentGameModel, setCurrentGameModel] = useState<GameModel|undefined>(undefined);
-
-  const currentStepId = useSelector((state: AppState) => state.steps.currentStep);//appProducer.getCurrentStepId();
-  const appProducer = useRef<IAppProducer | null>(null);
+  //const currentGameModel = useSelector(currentGameSelector);
+  const currentStepId = useSelector(currentStepIdSelector);
+  const appProducer = useRef<IAppProducer>(InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN));
 
   useEffect(() => {
-    initInjections();
     updateGameModel();
   },[]);
 
@@ -40,21 +44,44 @@ function GameContainerComponent(): React.JSX.Element {
     updateGameModel();
   }, [currentStepId]);
 
-  function initInjections(){
-    if(!appProducer.current){
-      appProducer.current = InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN);
-    }
-  }
-
   function updateGameModel(){
     const currentStep = appProducer.current?.getCurrentStep();
     Logger.log(logSource, "step changed: current step = " + currentStep?.displayName, false, currentStep?.game);
     setCurrentGameModel(currentStep?.game);
+    //appProducer.current.setCurrentGame(currentStep?.game);
   }
 
   function goToNextGame(){
-    appProducer.current?.setNextStep();
+    if(!appProducer.current?.setNextStep()){
+      Logger.log(logSource, "No more steps to show");
+    }
   }
+
+  // useEffect(() => {
+  //   Logger.log(logSource, "currentGameModel changed");
+  //   if (currentGameModel) {
+  //     const route = fromGameTypeToRoute();
+  //     if(route){
+  //       Logger.log(logSource, "Navigating to route: " + route);
+  //       appProducer.current.setNestedNavigationRoute(RoutesListValues.game, { screen: route });
+  //     }
+  //   }
+  // }, [currentGameModel]);
+
+  // function fromGameTypeToRoute(): RoutesListValues | undefined{
+  //   if (currentGameModel) {
+  //     switch (currentGameModel.type) {
+  //       case GameType.NewWord:
+  //         return RoutesListValues.newWord;
+  //       case GameType.SelectTranslation:
+  //         return RoutesListValues.selectTranslation;
+  //       case GameType.SayWord:
+  //         return RoutesListValues.sayWord;
+  //       case GameType.MatchTranslation:
+  //         return RoutesListValues.matchTranslation;
+  //     }
+  //   }
+  // }
 
   let game = <></>;
 
@@ -75,11 +102,11 @@ function GameContainerComponent(): React.JSX.Element {
     }
   }
 
+
   return (
     <View style={GameContainerStyling.host}>
       {game}
     </View>
-
   );
 }
 

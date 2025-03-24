@@ -26,12 +26,12 @@ import { IconButton } from "../../../../core/components/icon-button/IconButton.t
 import { SpeechButton } from "../../common/speech-button/SpeechButton.tsx";
 import { SpacingRow } from "../../../../core/components/spacing-row/SpacingRow.tsx";
 import { SpeechConfirmedButton } from "../../common/speech-button/SpeechConfirmedButton.tsx";
-import { GameModel } from "../models/GameModel.ts";
+import { GameComponentProps } from "../models/GameModel.ts";
 
-function SayWordComponent({model, onCompleted}: GameModel<SayWordModel>): React.JSX.Element {
+function SayWordComponent({model,onCompleted}: GameComponentProps<SayWordModel>): React.JSX.Element {
 
   const logSource = "SayWordComponent";
-
+  //const { model, onCompleted } = route.params;
   const [word, setWord] = useState<WordCardModel|undefined>(undefined);
   const [canContinue, setCanContinue] = useState(false);
   const [attempts, setAttempts] = useState(0);

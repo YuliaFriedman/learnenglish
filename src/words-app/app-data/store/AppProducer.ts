@@ -1,11 +1,15 @@
 import store from "./Store";
 import { SelectedCategory, setCategoriesList, setSelectedCategory } from "./reducers/CategoriesReducer";
-import { Category, CategoryType } from "../models/CategoryModel";
+import { Category } from "../models/CategoryModel";
 import { StepModel } from "../models/StepModel";
 import { setAllSteps, setSelectedStep } from "./reducers/StepsReducer";
 import { Logger } from "../../../logger/Logger";
 import { IAppProducer } from "./IAppProducer.ts";
 import { StepsModel } from "../models/AppDataModel.ts";
+import { NestedParamsType, ParamsType, setCurrentRoute } from "./reducers/AppNavigation.state.ts";
+import { RoutesListValues } from "../models/routeValues.ts";
+import { GameModel } from "../models/GameModel.ts";
+import { setCurrentGame } from "./reducers/CurrentGameReducer.ts";
 
 export class AppProducer implements IAppProducer{
 
@@ -58,6 +62,10 @@ export class AppProducer implements IAppProducer{
     }
   }
 
+  completeCurrentStep = () => {
+
+  }
+
   getCurrentSteps = (): StepModel[]|undefined => {
     return this.getStepsByCategory(this.getSelectedCategory());
   }
@@ -70,6 +78,13 @@ export class AppProducer implements IAppProducer{
     return store.getState()?.steps?.currentStep;
   }
 
+  goToNextStep = () => {
+    const nextStepWasSet = this.setNextStep();
+    if(nextStepWasSet){
+      this.setNavigationRoute(RoutesListValues.game);
+    }
+  }
+
   setNextStep = () => {
     const currentStepId = this.getCurrentStepId();
     const steps = this.getCurrentSteps();
@@ -78,7 +93,6 @@ export class AppProducer implements IAppProducer{
     if(steps && currentStepIndex != undefined && currentStepIndex >= 0) {
       // if last
       if (currentStepIndex === steps.length - 1) {
-        Logger.log(this.logSource, "IN setNextStep: this is last step " + currentStepIndex);
         return false;
       } else {
         Logger.log(this.logSource, "IN setNextStep: Moving to step " + (currentStepIndex + 1), false, steps[currentStepIndex + 1]);
@@ -106,4 +120,18 @@ export class AppProducer implements IAppProducer{
   getSelectedTranslation = () => {
     return store.getState()?.language.currentTranslation;
   }
+
+  // navigation
+
+  setNavigationRoute(routeName: RoutesListValues, params?: ParamsType) {
+    store.dispatch(setCurrentRoute({routeName: routeName, params: params}))
+  }
+
+  setNestedNavigationRoute(routeName: RoutesListValues, params: NestedParamsType) {
+    store.dispatch(setCurrentRoute({routeName: routeName, params: params}))
+  };
+
+  setCurrentGame (game: GameModel|undefined) {
+    store.dispatch(setCurrentGame(game));
+  };
 }

@@ -18,12 +18,13 @@ import InjectionManager from "../../../../core/services/InjectionManager.ts";
 import { IAppProducer } from "../../../app-data/store/IAppProducer.ts";
 import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
 import { Languages } from "../../../../app-data/language.ts";
-import { GameModel } from "../models/GameModel.ts";
+import { GameComponentProps } from "../models/GameModel.ts";
 
-function NewWordsComponent({model, onCompleted}: GameModel<NewWordsModel>): React.JSX.Element {
+function NewWordsComponent({model, onCompleted}: GameComponentProps<NewWordsModel>): React.JSX.Element {
 
   const logSource = "NewWordsComponent";
-
+  //Logger.log(logSource, "In NewWordsComponent " + JSON.stringify(route));
+  //const { model, onCompleted } = route.params;
   const [buttonDisabled,setButtonDisabled] = useState(true);
   const [words,setWords] = useState<WordCardModel[]>([]);
   const [scaleAnimations, setScaleAnimations] = useState(() =>
@@ -78,7 +79,9 @@ function NewWordsComponent({model, onCompleted}: GameModel<NewWordsModel>): Reac
   }
 
   function wordSpeakStarted(index: number){
-    animateWordScale(index);
+    if(!words[index].pressable){
+      animateWordScale(index);
+    }
   }
 
   function nextButtonPressed() {

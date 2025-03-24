@@ -24,7 +24,7 @@ import { IAppProducer } from "../../../app-data/store/IAppProducer.ts";
 import InjectionManager from "../../../../core/services/InjectionManager.ts";
 import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
 import { Languages } from "../../../../app-data/language.ts";
-import { GameModel } from "../models/GameModel.ts";
+import { GameComponentProps } from "../models/GameModel.ts";
 import { ThemeManager } from "../../../style/ThemeManager.ts";
 import { IShakeView, ShakeView } from "../../../../core/components/animations/shake/ShakeView.component.tsx";
 
@@ -34,10 +34,10 @@ interface SolutionModel{
   status: AnswerStatus;
 }
 
-function MatchTranslationComponent({model, onCompleted}: GameModel<MatchTranslationModel>): React.JSX.Element {
+function MatchTranslationComponent({model, onCompleted}: GameComponentProps<MatchTranslationModel>): React.JSX.Element {
 
   const logSource = "MatchTranslationComponent";
-
+  //const { model, onCompleted } = route.params;
   const [words, setWords] = useState<WordCardModel[]>([]);
   const [translations, setTranslations] = useState<WordCardModel[]>([]);
   const [solutions, setSolutions] = useState<SolutionModel[]>([]);

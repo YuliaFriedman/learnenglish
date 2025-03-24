@@ -9,7 +9,7 @@ export enum LogLevel {
 }
 
 export const Logger = {
-  currentLogLevel: LogLevel.INFO,
+  currentLogLevel: LogLevel.LOG,
 
   log: (source: string, msg: string, title: boolean = false, args?: any) => {
     Logger.print(LogLevel.LOG, source, msg, title, args);
@@ -20,23 +20,24 @@ export const Logger = {
   },
 
   print: (printLevel: LogLevel, source: string, msg: string, title: boolean = false, args?: any) => {
-    const now = new Date().toLocaleString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
-    });
-    const levelName = LogLevel[printLevel];
-    if(title){
-      console.log("==================================================");
-    }
-    if(args) {
-      console.log(`[${now}][${levelName}][${source}] ${msg}`, args);
-    }
-    else{
-      console.log(`[${now}][${levelName}][${source}] ${msg}`);
-    }
-    if(title){
-      console.log("==================================================");
+    if(printLevel <= Logger.currentLogLevel) {
+      const now = new Date().toLocaleString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+      const levelName = LogLevel[printLevel];
+      if (title) {
+        console.log("==================================================");
+      }
+      if (args) {
+        console.log(`[${now}][${levelName}][${source}] ${msg}`, args);
+      } else {
+        console.log(`[${now}][${levelName}][${source}] ${msg}`);
+      }
+      if (title) {
+        console.log("==================================================");
+      }
     }
   }
 }

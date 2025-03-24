@@ -55,6 +55,7 @@ function WordCardComponent({ model, style, onSpeakStarted, onSpeakCompleted, onP
   const [borderColor, setBorderColor] = useState(getCardBorder(cardStyle));
   const [backgroundColor, setBackgroundColor] = useState<string>(getCardBackground(cardStyle));
   const [currentCardStyle, setCurrentCardStyle] = useState<CardStyle>(ThemeManager.theme.games.card)
+  const [isPressed, setIsPressed] = useState(false);
 
   useEffect(() => {
     if(model?.shouldSayTheWord){
@@ -100,6 +101,7 @@ function WordCardComponent({ model, style, onSpeakStarted, onSpeakCompleted, onP
 
   function buttonPressed(){
     Logger.log(logSource, `WordCard pressed ${model?.word}`);
+    setIsPressed(true);
     if(model?.pressable){
       playSound();
       if(onPressed){
@@ -109,6 +111,7 @@ function WordCardComponent({ model, style, onSpeakStarted, onSpeakCompleted, onP
     else{
       Logger.log(logSource, "word card is not pressable " + model.word);
     }
+    setTimeout(() => setIsPressed(false), 200);
   }
 
   function getCardBorder(style?:Partial<CardStyle>){
@@ -151,39 +154,40 @@ function WordCardComponent({ model, style, onSpeakStarted, onSpeakCompleted, onP
   }
 
   Logger.log(logSource, `(${model.word}) background = ${backgroundColor}`);
-  const wordCardStyling = WordCardStyling(currentCardStyle, backgroundColor);
+  const wordCardStyling = WordCardStyling(currentCardStyle, backgroundColor, borderColor);
+
+  const content = (
+    <GradientBorder
+      model={{
+        colors: borderColor,
+        start:ThemeManager.theme.games.card.borderStart,
+        end:ThemeManager.theme.games.card.borderEnd
+      }}
+      style={[
+        wordCardStyling.host,
+        model?.pressable && isPressed && animationStyles.pressed
+      ]}
+      innerStyle={wordCardStyling.innerContainer}>
+      <View
+        style={[
+          wordCardStyling.imageContainer,
+          !model?.imgVisible && wordCardStyling.invisibleImg
+        ]}
+      >
+        <Image
+          source={images[model?.image]}
+          style={wordCardStyling.img}
+          resizeMode={"center"}
+        />
+      </View>
+      {model?.showText && <CardText style={wordCardStyling.text}>{model.word}</CardText>}
+    </GradientBorder>
+);
 
   return (
-
        <DraggablePressable  style={[style]} onPress={buttonPressed}>
-         {(state) => (
-         <GradientBorder
-           model={{
-             colors: borderColor,
-             start:ThemeManager.theme.games.card.borderStart,
-             end:ThemeManager.theme.games.card.borderEnd
-            }}
-            style={[
-              wordCardStyling.host,
-              model?.pressable && state.pressed && animationStyles.pressed
-            ]}
-            innerStyle={wordCardStyling.innerContainer}>
-            <View
-              style={[
-                wordCardStyling.imageContainer,
-                !model?.imgVisible && wordCardStyling.invisibleImg
-              ]}
-            >
-              <Image
-                source={images[model?.image]}
-                style={wordCardStyling.img}
-                resizeMode={"center"}
-              />
-            </View>
-            {model?.showText && <CardText style={wordCardStyling.text}>{model.word}</CardText>}
-         </GradientBorder>
-         )}
-      </DraggablePressable>
+         { content }
+       </DraggablePressable>
   );
 }
 

@@ -3,6 +3,9 @@ import { StepModel } from "../models/StepModel.ts";
 import { Languages } from "../../../app-data/language.ts";
 import { StepsModel } from "../models/AppDataModel.ts";
 import { SelectedCategory } from "./reducers/CategoriesReducer.ts";
+import { RoutesListValues } from "../models/routeValues.ts";
+import { NestedParamsType, ParamsType } from "./reducers/AppNavigation.state.ts";
+import { GameModel } from "../models/GameModel.ts";
 
 export interface IAppProducer {
 
@@ -21,4 +24,7 @@ export interface IAppProducer {
   getStepById: (id: number|null) => StepModel|undefined;
   getSelectedLanguage: () => Languages;
   getSelectedTranslation: () => Languages;
+  setNavigationRoute: (routeName: RoutesListValues, params?: ParamsType) => void;
+  setNestedNavigationRoute: (routeName: RoutesListValues, params: NestedParamsType) => void;
+  setCurrentGame: (game: GameModel | undefined) => void;
 }

@@ -1,5 +1,4 @@
 import { FunctionComponent } from "react";
-import { Page } from "../routing/AppNavigatorService";
 
 export interface ActivityProps<T> {
    model: T;

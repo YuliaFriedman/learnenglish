@@ -23,13 +23,13 @@ import { IAppProducer } from "../../../app-data/store/IAppProducer.ts";
 import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
 import { Languages } from "../../../../app-data/language.ts";
 import { SpacingRow } from "../../../../core/components/spacing-row/SpacingRow.tsx";
-import { GameModel } from "../models/GameModel.ts";
+import { GameComponentProps } from "../models/GameModel.ts";
 import { IShakeView, ShakeView } from "../../../../core/components/animations/shake/ShakeView.component.tsx";
 
-function SelectTranslationComponent({model, onCompleted}: GameModel<SelectTranslationModel>): React.JSX.Element {
+function SelectTranslationComponent({model, onCompleted}: GameComponentProps<SelectTranslationModel>): React.JSX.Element {
 
   const logSource = "SelectTranslationComponent";
-
+  //const { model, onCompleted } = route.params;
   const incorrectCardRefs = useRef<Array<IShakeView>>([]);
   const [translations,setTranslations] = useState<WordCardModel[]>([]);
   const [word, setWord] = useState<WordTextCardModel|undefined>(undefined);

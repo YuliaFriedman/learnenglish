@@ -17,13 +17,15 @@ export interface DraggableProps<T = {}> {
 export function DraggablePressable({onPress, children, style}:DraggableProps){
   const logSource = 'DraggablePressable';
   const [isDragging, setIsDragging] = useState(false);
+  const [isPressing, setIsPressing] = useState(false);
   const touchStart = useRef({ x: 0, y: 0 }); // Reference for the initial touch position
   const [dragThreshold] = useState(4); // Set a threshold for detecting drag
 
-  const onPressIn = (e: GestureResponderEvent) => {
+  const onStartShouldSetResponder = (e: GestureResponderEvent) => {
     const { pageX, pageY } = e.nativeEvent;
     touchStart.current = { x: pageX, y: pageY }; // Store the initial touch position
     console.log('Touch started at:', touchStart.current);
+    return false;
   };
 
   //onTouchMove will track the movement and set `isDragging` once the threshold is exceeded
@@ -36,17 +38,31 @@ export function DraggablePressable({onPress, children, style}:DraggableProps){
 
     Logger.log(logSource, `onTouchMove dx: ${dx}, dy: ${dy}`);
 
-    // If movement exceeds threshold, mark it as a drag
-    if (dx > dragThreshold || dy > dragThreshold) {
-      if (!isDragging) {
+    if (!isDragging) {
+      if (dx > dragThreshold || dy > dragThreshold) {
         console.log('Started dragging');
         setIsDragging(true);
+        setIsPressing(false);
+      }
+      else{
+        setIsPressing(true);
       }
     }
+
+    // If movement exceeds threshold, mark it as a drag
+    // if (dx > dragThreshold || dy > dragThreshold) {
+    //   if (!isDragging) {
+    //     console.log('Started dragging');
+    //     setIsDragging(true);
+    //   }
+    // }
+    // else if (!isDragging) {
+    //
+    // }
   };
 
 
-  const onPressOut = () => {
+  const onTouchEnd = () => {
     if (isDragging) {
       console.log('Drag performed');
       // You can handle drag end logic here
@@ -62,13 +78,14 @@ export function DraggablePressable({onPress, children, style}:DraggableProps){
   };
 
   return (
-    <Pressable style={[styles.host, style]}
-       onPressIn={onPressIn}
-      onTouchMove={onTouchMove}
-       onPressOut={onPressOut}
+    <View style={[styles.host, style]}
+          onStartShouldSetResponder={onStartShouldSetResponder}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
       >
-      { state => typeof children === 'function' ? children(state) : children }
-    </Pressable>
+
+        {  typeof children === 'function' ? children({pressed: isPressing}) : children }
+    </View>
   );
 }
 

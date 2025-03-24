@@ -6,27 +6,26 @@
  */
 
 import React, { useEffect, useRef, useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { View } from "react-native";
 import { CategoriesStepsStyling } from "./CategoriesSteps.styling";
-import { StepModel, StepStatus } from "../../app-data/models/StepModel";
+import { StepModel } from "../../app-data/models/StepModel";
 import { Category } from "../../app-data/models/CategoryModel";
 import { Logger } from "../../../logger/Logger";
 // @ts-ignore
 import Icon from "react-native-vector-icons/FontAwesome";
 import { GameType } from "../../app-data/models/GameType";
-import { navigatorService } from "../../../routing/AppNavigatorService";
-import { WordsAppPages } from "../../navigation/WordsAppPages";
 import { IAppProducer } from "../../app-data/store/IAppProducer.ts";
 import InjectionManager from "../../../core/services/InjectionManager.ts";
 import { DepInjectionsTokens } from "../../dependency-injection/DepInjectionTokens.ts";
-import { StepProgressIcon } from "./StepProgressIcon.component.tsx";
 import { CategoriesStepComponent } from "./CategoriesStep.component.tsx";
 import { CategoriesExamStepComponent } from "./CategoriesExamStep.component.tsx";
+import { RoutesListValues } from "../../app-data/models/routeValues.ts";
 
 function CategoriesStepsComponent(): React.JSX.Element {
 
   const logSource = "CategoriesStepsComponent";
 
+  //const navigation = useNavigation<StackNavigationProp<WordsAppPages>>();
   const [currentCategory, setCurrentCategory] = useState<Category|undefined>(undefined);
   const [steps, setSteps] = useState<StepModel[]>([]);
   const appProducer = useRef<IAppProducer | null>(null);
@@ -91,8 +90,9 @@ function CategoriesStepsComponent(): React.JSX.Element {
   }
 
   function navigateToStep(step: StepModel){
+    Logger.log(logSource, "Navigating to step: " + step.id);
     appProducer.current?.setCurrentStep(step.id);
-    navigatorService.navigate(WordsAppPages.game);
+    appProducer.current?.setNestedNavigationRoute(RoutesListValues.step, {screen: RoutesListValues.game});
   }
 
   return (

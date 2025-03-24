@@ -10,22 +10,29 @@ import { Button, Pressable, SafeAreaView, ScrollView, Text, useColorScheme, View
 import { categories } from "../../app-data/levels/Categories";
 import { AppHeaderStyling } from "./AppHeader.styling";
 import { AppHeaderModel } from "./AppHeaderModel";
-import { navigatorService } from "../../../routing/AppNavigatorService";
-import { WordsAppPages } from "../../navigation/WordsAppPages";
 import { Logger } from "../../../logger/Logger";
 import LinearGradient from "react-native-linear-gradient";
 import { ThemeManager } from "../../style/ThemeManager.ts";
 import { IconButton } from "../../../core/components/icon-button/IconButton.tsx";
 import { GradientLayout } from "../../../core/components/gradient-layout/GradientLayout.tsx";
+import { IAppProducer } from "../../app-data/store/IAppProducer.ts";
+import InjectionManager from "../../../core/services/InjectionManager.ts";
+import { DepInjectionsTokens } from "../../dependency-injection/DepInjectionTokens.ts";
+import { RoutesListValues } from "../../app-data/models/routeValues.ts";
 
 
 function AppHeaderComponent(model : AppHeaderModel): React.JSX.Element {
 
   const logSource = "AppHeader";
 
+  const appProducer = useRef<IAppProducer>(
+    InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN)
+  );
+
   function navigateHome(){
     Logger.log(logSource, "Navigating home")
-    navigatorService.navigate(WordsAppPages.categories);
+    appProducer.current.setNavigationRoute(RoutesListValues.categories);
+
   }
 
   return (

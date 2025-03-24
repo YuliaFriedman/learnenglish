@@ -11,17 +11,17 @@ import { AllCategoriesStyling } from "./AllCategories.styling";
 import { Category } from "../../app-data/models/CategoryModel";
 import { images } from "../../app-data/ImagesManager";
 import { Logger } from "../../../logger/Logger";
-import { navigatorService } from "../../../routing/AppNavigatorService";
-import { WordsAppPages } from "../../navigation/WordsAppPages";
 import { CategoryCard } from "./category-card/CategoryCard.component.tsx";
 import InjectionManager from "../../../core/services/InjectionManager.ts";
 import { IAppProducer } from "../../app-data/store/IAppProducer.ts";
 import { DepInjectionsTokens } from "../../dependency-injection/DepInjectionTokens.ts";
+import { RoutesListValues } from "../../app-data/models/routeValues.ts";
 
 function AllCategoriesComponent(): React.JSX.Element {
 
   const logSource = "AllCategories";
 
+  //const navigation = useNavigation<StackNavigationProp<WordsAppPages>>();
   const [allCategoriesView, setAllCategoriesView] = useState<React.ReactNode[]>([]);
   const appProducer = useRef<IAppProducer | null>(null);
 
@@ -47,7 +47,7 @@ function AllCategoriesComponent(): React.JSX.Element {
     Logger.log(logSource, "categories changed: ", false, allCategories)
     setAllCategoriesView(allCategories
       ? allCategories.map((category, index) => {
-          Logger.log(logSource, "Next Category: " + category.title + ", icon = " + category.icon + " style = " + JSON.stringify(category.style));
+          Logger.debug(logSource, "Next Category: " + category.title + ", icon = " + category.icon + " style = " + JSON.stringify(category.style));
           return (
             <CategoryCard key={'category_' + index} category={category} onPress={() => categoryPressed(category)}></CategoryCard>
           )
@@ -56,8 +56,9 @@ function AllCategoriesComponent(): React.JSX.Element {
   }
 
   function categoryPressed(category:Category){
+    Logger.log(logSource, "Category pressed: " + category.title);
     appProducer.current?.setSelectedCategory(category.type);
-    navigatorService.navigate(WordsAppPages.steps);
+    appProducer.current?.setNavigationRoute(RoutesListValues.steps)
   }
 
   return (

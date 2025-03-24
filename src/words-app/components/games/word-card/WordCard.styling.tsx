@@ -1,9 +1,21 @@
 import { StyleSheet } from "react-native";
 import { ThemeManager } from "../../../style/ThemeManager.ts";
+import { Colors } from "../../../../style/Colors.js";
 
-export const WordCardStyling = (cardStyle: any, background: string) => {
+export const WordCardStyling = (cardStyle: any, background: string, borderColor: string[]) => {
   return StyleSheet.create({
     host: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      borderRadius: 20,
+      flex: 1
+    },
+
+    borderStyle: {
+      borderColor: borderColor && borderColor.length > 0 ? borderColor[0] : Colors.$transparent,
+      borderWidth:  1 ,
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
