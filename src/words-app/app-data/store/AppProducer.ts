@@ -78,31 +78,6 @@ export class AppProducer implements IAppProducer{
     return store.getState()?.steps?.currentStep;
   }
 
-  goToNextStep = () => {
-    const nextStepWasSet = this.setNextStep();
-    if(nextStepWasSet){
-      this.setNavigationRoute(RoutesListValues.game);
-    }
-  }
-
-  setNextStep = () => {
-    const currentStepId = this.getCurrentStepId();
-    const steps = this.getCurrentSteps();
-    const currentStepIndex = steps?.findIndex(step => step.id === currentStepId);
-
-    if(steps && currentStepIndex != undefined && currentStepIndex >= 0) {
-      // if last
-      if (currentStepIndex === steps.length - 1) {
-        return false;
-      } else {
-        Logger.log(this.logSource, "IN setNextStep: Moving to step " + (currentStepIndex + 1), false, steps[currentStepIndex + 1]);
-        this.setCurrentStep(steps[currentStepIndex + 1].id);
-        return true;
-      }
-    }
-    return false;
-  }
-
   getCurrentStep = () => {
     return this.getStepById(this.getCurrentStepId());
   }

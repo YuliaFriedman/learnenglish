@@ -19,21 +19,6 @@ export interface CategoriesStepProps {
 }
 
 export function CategoriesStepComponent({step, onPress, stepStyling}: CategoriesStepProps) {
-  const appProducer = useRef<IAppProducer | null>(null);
-  const selectedCategory = useRef(appProducer.current?.getCategory(appProducer.current?.getSelectedCategory()));
-
-  useEffect(() => {
-    initInjections();
-  }, []);
-
-  function initInjections(){
-    if(!appProducer.current){
-      appProducer.current = InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN);
-    }
-  }
-
-
-
 
   return(
     <PressableWithAnimation style={CategoriesStepStyling.step} key={step.id} onPress={() => onPress()}>

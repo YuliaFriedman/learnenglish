@@ -16,37 +16,28 @@ import InjectionManager from "../../../core/services/InjectionManager.ts";
 import { IAppProducer } from "../../app-data/store/IAppProducer.ts";
 import { DepInjectionsTokens } from "../../dependency-injection/DepInjectionTokens.ts";
 import { RoutesListValues } from "../../app-data/models/routeValues.ts";
+import { useSelector } from "react-redux";
+import { categoriesListSelector } from "../../app-data/store/AppSelectors.ts";
 
 function AllCategoriesComponent(): React.JSX.Element {
 
   const logSource = "AllCategories";
 
-  //const navigation = useNavigation<StackNavigationProp<WordsAppPages>>();
   const [allCategoriesView, setAllCategoriesView] = useState<React.ReactNode[]>([]);
-  const appProducer = useRef<IAppProducer | null>(null);
-
-  //const allCategories: Category[] = appProducer.getCategoriesList();
+  const appProducer = useRef<IAppProducer>(InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN));
+  const categoriesList = useSelector(categoriesListSelector);
 
   useEffect(() =>{
-    initInjections();
     buildCategoriesView();
   }, [])
 
   useEffect(() => {
     buildCategoriesView();
-  }, [appProducer.current?.getCategoriesList()]);
-
-  function initInjections(){
-    if(!appProducer.current){
-      appProducer.current = InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN);
-    }
-  }
+  }, [categoriesList]);
 
   function buildCategoriesView(){
-    const allCategories = appProducer.current?.getCategoriesList();
-    Logger.log(logSource, "categories changed: ", false, allCategories)
-    setAllCategoriesView(allCategories
-      ? allCategories.map((category, index) => {
+    setAllCategoriesView(categoriesList
+      ? categoriesList.map((category, index) => {
           Logger.debug(logSource, "Next Category: " + category.title + ", icon = " + category.icon + " style = " + JSON.stringify(category.style));
           return (
             <CategoryCard key={'category_' + index} category={category} onPress={() => categoryPressed(category)}></CategoryCard>

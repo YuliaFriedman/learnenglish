@@ -20,31 +20,17 @@ import { DepInjectionsTokens } from "../../dependency-injection/DepInjectionToke
 import { CategoriesStepComponent } from "./CategoriesStep.component.tsx";
 import { CategoriesExamStepComponent } from "./CategoriesExamStep.component.tsx";
 import { RoutesListValues } from "../../app-data/models/routeValues.ts";
+import { INavigationManager } from "../../navigation/INavigationManager.tsx";
+import { useSelector } from "react-redux";
+import { currentCategorySelector, currentStepsSelector } from "../../app-data/store/AppSelectors.ts";
 
 function CategoriesStepsComponent(): React.JSX.Element {
 
   const logSource = "CategoriesStepsComponent";
 
-  //const navigation = useNavigation<StackNavigationProp<WordsAppPages>>();
-  const [currentCategory, setCurrentCategory] = useState<Category|undefined>(undefined);
-  const [steps, setSteps] = useState<StepModel[]>([]);
-  const appProducer = useRef<IAppProducer | null>(null);
-
-  useEffect(() => {
-    if(!appProducer.current){
-      appProducer.current = InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN);
-    }
-  }, []);
-
-  useEffect(() => {
-    setCurrentCategory(appProducer.current?.getCategory(appProducer.current?.getSelectedCategory()));
-  }, [appProducer.current?.getSelectedCategory()]);
-
-  useEffect(() => {
-    if(currentCategory && currentCategory?.type) {
-      setSteps(appProducer.current?.getCurrentSteps() || []);
-    }
-  }, [currentCategory]);
+  const currentCategory = useSelector(currentCategorySelector);
+  const steps = useSelector(currentStepsSelector);
+  const navigationManager = useRef<INavigationManager>( InjectionManager.useInjection<INavigationManager>(DepInjectionsTokens.NAVIGATION_MANAGER) );
 
   function createStepsGroups():StepModel[][]{
     Logger.log(logSource,"in createStepsGroups: category = " + currentCategory?.title + ", steps count = " + steps.length);
@@ -65,10 +51,6 @@ function CategoriesStepsComponent(): React.JSX.Element {
 
   let groups = createStepsGroups();
   Logger.log(logSource,"groups length = " + groups.length);
-
-  /*if(group.length == 1 && group[0].gameType === GameType.Test){
-
-  }*/
 
   function buildGroup(group: StepModel[]){
     return group.map((step,index) => {
@@ -91,8 +73,7 @@ function CategoriesStepsComponent(): React.JSX.Element {
 
   function navigateToStep(step: StepModel){
     Logger.log(logSource, "Navigating to step: " + step.id);
-    appProducer.current?.setCurrentStep(step.id);
-    appProducer.current?.setNestedNavigationRoute(RoutesListValues.step, {screen: RoutesListValues.game});
+    navigationManager.current.navigateToStep(step.id);
   }
 
   return (

@@ -19,7 +19,6 @@ export interface IAppProducer {
   getCurrentSteps: () => StepModel[]|undefined;
   setCurrentStep: (step:number|null) => void;
   getCurrentStepId: () => number|null;
-  setNextStep: () => boolean;
   getCurrentStep: () => StepModel|undefined;
   getStepById: (id: number|null) => StepModel|undefined;
   getSelectedLanguage: () => Languages;

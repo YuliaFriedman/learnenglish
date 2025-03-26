@@ -3,5 +3,7 @@ export enum RoutesListValues {
   steps = "steps",
   step = "step",
   game = "game",
+  exam = "exam",
   stepsGroupCompleted = "stepsGroupCompleted",
+  categoryCompleted = "categoryCompleted",
 }

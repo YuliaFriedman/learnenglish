@@ -9,4 +9,6 @@ export interface RoutesList extends ParamListBase {
   [RoutesListValues.step]:  undefined;
   [RoutesListValues.game]: undefined;
   [RoutesListValues.stepsGroupCompleted]: undefined;
+  [RoutesListValues.categoryCompleted]: undefined;
+  [RoutesListValues.exam]: undefined;
 }

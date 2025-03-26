@@ -4,7 +4,7 @@ import { View, Text } from "react-native";
 import { WordsAppStyling } from "./WordsApp.styling";
 import React, { useEffect, useRef, useState } from "react";
 import { Logger } from "../logger/Logger";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import store from "./app-data/store/Store";
 import CategoriesStepsComponent from "./components/CategoryStepsComponent/CategoriesSteps.component";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -27,78 +27,18 @@ import { NavigationContainer, useNavigationState } from "@react-navigation/nativ
 import { createNativeStackNavigator, NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { AppNavigation } from "./navigation/AppNavigation.component.tsx";
 import { RoutesListValues } from "./app-data/models/routeValues.ts";
-import { GameManager } from "./components/games/game-manager/GameManager.component.tsx";
+import { StepGamesManager } from "./components/games/step-games-manager/StepGamesManager.component.tsx";
+import { CategoryCompleted } from "./components/completed-pages/category-completed/CategoryCompleted.component.tsx";
+import { INavigationManager } from "./navigation/INavigationManager.tsx";
+import { currentCategorySelector, selectedCategoryTypeSelector } from "./app-data/store/AppSelectors.ts";
 
 export function WordsApp(){
 
   const logSource = "WordsApp";
 
-  const [isInitialized, setIsInitialized] = useState(false);
-  const appProducer = useRef<IAppProducer | null>(null);
-  const audioManager = useRef<IAudioManager | null>(null);
-  const appDataInitializer = useRef<IAppDataInitializer | null>(null);
+  const selectedCategory = useSelector(currentCategorySelector);
 
   const Stack = createNativeStackNavigator();
-
-  useEffect(() => {
-    initDependencyInjections();
-    initInjections();
-    initData();
-    setIsInitialized(true);
-  },[])
-
-  function initInjections(){
-    if(!appProducer.current){
-      appProducer.current = InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN);
-    }
-
-    if(!audioManager.current){
-      audioManager.current = InjectionManager.useInjection<IAudioManager>(DepInjectionsTokens.AUDIO_MANAGER_TOKEN);
-    }
-
-    if(!appDataInitializer.current){
-      appDataInitializer.current = InjectionManager.useInjection<IAppDataInitializer>(DepInjectionsTokens.APP_DATA_INITIALIZER);
-    }
-  }
-
-  function initData(){
-    const appData = appDataInitializer.current?.getData();
-    if(appData) {
-      appProducer.current?.setCategoriesList(appData.categories);
-      appProducer.current?.setAllSteps(appData.steps || {});
-    }
-  }
-
-  function buildPageAndTitle(){
-    // let newTitle = "N/A";
-    // let newPage = <></>;
-    // if(visiblePage) {
-    //   switch (visiblePage.key) {
-    //     case WordsAppPages.categories:
-    //       newPage = <AllCategoriesComponent></AllCategoriesComponent>;
-    //       newTitle = "Words App";
-    //       break;
-    //     case WordsAppPages.steps:
-    //       newPage = <CategoriesStepsComponent></CategoriesStepsComponent>;
-    //       let selectedCategory = getSelectedCategory();
-    //       newTitle = selectedCategory ? selectedCategory.title : "Words App";
-    //       break;
-    //     case WordsAppPages.game:
-    //       newPage = <GameContainerComponent></GameContainerComponent>
-    //       selectedCategory = getSelectedCategory();
-    //       newTitle = selectedCategory ? selectedCategory.title : "Words App";
-    //       break;
-    //   }
-    // }
-    //
-    // setTitle(newTitle);
-    // setPage(newPage);
-  }
-
-  function getSelectedCategory(){
-    const selectedCategoryId = appProducer.current?.getSelectedCategory();
-    return selectedCategoryId ? appProducer.current?.getCategory(selectedCategoryId) : null;
-  }
 
   function getTitle(props: NativeStackHeaderProps){
     let title = "Words App";
@@ -106,16 +46,13 @@ export function WordsApp(){
       case RoutesListValues.categories:
         title = "Words App";
       case RoutesListValues.steps:
-        let selectedCategory = getSelectedCategory();
         title = selectedCategory ? selectedCategory.title : "Words App";
       case RoutesListValues.game:
-        selectedCategory = getSelectedCategory();
         title = selectedCategory ? selectedCategory.title : "Words App";
     }
     return <AppHeaderComponent title={title}></AppHeaderComponent>;
   }
 
-    if (isInitialized) {
       return (
         <InversifyProvider container={InjectionManager.container}>
           <Provider store={store}>
@@ -140,7 +77,8 @@ export function WordsApp(){
                       >
                         <Stack.Screen name={RoutesListValues.categories} component={AllCategoriesComponent} />
                         <Stack.Screen name={RoutesListValues.steps} component={CategoriesStepsComponent} />
-                        <Stack.Screen name={RoutesListValues.step} component={GameManager} />
+                        <Stack.Screen name={RoutesListValues.step} component={StepGamesManager} />
+                        <Stack.Screen name={RoutesListValues.categoryCompleted} component={CategoryCompleted} />
                       </Stack.Navigator>
                       </AppNavigation>
                     </NavigationContainer>
@@ -151,9 +89,7 @@ export function WordsApp(){
           </Provider>
         </InversifyProvider>
       );
-    }
-    else{
-      return <View><Text>Loading...</Text></View>;
-    }
+
+
 
 }

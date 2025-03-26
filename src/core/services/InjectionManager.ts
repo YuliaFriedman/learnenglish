@@ -1,8 +1,4 @@
-import { container } from 'inversify-hooks';
-import { Constructor } from "react-native/types/private/Utilities";
-import { useInject } from 'inversify-hooks';
 import { Container } from "inversify";
-//import { useInjection } from 'inversify-hooks';
 
 class InjectionManager{
   _container = new Container();

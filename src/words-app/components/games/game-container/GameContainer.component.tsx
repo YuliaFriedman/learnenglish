@@ -23,6 +23,8 @@ import { currentGameSelector, currentStepIdSelector } from "../../../app-data/st
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { RoutesListValues } from "../../../app-data/models/routeValues.ts";
 import { NoGame } from "../no-game/no-game.component.tsx";
+import { INavigationManager } from "../../../navigation/INavigationManager.tsx";
+import { Game } from "../game/game.component.tsx";
 
 const GameStack = createNativeStackNavigator();
 
@@ -31,9 +33,9 @@ function GameContainerComponent(): React.JSX.Element {
   const logSource = "GameContainer";
 
   const [currentGameModel, setCurrentGameModel] = useState<GameModel|undefined>(undefined);
-  //const currentGameModel = useSelector(currentGameSelector);
   const currentStepId = useSelector(currentStepIdSelector);
   const appProducer = useRef<IAppProducer>(InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN));
+  const navigationManager = useRef<INavigationManager>(InjectionManager.useInjection<INavigationManager>(DepInjectionsTokens.NAVIGATION_MANAGER));
 
   useEffect(() => {
     updateGameModel();
@@ -48,13 +50,10 @@ function GameContainerComponent(): React.JSX.Element {
     const currentStep = appProducer.current?.getCurrentStep();
     Logger.log(logSource, "step changed: current step = " + currentStep?.displayName, false, currentStep?.game);
     setCurrentGameModel(currentStep?.game);
-    //appProducer.current.setCurrentGame(currentStep?.game);
   }
 
   function goToNextGame(){
-    if(!appProducer.current?.setNextStep()){
-      Logger.log(logSource, "No more steps to show");
-    }
+    navigationManager.current?.goToNextStep();
   }
 
   // useEffect(() => {
@@ -83,29 +82,29 @@ function GameContainerComponent(): React.JSX.Element {
   //   }
   // }
 
-  let game = <></>;
-
-  if(currentGameModel){
-    switch (currentGameModel.type) {
-      case GameType.NewWord:
-        game = <NewWordsComponent model={currentGameModel.data} onCompleted={goToNextGame}></NewWordsComponent>;
-        break;
-      case GameType.SelectTranslation:
-        game = <SelectTranslationComponent model={currentGameModel.data} onCompleted={goToNextGame}></SelectTranslationComponent>;
-        break;
-      case GameType.SayWord:
-        game = <SayWordComponent model={currentGameModel.data} onCompleted={goToNextGame}></SayWordComponent>;
-        break;
-      case GameType.MatchTranslation:
-        game = <MatchTranslationComponent model={currentGameModel.data} onCompleted={goToNextGame}></MatchTranslationComponent>;
-        break;
-    }
-  }
+  // let game = <></>;
+  //
+  // if(currentGameModel){
+  //   switch (currentGameModel.type) {
+  //     case GameType.NewWord:
+  //       game = <NewWordsComponent model={currentGameModel.data} onCompleted={goToNextGame}></NewWordsComponent>;
+  //       break;
+  //     case GameType.SelectTranslation:
+  //       game = <SelectTranslationComponent model={currentGameModel.data} onCompleted={goToNextGame}></SelectTranslationComponent>;
+  //       break;
+  //     case GameType.SayWord:
+  //       game = <SayWordComponent model={currentGameModel.data} onCompleted={goToNextGame}></SayWordComponent>;
+  //       break;
+  //     case GameType.MatchTranslation:
+  //       game = <MatchTranslationComponent model={currentGameModel.data} onCompleted={goToNextGame}></MatchTranslationComponent>;
+  //       break;
+  //   }
+  // }
 
 
   return (
     <View style={GameContainerStyling.host}>
-      {game}
+      {currentGameModel && <Game gameModel={currentGameModel} onCompleted={goToNextGame} />}
     </View>
   );
 }

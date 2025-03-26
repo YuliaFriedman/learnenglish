@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-export const GameManagerStyling = StyleSheet.create({
+export const StepGamesManagerStyling = StyleSheet.create({
   host: {
     flex: 1,
   }

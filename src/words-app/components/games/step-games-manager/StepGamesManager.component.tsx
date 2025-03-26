@@ -1,16 +1,17 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View } from "react-native";
-import { GameManagerStyling } from "./GameManager.styling.tsx";
+import { StepGamesManagerStyling } from "./StepGamesManager.styling.tsx";
 import { RoutesListValues } from "../../../app-data/models/routeValues.ts";
 import React from "react";
 import GameContainerComponent from "../game-container/GameContainer.component.tsx";
-import { StepsCompleted } from "../steps-completed/StepsCompleted.component.tsx";
+import { GroupCompleted } from "../../completed-pages/group-completed/GroupCompleted.component.tsx";
+import { ExamContainerComponent } from "../exam-container/ExamContainer.component.tsx";
 
-export function GameManager(){
+export function StepGamesManager(){
   const GameStack = createNativeStackNavigator();
 
   return (
-    <View style={GameManagerStyling.host}>
+    <View style={StepGamesManagerStyling.host}>
       <GameStack.Navigator screenOptions={{ headerShown: false }}>
         <GameStack.Screen
           name={RoutesListValues.game}
@@ -20,7 +21,12 @@ export function GameManager(){
         <GameStack.Screen
           name={RoutesListValues.stepsGroupCompleted}
           // @ts-ignore
-          component={StepsCompleted}
+          component={GroupCompleted}
+        />
+        <GameStack.Screen
+          name={RoutesListValues.exam}
+          // @ts-ignore
+          component={ExamContainerComponent}
         />
       </GameStack.Navigator>
     </View>

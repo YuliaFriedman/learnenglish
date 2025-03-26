@@ -164,6 +164,11 @@ export const KidsTheme = {
         shadow: Colors.$transparent,
         placeholderBg: Colors.$violet_gray_500
       }
+    },
+    gamesGroupCompleted: {
+      iconColor: Colors.$yellow_500,
+      titleColor: Colors.$gray_0,
+      titleStrokeColor: Colors.$violet_700,
     }
   },
   buttons: {
@@ -211,6 +216,11 @@ export const KidsTheme = {
     speechConfirmButton: {
       backgroundColor: Colors.$lime_900
     }
+  },
+  gameCompleted: {
+    iconColor: Colors.$yellow_500,
+    titleColor: Colors.$gray_0,
+    titleStrokeColor: Colors.$violet_700,
   },
   shadow: (color: string, innerShadow: boolean = false) => {
     if(!color || color === Colors.$transparent){
