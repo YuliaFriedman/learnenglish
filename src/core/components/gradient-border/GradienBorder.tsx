@@ -1,6 +1,6 @@
 import LinearGradient from "react-native-linear-gradient";
 import { ReactNode } from "react";
-import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
 
 interface GradientBorderModelProp {
   colors: (string | number)[];
@@ -25,9 +25,9 @@ export function GradientBorder({model, style, innerStyle, children}: GradientBor
       colors={model.colors}
       start={model.start}
       end={model.end}
-      style={[style]}
+      style={[gradientBorderStyle.host, style]}
     >
-      <View style={[innerStyle, gradientBorderStyle.innerContainer]}>
+      <View style={[gradientBorderStyle.innerContainer, innerStyle]}>
           {children}
       </View>
     </LinearGradient>
@@ -35,11 +35,13 @@ export function GradientBorder({model, style, innerStyle, children}: GradientBor
 }
 
 const gradientBorderStyle = StyleSheet.create({
+  host: {
+    flex: 1
+  },
   innerContainer: {
-    //flex: 1,
     margin: 2, // <-- Border Width
-    //justifyContent: "center",
-    //alignItems: "center",
-    overflow: "hidden"
+    overflow: "hidden",
+    alignSelf: "stretch",
+
   },
 });

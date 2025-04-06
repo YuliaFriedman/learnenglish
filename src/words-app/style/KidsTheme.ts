@@ -140,7 +140,7 @@ export const KidsTheme = {
 
     matchTranslation: {
       card: {
-        borderColors: [Colors.$gray_50, Colors.$gray_50],
+        borderColors: [Colors.$transparent, Colors.$transparent],
         backgroundColor: Colors.$transparent,
         shadow: Colors.$transparent,
       },
@@ -169,6 +169,23 @@ export const KidsTheme = {
       iconColor: Colors.$yellow_500,
       titleColor: Colors.$gray_0,
       titleStrokeColor: Colors.$violet_700,
+    },
+
+    memoryGame: {
+      cardStyling: [
+        {
+          borderColors: [Colors.$lime_500, Colors.$lime_500],
+        },
+        {
+          borderColors: [Colors.$orange_400, Colors.$orange_400],
+        },
+        {
+          borderColors: [Colors.$magenta_300, Colors.$magenta_300],
+        },
+        {
+          borderColors: [Colors.$navy_400, Colors.$navy_400],
+        }
+      ]
     }
   },
   buttons: {

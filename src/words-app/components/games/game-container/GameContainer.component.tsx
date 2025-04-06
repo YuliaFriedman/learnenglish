@@ -56,52 +56,6 @@ function GameContainerComponent(): React.JSX.Element {
     navigationManager.current?.goToNextStep();
   }
 
-  // useEffect(() => {
-  //   Logger.log(logSource, "currentGameModel changed");
-  //   if (currentGameModel) {
-  //     const route = fromGameTypeToRoute();
-  //     if(route){
-  //       Logger.log(logSource, "Navigating to route: " + route);
-  //       appProducer.current.setNestedNavigationRoute(RoutesListValues.game, { screen: route });
-  //     }
-  //   }
-  // }, [currentGameModel]);
-
-  // function fromGameTypeToRoute(): RoutesListValues | undefined{
-  //   if (currentGameModel) {
-  //     switch (currentGameModel.type) {
-  //       case GameType.NewWord:
-  //         return RoutesListValues.newWord;
-  //       case GameType.SelectTranslation:
-  //         return RoutesListValues.selectTranslation;
-  //       case GameType.SayWord:
-  //         return RoutesListValues.sayWord;
-  //       case GameType.MatchTranslation:
-  //         return RoutesListValues.matchTranslation;
-  //     }
-  //   }
-  // }
-
-  // let game = <></>;
-  //
-  // if(currentGameModel){
-  //   switch (currentGameModel.type) {
-  //     case GameType.NewWord:
-  //       game = <NewWordsComponent model={currentGameModel.data} onCompleted={goToNextGame}></NewWordsComponent>;
-  //       break;
-  //     case GameType.SelectTranslation:
-  //       game = <SelectTranslationComponent model={currentGameModel.data} onCompleted={goToNextGame}></SelectTranslationComponent>;
-  //       break;
-  //     case GameType.SayWord:
-  //       game = <SayWordComponent model={currentGameModel.data} onCompleted={goToNextGame}></SayWordComponent>;
-  //       break;
-  //     case GameType.MatchTranslation:
-  //       game = <MatchTranslationComponent model={currentGameModel.data} onCompleted={goToNextGame}></MatchTranslationComponent>;
-  //       break;
-  //   }
-  // }
-
-
   return (
     <View style={GameContainerStyling.host}>
       {currentGameModel && <Game gameModel={currentGameModel} onCompleted={goToNextGame} />}

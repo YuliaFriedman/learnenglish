@@ -7,6 +7,7 @@ import MatchTranslationComponent from "../match-translation/MatchTranslation.com
 import React from "react";
 import { GameModel } from "../../../app-data/models/GameModel.ts";
 import { GameStyling } from "./game.styling.tsx";
+import { MemoryGame } from "../memory/MemoryGame.component.tsx";
 
 export interface GameProps {
   gameModel: GameModel;
@@ -30,6 +31,9 @@ export function Game({gameModel, onCompleted}: GameProps){
         break;
       case GameType.MatchTranslation:
         game = <MatchTranslationComponent model={gameModel.data} onCompleted={onCompleted}></MatchTranslationComponent>;
+        break;
+      case GameType.Memory:
+        game = <MemoryGame model={gameModel.data} onCompleted={onCompleted}></MemoryGame>;
         break;
     }
   }

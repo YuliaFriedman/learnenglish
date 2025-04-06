@@ -58,7 +58,7 @@ export const MatchTranslationStyling = StyleSheet.create({
   droppableStyle: {
     borderRadius: 20,
     borderWidth: 1,
-    ...ThemeManager.theme.shadow(ThemeManager.theme.games.matchTranslation.highlight.shadow)
+    ...ThemeManager.theme.shadow(ThemeManager.theme.games.matchTranslation.highlight.shadow),
   },
 
   answerStyle: {

@@ -1,16 +1,22 @@
 import { StyleSheet } from "react-native";
 import { ThemeManager } from "../../../style/ThemeManager.ts";
 import { Colors } from "../../../../style/Colors.js";
+import { fromPercentToPixelsWidth } from "../../../../style/dimentions.ts";
 
 export const WordCardStyling = (cardStyle: any, background: string, borderColor: string[]) => {
   return StyleSheet.create({
-    host: {
+
+  host: {
+  },
+
+    content: {
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
       alignItems: "center",
       borderRadius: 20,
-      flex: 1
+      flex: 1,
+      margin: 1
     },
 
     borderStyle: {
@@ -31,11 +37,12 @@ export const WordCardStyling = (cardStyle: any, background: string, borderColor:
       alignItems: "center",
       marginTop: "5%",
       flex: 1,
-      padding: "15%"
+      padding: "15%",
     },
 
     invisibleImg: {
-      opacity: 0
+      opacity: 0,
+      display: "none"
     },
 
     img: {
@@ -44,6 +51,12 @@ export const WordCardStyling = (cardStyle: any, background: string, borderColor:
       maxHeight: '100%',
       aspectRatio: 1, // Adjust this value to match your image's aspect ratio
       resizeMode: 'contain'
+    },
+    textContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignContent: "center",
+      alignItems: "center"
     },
     text: {
       marginBottom: "5%",
@@ -54,7 +67,7 @@ export const WordCardStyling = (cardStyle: any, background: string, borderColor:
       backgroundColor: background,
       flex: 1,
       justifyContent: "center",
-      alignItems: "center",
+      alignItems: "stretch",
     },
   })
 }

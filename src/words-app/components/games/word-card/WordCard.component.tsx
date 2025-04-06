@@ -153,7 +153,6 @@ function WordCardComponent({ model, style, onSpeakStarted, onSpeakCompleted, onP
     return styleToUse.backgroundColor ?? defaultBg;
   }
 
-  Logger.log(logSource, `(${model.word}) background = ${backgroundColor}`);
   const wordCardStyling = WordCardStyling(currentCardStyle, backgroundColor, borderColor);
 
   const content = (
@@ -164,7 +163,7 @@ function WordCardComponent({ model, style, onSpeakStarted, onSpeakCompleted, onP
         end:ThemeManager.theme.games.card.borderEnd
       }}
       style={[
-        wordCardStyling.host,
+        wordCardStyling.content,
         model?.pressable && isPressed && animationStyles.pressed
       ]}
       innerStyle={wordCardStyling.innerContainer}>
@@ -180,7 +179,7 @@ function WordCardComponent({ model, style, onSpeakStarted, onSpeakCompleted, onP
           resizeMode={"center"}
         />
       </View>
-      {model?.showText && <CardText style={wordCardStyling.text}>{model.word}</CardText>}
+      {model?.showText && <View style={wordCardStyling.textContainer}><CardText style={wordCardStyling.text}>{model.word}</CardText></View>}
     </GradientBorder>
 );
 

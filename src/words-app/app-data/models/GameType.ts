@@ -3,6 +3,7 @@ export enum GameType {
   SayWord,
   SelectTranslation,
   MatchTranslation,
+  Memory,
   PoppingWords,
   Test
 }
