@@ -1,14 +1,7 @@
-// import Animated, {
-//   interpolate,
-//   useAnimatedStyle,
-//   useSharedValue,
-//   withTiming,
-// } from 'react-native-reanimated';
-import { StyleSheet, View } from 'react-native/types';
 import { StyleProp } from "react-native/Libraries/StyleSheet/StyleSheet";
-import { ViewStyle } from "react-native";
+import { ViewStyle, StyleSheet, View } from "react-native";
 import { ReactNode } from "react";
-import Animated, { interpolate, withTiming } from 'react-native-reanimated';
+import Animated, { interpolate, withTiming, useAnimatedStyle } from 'react-native-reanimated';
 
 export interface FlipCardProps {
   isFlipped: boolean;
@@ -50,7 +43,7 @@ export function FlipCard  ({
   });
 
   return (
-    <View>
+    <View style={flipCardStyles.host}>
       <Animated.View
         style={[
           flipCardStyles.regularCard,
@@ -72,11 +65,22 @@ export function FlipCard  ({
 };
 
 const flipCardStyles = StyleSheet.create({
+  host: {
+    position: 'relative'
+  },
   regularCard: {
     position: 'absolute',
+    top: 0,
+    left: 0,
     zIndex: 1,
+    borderWidth: 4,
+    borderColor: "red"
   },
   flippedCard: {
+    top: 0,
+    left: 0,
     zIndex: 2,
+    borderWidth: 4,
+    borderColor: "blue"
   },
 });

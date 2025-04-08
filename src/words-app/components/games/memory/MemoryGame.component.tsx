@@ -69,8 +69,8 @@ export function MemoryGame({model, onCompleted}: GameComponentProps<MemoryGameMo
       <View style={MemoryGameStyling.cardsContainer}>
 
 
-        {gameCards.map(card => (
-          <View style={MemoryGameStyling.card}>
+        {gameCards.map((card, index) => (
+          <View style={MemoryGameStyling.card} key={"card_" + index}>
             <FlipCard
               isFlipped={card.isFlipped}
               direction={"x"}
