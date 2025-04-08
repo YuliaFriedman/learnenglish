@@ -185,7 +185,13 @@ export const KidsTheme = {
         {
           borderColors: [Colors.$navy_400, Colors.$navy_400],
         }
-      ]
+      ],
+      cardBack: {
+        colors: [Colors.$navy_200, Colors.$navy_500],
+        locations: [0, 1],
+        borderColor: Colors.$navy_600,
+        overlayColor: Colors.$navy_100
+      }
     }
   },
   buttons: {

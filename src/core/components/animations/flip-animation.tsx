@@ -43,7 +43,7 @@ export function FlipCard  ({
   });
 
   return (
-    <View style={flipCardStyles.host}>
+    <View>
       <Animated.View
         style={[
           flipCardStyles.regularCard,
@@ -65,22 +65,17 @@ export function FlipCard  ({
 };
 
 const flipCardStyles = StyleSheet.create({
-  host: {
-    position: 'relative'
-  },
   regularCard: {
     position: 'absolute',
     top: 0,
     left: 0,
+    bottom: 0,
+    right: 0,
     zIndex: 1,
-    borderWidth: 4,
-    borderColor: "red"
+    backfaceVisibility: 'hidden',
   },
   flippedCard: {
-    top: 0,
-    left: 0,
     zIndex: 2,
-    borderWidth: 4,
-    borderColor: "blue"
+    backfaceVisibility: 'hidden',
   },
 });

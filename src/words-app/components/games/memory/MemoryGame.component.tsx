@@ -13,6 +13,7 @@ import { MemoryGameStyling } from "./MemoryGame.styling.tsx";
 import PrimaryButtonComponent from "../../common/primary-button/PrimaryButton.component.tsx";
 import { ThemeManager } from "../../../style/ThemeManager.ts";
 import { FlipCard } from "../../../../core/components/animations/flip-animation.tsx";
+import { CardBack } from "./CardBack.component.tsx";
 
 export function MemoryGame({model, onCompleted}: GameComponentProps<MemoryGameModel>){
 
@@ -73,20 +74,18 @@ export function MemoryGame({model, onCompleted}: GameComponentProps<MemoryGameMo
           <View style={MemoryGameStyling.card} key={"card_" + index}>
             <FlipCard
               isFlipped={card.isFlipped}
-              direction={"x"}
+              direction={"y"}
               RegularContent={
+                 <CardBack onPress={() => doFlipCard(card)}></CardBack>
+              }
+              FlippedContent={
                 <WordCardComponent
-                  style={{width: "100%"}}
                   key={card.word.id}
                   model={card.word}
                   onPressed={() => doFlipCard(card)}
                   cardStyle={cardStyling.current[card.word.id]}
                 />
-              }
-              FlippedContent={
-                <Pressable onPress={() => doFlipCard(card)} style={{height: "100%", width: "100%", backgroundColor: "white"}}>
-                  <Text>{card.word.word}</Text>
-                </Pressable>
+
               }/>
           </View>
         ))}
