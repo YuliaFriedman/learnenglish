@@ -21,7 +21,7 @@ function AllCategoriesComponent(): React.JSX.Element {
   const logSource = "AllCategories";
 
   const [allCategoriesView, setAllCategoriesView] = useState<React.ReactNode[]>([]);
-  const { appProducer } = useServices();
+  const { appProducer, navigationManager } = useServices();
   const categoriesList = useSelector(categoriesListSelector);
 
   useEffect(() =>{
@@ -46,7 +46,7 @@ function AllCategoriesComponent(): React.JSX.Element {
   function categoryPressed(category:Category){
     Logger.log(logSource, "Category pressed: " + category.title);
     appProducer.setSelectedCategory(category.type);
-    appProducer.setNavigationRoute(RoutesListValues.steps)
+    navigationManager.navigateTo(RoutesListValues.steps);
   }
 
   return (

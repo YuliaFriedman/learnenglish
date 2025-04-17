@@ -1,18 +1,19 @@
 import { IAppProducer } from "../app-data/store/IAppProducer.ts";
 import { RoutesListValues } from "../app-data/models/routeValues.ts";
-import { INavigationManager } from "./INavigationManager.tsx";
+import { INavigationManager, ParamsType } from "./INavigationManager.tsx";
 import { Logger } from "../../logger/Logger.ts";
-import { GameType } from "../app-data/models/GameType.ts";
+import { RoutesList } from "../app-data/models/routes.ts";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 export class NavigationManager implements INavigationManager{
 
   logSource = "NavigationManager";
 
-  constructor(private appProducer: IAppProducer) {
+  constructor(private appProducer: IAppProducer, private navigation: StackNavigationProp<RoutesList>) {
   }
 
   navigateHome(){
-    this.appProducer.setNavigationRoute(RoutesListValues.categories);
+    this.navigation.navigate(RoutesListValues.categories)
   }
 
   goToNextStep(){
@@ -23,7 +24,7 @@ export class NavigationManager implements INavigationManager{
     if(steps && currentStepIndex != undefined && currentStepIndex >= 0) {
       // if last
       if (currentStepIndex === steps.length - 1) {
-        this.appProducer.setNavigationRoute(RoutesListValues.categoryCompleted);
+        this.navigation.navigate(RoutesListValues.categoryCompleted)
       }
       // if next is game
       else
@@ -45,9 +46,15 @@ export class NavigationManager implements INavigationManager{
     const stepIndex = steps.findIndex(step => step.id === id);
     if(stepIndex >= 0){
       this.appProducer.setCurrentStep(id);
-      this.appProducer.setNavigationRoute(RoutesListValues.step, {screen: RoutesListValues.game});
+      this.navigation.navigate(RoutesListValues.game)
     }
   }
 
-
+  navigateTo(routeName: RoutesListValues, params?: ParamsType){
+    if (params !== undefined) {
+      this.navigation.navigate(routeName as string, params as object);
+    } else {
+      this.navigation.navigate(routeName as string);
+    }
+  }
 }

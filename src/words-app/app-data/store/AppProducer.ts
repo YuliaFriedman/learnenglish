@@ -6,10 +6,6 @@ import { setAllSteps, setSelectedStep } from "./reducers/StepsReducer";
 import { Logger } from "../../../logger/Logger";
 import { IAppProducer } from "./IAppProducer.ts";
 import { StepsModel } from "../models/AppDataModel.ts";
-import { NestedParamsType, ParamsType, setCurrentRoute } from "./reducers/AppNavigation.state.ts";
-import { RoutesListValues } from "../models/routeValues.ts";
-import { GameModel } from "../models/GameModel.ts";
-import { setCurrentGame } from "./reducers/CurrentGameReducer.ts";
 
 export class AppProducer implements IAppProducer{
 
@@ -96,17 +92,4 @@ export class AppProducer implements IAppProducer{
     return store.getState()?.language.currentTranslation;
   }
 
-  // navigation
-
-  setNavigationRoute(routeName: RoutesListValues, params?: ParamsType) {
-    store.dispatch(setCurrentRoute({routeName: routeName, params: params}))
-  }
-
-  setNestedNavigationRoute(routeName: RoutesListValues, params: NestedParamsType) {
-    store.dispatch(setCurrentRoute({routeName: routeName, params: params}))
-  };
-
-  setCurrentGame (game: GameModel|undefined) {
-    store.dispatch(setCurrentGame(game));
-  };
 }

@@ -5,42 +5,58 @@ import SelectTranslationComponent from "../select-translation/SelectTranslation.
 import SayWordComponent from "../say-word/SayWord.component.tsx";
 import MatchTranslationComponent from "../match-translation/MatchTranslation.component.tsx";
 import React from "react";
-import { GameModel } from "../../../app-data/models/GameModel.ts";
 import { GameStyling } from "./game.styling.tsx";
 import { MemoryGame } from "../memory/MemoryGame.component.tsx";
+import { useSelector } from "react-redux";
+import { currentStepSelector } from "../../../app-data/store/AppSelectors.ts";
+import { StepModel } from "../../../app-data/models/StepModel.ts";
+import { useServices } from "../../../dependency-injection/ServicesContext.tsx";
+import { NoGame } from "../no-game/no-game.component.tsx";
 
-export interface GameProps {
-  gameModel: GameModel;
-  onCompleted: () => void
-}
+function Game(): React.JSX.Element {
 
-export function Game({gameModel, onCompleted}: GameProps){
+  const { navigationManager} = useServices();
+  const currentStep:StepModel = useSelector(currentStepSelector);
 
-  let game = <></>;
+  let content = <NoGame></NoGame>;
+  let gameFound = false;
 
-  if(gameModel){
-    switch (gameModel.type) {
+  if(currentStep && currentStep.game){
+    switch (currentStep.game.type) {
       case GameType.NewWord:
-        game = <NewWordsComponent model={gameModel.data} onCompleted={onCompleted}></NewWordsComponent>;
+        content = <NewWordsComponent model={currentStep.game.data} onCompleted={goToNextGame}></NewWordsComponent>;
+        gameFound = true;
         break;
       case GameType.SelectTranslation:
-        game = <SelectTranslationComponent model={gameModel.data} onCompleted={onCompleted}></SelectTranslationComponent>;
+        content = <SelectTranslationComponent model={currentStep.game.data} onCompleted={goToNextGame}></SelectTranslationComponent>;
+        gameFound = true;
         break;
       case GameType.SayWord:
-        game = <SayWordComponent model={gameModel.data} onCompleted={onCompleted}></SayWordComponent>;
+        content = <SayWordComponent model={currentStep.game.data} onCompleted={goToNextGame}></SayWordComponent>;
+        gameFound = true;
         break;
       case GameType.MatchTranslation:
-        game = <MatchTranslationComponent model={gameModel.data} onCompleted={onCompleted}></MatchTranslationComponent>;
+        content = <MatchTranslationComponent model={currentStep.game.data} onCompleted={goToNextGame}></MatchTranslationComponent>;
+        gameFound = true;
         break;
       case GameType.Memory:
-        game = <MemoryGame model={gameModel.data} onCompleted={onCompleted}></MemoryGame>;
+        content = <MemoryGame model={currentStep.game.data} onCompleted={goToNextGame}></MemoryGame>;
+        gameFound = true;
         break;
     }
   }
 
+  if(gameFound){
+    content = <View style={GameStyling.host}>{content}</View>
+  }
+
+  function goToNextGame(){
+    navigationManager.goToNextStep();
+  }
+
   return (
-    <View style={GameStyling.host}>
-      {game}
-    </View>
+    <>{content}</>
   )
 }
+
+export default Game;

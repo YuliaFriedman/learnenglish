@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { StepModel, StepStatus } from "../../models/StepModel";
+import { StepStatus } from "../../models/StepModel";
 import { Logger } from "../../../../logger/Logger";
 import { StepsModel } from "../../models/AppDataModel.ts";
 import { currentStepSelector } from "../AppSelectors.ts";
