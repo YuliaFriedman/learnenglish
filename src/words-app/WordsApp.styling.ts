@@ -15,7 +15,7 @@ export const WordsAppStyling = StyleSheet.create({
 
   content:{
     position: "relative",
-    backgroundColor: ThemeManager.theme.content.bg,
+    //backgroundColor: ThemeManager.theme.content.bg,
     flex: 1
   },
 

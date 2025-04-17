@@ -1,12 +1,5 @@
-export interface GameComponentProps<T> {
-  // route: {
-  //   params: {
-  //     model: T
-  //     onCompleted: () => void;
-  //   }
-  // },
-  // navigation: any;
 
+export interface GameComponentProps<T> {
   model: T
   onCompleted: () => void;
 }
