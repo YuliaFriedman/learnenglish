@@ -6,9 +6,8 @@
  */
 
 import React, { useEffect, useRef, useState } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { SelectTranslationModel } from "./SelectTranslationModel";
-import { Logger } from "../../../../logger/Logger";
 import { SelectTranslationStyling } from "./SelectTranslation.styling";
 import PrimaryButtonComponent from "../../common/primary-button/PrimaryButton.component.tsx";
 import { WordCardModel } from "../word-card/WordCardModel";
@@ -18,13 +17,11 @@ import WordTextCardComponent from "../word-text-card/WordTextCard.component";
 import { WordTextCardModel } from "../word-text-card/WordTextCardModel";
 import { AnswerStatus } from "../../../app-data/models/AnswerStatus.ts";
 import { AppSoundsPlayer } from "../../../../services/AppSoundsPlayer.ts";
-import InjectionManager from "../../../../core/services/InjectionManager.ts";
-import { IAppProducer } from "../../../app-data/store/IAppProducer.ts";
-import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
 import { Languages } from "../../../../app-data/language.ts";
 import { SpacingRow } from "../../../../core/components/spacing-row/SpacingRow.tsx";
 import { GameComponentProps } from "../models/GameModel.ts";
 import { IShakeView, ShakeView } from "../../../../core/components/animations/shake/ShakeView.component.tsx";
+import { useServices } from "../../../dependency-injection/ServicesContext.tsx";
 
 function SelectTranslationComponent({model, onCompleted}: GameComponentProps<SelectTranslationModel>): React.JSX.Element {
 
@@ -33,29 +30,23 @@ function SelectTranslationComponent({model, onCompleted}: GameComponentProps<Sel
   const incorrectCardRefs = useRef<Array<IShakeView>>([]);
   const [translations,setTranslations] = useState<WordCardModel[]>([]);
   const [word, setWord] = useState<WordTextCardModel|undefined>(undefined);
-  const appProducer = useRef<IAppProducer | null>(null);
+  const { appProducer } = useServices();
 
   useEffect(() => {
-    initInjections();
     initData();
   }, []);
 
-  function initInjections(){
-    if(!appProducer.current){
-      appProducer.current = InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN);
-    }
-  }
 
   function initData(){
     let selectedLanguage: Languages = Languages.EN;
     let selectedTranslation: Languages = Languages.EN;
     if(model.source){
-      selectedLanguage = appProducer.current?.getSelectedLanguage() || Languages.EN;
-      selectedTranslation = appProducer.current?.getSelectedTranslation() || Languages.EN;
+      selectedLanguage = appProducer.getSelectedLanguage() || Languages.EN;
+      selectedTranslation = appProducer.getSelectedTranslation() || Languages.EN;
     }
     else{
-      selectedLanguage = appProducer.current?.getSelectedTranslation() || Languages.EN;
-      selectedTranslation = appProducer.current?.getSelectedLanguage() || Languages.EN;
+      selectedLanguage = appProducer.getSelectedTranslation() || Languages.EN;
+      selectedTranslation = appProducer.getSelectedLanguage() || Languages.EN;
     }
 
     let newWords = model.translations.map((word,i) => {

@@ -14,11 +14,9 @@ import { NewWordsStyling } from "./NewWords.styling";
 import PrimaryButtonComponent from "../../common/primary-button/PrimaryButton.component.tsx";
 import { WordCardModel } from "../word-card/WordCardModel";
 import { dictionary } from "../../../app-data/levels/dictionary/Dictionary";
-import InjectionManager from "../../../../core/services/InjectionManager.ts";
-import { IAppProducer } from "../../../app-data/store/IAppProducer.ts";
-import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
 import { Languages } from "../../../../app-data/language.ts";
 import { GameComponentProps } from "../models/GameModel.ts";
+import { useServices } from "../../../dependency-injection/ServicesContext.tsx";
 
 function NewWordsComponent({model, onCompleted}: GameComponentProps<NewWordsModel>): React.JSX.Element {
 
@@ -32,12 +30,10 @@ function NewWordsComponent({model, onCompleted}: GameComponentProps<NewWordsMode
   );
   let selectedLanguage = useRef<Languages>(Languages.EN);
 
-  const appProducer = useRef<IAppProducer>(
-    InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN)
-  );
+  const { appProducer } = useServices();
 
   useEffect(() => {
-    selectedLanguage.current = appProducer.current?.getSelectedLanguage() || Languages.EN;
+    selectedLanguage.current = appProducer.getSelectedLanguage() || Languages.EN;
     setNextWordToSpeak(0);
   },[]);
 

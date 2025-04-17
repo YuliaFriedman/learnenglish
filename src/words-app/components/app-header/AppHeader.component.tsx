@@ -5,30 +5,26 @@
  * @format
  */
 
-import React, { useEffect, useRef, useState } from "react";
-import { Button, Pressable, SafeAreaView, ScrollView, Text, useColorScheme, View } from "react-native";
+import React, { useRef } from "react";
+import { Text, View } from "react-native";
 import { AppHeaderStyling } from "./AppHeader.styling";
 import { AppHeaderModel } from "./AppHeaderModel";
 import { Logger } from "../../../logger/Logger";
 import { ThemeManager } from "../../style/ThemeManager.ts";
 import { IconButton } from "../../../core/components/icon-button/IconButton.tsx";
 import { GradientLayout } from "../../../core/components/gradient-layout/GradientLayout.tsx";
-import InjectionManager from "../../../core/services/InjectionManager.ts";
-import { DepInjectionsTokens } from "../../dependency-injection/DepInjectionTokens.ts";
-import { INavigationManager } from "../../navigation/INavigationManager.tsx";
-import { IAppProducer } from "../../app-data/store/IAppProducer.ts";
+import { useServices } from "../../dependency-injection/ServicesContext.tsx";
 
 
 function AppHeaderComponent({title} : AppHeaderModel): React.JSX.Element {
 
   const logSource = "AppHeader";
 
-  const navigationManager = useRef<INavigationManager>( InjectionManager.useInjection<INavigationManager>(DepInjectionsTokens.NAVIGATION_MANAGER) );
-  //const navigationManager = useRef<IAppProducer>( InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN) );
-  //
+  const { navigationManager } = useServices();
+
   function navigateHome(){
     Logger.log(logSource, "Navigating home")
-    navigationManager.current.navigateHome();
+    navigationManager.navigateHome();
 
   }
 

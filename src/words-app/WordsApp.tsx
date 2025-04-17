@@ -3,12 +3,9 @@ import AppHeaderComponent from "./components/app-header/AppHeader.component";
 import { View, ImageBackground } from "react-native";
 import { WordsAppStyling } from "./WordsApp.styling";
 import React from "react";
-import { Provider, useSelector } from "react-redux";
-import store from "./app-data/store/Store";
+import { useSelector } from "react-redux";
 import CategoriesStepsComponent from "./components/CategoryStepsComponent/CategoriesSteps.component";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import InjectionManager from "../core/services/InjectionManager.ts";
-import { Provider as InversifyProvider} from 'inversify-react';
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator, NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { AppNavigation } from "./navigation/AppNavigation.component.tsx";
@@ -39,37 +36,38 @@ export function WordsApp(){
   }
 
   return (
-        <InversifyProvider container={InjectionManager.container}>
-          <Provider store={store}>
-            <GestureHandlerRootView style={{ flex: 1 }}>
-              <View style={WordsAppStyling.host}>
-                <View style={WordsAppStyling.content}>
-                  <ImageBackground
-                    source={require("../../assets/images/appbg.jpg")}
-                    style={WordsAppStyling.host}
-                  >
-                    <View style={{ ...WordsAppStyling.host, backgroundColor: 'rgba(255, 255, 255, 0.5)' }}>
-                    <NavigationContainer>
-                      <AppNavigation>
+        // <InversifyProvider container={InjectionManager.container}>
+        //   <Provider store={store}>
 
-                      <Stack.Navigator
-                        initialRouteName={RoutesListValues.categories}
-                        screenOptions={{ header: getTitle, contentStyle: { backgroundColor: 'transparent' } }}
-                      >
-                        <Stack.Screen name={RoutesListValues.categories} component={AllCategoriesComponent} />
-                        <Stack.Screen name={RoutesListValues.steps} component={CategoriesStepsComponent} />
-                        <Stack.Screen name={RoutesListValues.step} component={StepGamesManager} />
-                        <Stack.Screen name={RoutesListValues.categoryCompleted} component={CategoryCompleted} />
-                      </Stack.Navigator>
-                      </AppNavigation>
-                    </NavigationContainer>
+              <GestureHandlerRootView style={{ flex: 1 }}>
+                <View style={WordsAppStyling.host}>
+                  <View style={WordsAppStyling.content}>
+                    <ImageBackground
+                      source={require("../../assets/images/appbg.jpg")}
+                      style={WordsAppStyling.host}
+                    >
+                      <View style={{ ...WordsAppStyling.host, backgroundColor: 'rgba(255, 255, 255, 0.5)' }}>
+                      <NavigationContainer>
+                        <AppNavigation>
+
+                        <Stack.Navigator
+                          initialRouteName={RoutesListValues.categories}
+                          screenOptions={{ header: getTitle, contentStyle: { backgroundColor: 'transparent' } }}
+                        >
+                          <Stack.Screen name={RoutesListValues.categories} component={AllCategoriesComponent} />
+                          <Stack.Screen name={RoutesListValues.steps} component={CategoriesStepsComponent} />
+                          <Stack.Screen name={RoutesListValues.step} component={StepGamesManager} />
+                          <Stack.Screen name={RoutesListValues.categoryCompleted} component={CategoryCompleted} />
+                        </Stack.Navigator>
+                        </AppNavigation>
+                      </NavigationContainer>
+                    </View>
+                    </ImageBackground>
                   </View>
-                  </ImageBackground>
                 </View>
-              </View>
-            </GestureHandlerRootView>
-          </Provider>
-        </InversifyProvider>
+              </GestureHandlerRootView>
+          // </Provider>
+        // </InversifyProvider>
       );
 
 

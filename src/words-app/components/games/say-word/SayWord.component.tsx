@@ -16,17 +16,12 @@ import { dictionary } from "../../../app-data/levels/dictionary/Dictionary";
 import WordCardComponent from "../word-card/WordCard.component";
 // @ts-ignore
 import Icon from "react-native-vector-icons/FontAwesome";
-import { SpeechResults, SpeechToTextManager } from "../../../../sound/SpeechToTextManager";
-import { IAppProducer } from "../../../app-data/store/IAppProducer.ts";
-import InjectionManager from "../../../../core/services/InjectionManager.ts";
-import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
+import { SpeechResults } from "../../../../sound/SpeechToTextManager";
 import { Languages } from "../../../../app-data/language.ts";
-import { IAudioManager } from "../../../../sound/IAudioManager.ts";
-import { IconButton } from "../../../../core/components/icon-button/IconButton.tsx";
 import { SpeechButton } from "../../common/speech-button/SpeechButton.tsx";
-import { SpacingRow } from "../../../../core/components/spacing-row/SpacingRow.tsx";
 import { SpeechConfirmedButton } from "../../common/speech-button/SpeechConfirmedButton.tsx";
 import { GameComponentProps } from "../models/GameModel.ts";
+import { useServices } from "../../../dependency-injection/ServicesContext.tsx";
 
 function SayWordComponent({model,onCompleted}: GameComponentProps<SayWordModel>): React.JSX.Element {
 
@@ -37,11 +32,9 @@ function SayWordComponent({model,onCompleted}: GameComponentProps<SayWordModel>)
   const [attempts, setAttempts] = useState(0);
   const maxNumOfAttempts = useRef(2);
 
-  const appProducer = useRef<IAppProducer | null>(null);
-  const audioManager = useRef<IAudioManager | null>(null);
+  const { appProducer, audioManager} = useServices();
 
   useEffect(() => {
-    initInjections();
     initData();
   }, []);
 
@@ -51,17 +44,8 @@ function SayWordComponent({model,onCompleted}: GameComponentProps<SayWordModel>)
     }
   }, [attempts])
 
-  function initInjections(){
-    if(!appProducer.current){
-      appProducer.current = InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN);
-    }
-    if(!audioManager.current){
-      audioManager.current = InjectionManager.useInjection<IAudioManager>(DepInjectionsTokens.AUDIO_MANAGER_TOKEN);
-    }
-  }
-
   function initData(){
-    const selectedLanguage = appProducer.current?.getSelectedLanguage() || Languages.EN;
+    const selectedLanguage = appProducer.getSelectedLanguage() || Languages.EN;
     const wordFromDictionary = dictionary.getWord(selectedLanguage, model.word);
     setWord(new WordCardModel({
       id: model.word,
@@ -72,15 +56,15 @@ function SayWordComponent({model,onCompleted}: GameComponentProps<SayWordModel>)
     }));
 
     if(wordFromDictionary){
-      audioManager.current?.playSound({
+      audioManager.playSound({
         text: "Press the microphone button and say the word",
-        language: appProducer.current?.getSelectedLanguage() || Languages.EN,
+        language: appProducer.getSelectedLanguage() || Languages.EN,
         soundKey: ""
       }).then(() => {
         setTimeout(() => {
-          audioManager.current?.playSound({
+          audioManager.playSound({
             text: wordFromDictionary.word,
-            language: appProducer.current?.getSelectedLanguage() || Languages.EN,
+            language: appProducer.getSelectedLanguage() || Languages.EN,
             soundKey: ""
           });
         }, 400);

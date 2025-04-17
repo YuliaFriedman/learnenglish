@@ -1,6 +1,4 @@
 import { IAppProducer } from "../app-data/store/IAppProducer.ts";
-import InjectionManager from "../../core/services/InjectionManager.ts";
-import { DepInjectionsTokens } from "../dependency-injection/DepInjectionTokens.ts";
 import { RoutesListValues } from "../app-data/models/routeValues.ts";
 import { INavigationManager } from "./INavigationManager.tsx";
 import { Logger } from "../../logger/Logger.ts";
@@ -9,11 +7,8 @@ import { GameType } from "../app-data/models/GameType.ts";
 export class NavigationManager implements INavigationManager{
 
   logSource = "NavigationManager";
-  appProducer: IAppProducer;
 
-  constructor(){
-    //this.appProducer = useRef<IAppProducer>( InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN) );
-    this.appProducer = InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN);
+  constructor(private appProducer: IAppProducer) {
   }
 
   navigateHome(){

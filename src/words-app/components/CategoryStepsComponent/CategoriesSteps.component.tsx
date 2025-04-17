@@ -14,15 +14,11 @@ import { Logger } from "../../../logger/Logger";
 // @ts-ignore
 import Icon from "react-native-vector-icons/FontAwesome";
 import { GameType } from "../../app-data/models/GameType";
-import { IAppProducer } from "../../app-data/store/IAppProducer.ts";
-import InjectionManager from "../../../core/services/InjectionManager.ts";
-import { DepInjectionsTokens } from "../../dependency-injection/DepInjectionTokens.ts";
 import { CategoriesStepComponent } from "./CategoriesStep.component.tsx";
 import { CategoriesExamStepComponent } from "./CategoriesExamStep.component.tsx";
-import { RoutesListValues } from "../../app-data/models/routeValues.ts";
-import { INavigationManager } from "../../navigation/INavigationManager.tsx";
 import { useSelector } from "react-redux";
 import { currentCategorySelector, currentStepsSelector } from "../../app-data/store/AppSelectors.ts";
+import { useServices } from "../../dependency-injection/ServicesContext.tsx";
 
 function CategoriesStepsComponent(): React.JSX.Element {
 
@@ -30,7 +26,7 @@ function CategoriesStepsComponent(): React.JSX.Element {
 
   const currentCategory = useSelector(currentCategorySelector);
   const steps = useSelector(currentStepsSelector);
-  const navigationManager = useRef<INavigationManager>( InjectionManager.useInjection<INavigationManager>(DepInjectionsTokens.NAVIGATION_MANAGER) );
+  const { navigationManager } = useServices();
 
   function createStepsGroups():StepModel[][]{
     Logger.log(logSource,"in createStepsGroups: category = " + currentCategory?.title + ", steps count = " + steps.length);
@@ -73,7 +69,7 @@ function CategoriesStepsComponent(): React.JSX.Element {
 
   function navigateToStep(step: StepModel){
     Logger.log(logSource, "Navigating to step: " + step.id);
-    navigationManager.current.navigateToStep(step.id);
+    navigationManager.navigateToStep(step.id);
   }
 
   return (

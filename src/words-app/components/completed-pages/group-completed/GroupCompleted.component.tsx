@@ -6,18 +6,15 @@ import { CategoryCompletedStyling } from "../category-completed/CategoryComplete
 import Icon from "react-native-vector-icons/FontAwesome";
 import { fromPercentToPixelsWidth } from "../../../../style/dimentions.ts";
 import PrimaryButtonComponent from "../../common/primary-button/PrimaryButton.component.tsx";
-import { useRef } from "react";
-import { INavigationManager } from "../../../navigation/INavigationManager.tsx";
-import InjectionManager from "../../../../core/services/InjectionManager.ts";
-import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
+import { useServices } from "../../../dependency-injection/ServicesContext.tsx";
 
 
 export function GroupCompleted() {
 
-  const navigationManager = useRef<INavigationManager>(InjectionManager.useInjection<INavigationManager>(DepInjectionsTokens.NAVIGATION_MANAGER));
+  const { navigationManager } = useServices();
 
   function goToNextGame(){
-    navigationManager.current.goToNextStep();
+    navigationManager.goToNextStep();
   }
 
   return (

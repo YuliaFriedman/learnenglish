@@ -12,13 +12,11 @@ import { Logger } from "../../../../logger/Logger";
 import { WordTextCardStyling } from "./WordTextCard.styling";
 // @ts-ignore
 import Icon from "react-native-vector-icons/FontAwesome";
-import InjectionManager from "../../../../core/services/InjectionManager.ts";
-import { IAppProducer } from "../../../app-data/store/IAppProducer.ts";
-import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
 import { IAudioManager } from "../../../../sound/IAudioManager.ts";
 import { ThemeManager } from "../../../style/ThemeManager.ts";
 import { GradientBorder } from "../../../../core/components/gradient-border/GradienBorder.tsx";
 import { CardText } from "../../common/card-text/CardText.tsx";
+import { useServices } from "../../../dependency-injection/ServicesContext.tsx";
 
 export interface WordTextCardComponentProps {
   model: WordTextCardModel;
@@ -32,11 +30,8 @@ export interface WordTextCardComponentProps {
 function WordTextCardComponent({model, onSpeakStarted, onSpeakCompleted, onPressed, style}: WordTextCardComponentProps): React.JSX.Element {
 
   const logSource = "WordTextCardComponent";
-  const audioManager = useRef<IAudioManager | null>(null);
+  const { audioManager } = useServices();
 
-  useEffect(() => {
-    initInjections();
-  }, []);
 
   useEffect(() => {
     if(model?.shouldSayTheWord){
@@ -44,18 +39,12 @@ function WordTextCardComponent({model, onSpeakStarted, onSpeakCompleted, onPress
     }
   }, [model?.shouldSayTheWord]);
 
-  function initInjections(){
-    if(!audioManager.current){
-      audioManager.current = InjectionManager.useInjection<IAudioManager>(DepInjectionsTokens.AUDIO_MANAGER_TOKEN);
-    }
-  }
-
   function playSound(){
     Logger.log(logSource, "Playing sound " + model.word + "(" + model.language + ")");
     if(onSpeakStarted){
       onSpeakStarted();
     }
-    audioManager.current?.playSound({
+    audioManager.playSound({
       text: model.word,
       soundKey: model.sound,
       language: model.language

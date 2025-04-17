@@ -6,25 +6,22 @@
  */
 
 import React, { useEffect, useRef, useState } from "react";
-import { Image, Pressable, SafeAreaView, ScrollView, Text, useColorScheme, View } from "react-native";
+import { View } from "react-native";
 import { AllCategoriesStyling } from "./AllCategories.styling";
 import { Category } from "../../app-data/models/CategoryModel";
-import { images } from "../../app-data/ImagesManager";
 import { Logger } from "../../../logger/Logger";
 import { CategoryCard } from "./category-card/CategoryCard.component.tsx";
-import InjectionManager from "../../../core/services/InjectionManager.ts";
-import { IAppProducer } from "../../app-data/store/IAppProducer.ts";
-import { DepInjectionsTokens } from "../../dependency-injection/DepInjectionTokens.ts";
 import { RoutesListValues } from "../../app-data/models/routeValues.ts";
 import { useSelector } from "react-redux";
 import { categoriesListSelector } from "../../app-data/store/AppSelectors.ts";
+import { useServices } from "../../dependency-injection/ServicesContext.tsx";
 
 function AllCategoriesComponent(): React.JSX.Element {
 
   const logSource = "AllCategories";
 
   const [allCategoriesView, setAllCategoriesView] = useState<React.ReactNode[]>([]);
-  const appProducer = useRef<IAppProducer>(InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN));
+  const { appProducer } = useServices();
   const categoriesList = useSelector(categoriesListSelector);
 
   useEffect(() =>{
@@ -48,8 +45,8 @@ function AllCategoriesComponent(): React.JSX.Element {
 
   function categoryPressed(category:Category){
     Logger.log(logSource, "Category pressed: " + category.title);
-    appProducer.current?.setSelectedCategory(category.type);
-    appProducer.current?.setNavigationRoute(RoutesListValues.steps)
+    appProducer.setSelectedCategory(category.type);
+    appProducer.setNavigationRoute(RoutesListValues.steps)
   }
 
   return (

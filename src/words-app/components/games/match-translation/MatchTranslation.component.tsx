@@ -20,13 +20,11 @@ import DroppableComponent, { DroppableComponentType } from "../../../../core/com
 import SecondaryButtonComponent from "../../common/secondary-button/SecondaryButton.component.tsx";
 import { AnswerStatus } from "../../../app-data/models/AnswerStatus.ts";
 import { AppSoundsPlayer } from "../../../../services/AppSoundsPlayer";
-import { IAppProducer } from "../../../app-data/store/IAppProducer.ts";
-import InjectionManager from "../../../../core/services/InjectionManager.ts";
-import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
 import { Languages } from "../../../../app-data/language.ts";
 import { GameComponentProps } from "../models/GameModel.ts";
 import { ThemeManager } from "../../../style/ThemeManager.ts";
 import { IShakeView, ShakeView } from "../../../../core/components/animations/shake/ShakeView.component.tsx";
+import { useServices } from "../../../dependency-injection/ServicesContext.tsx";
 
 interface SolutionModel{
   sourceIndex: number;
@@ -46,7 +44,7 @@ function MatchTranslationComponent({model, onCompleted}: GameComponentProps<Matc
   const droppableComponents = useRef<DroppableComponentType[]|null[]>([]);
   const [cardsStyle,setCardsStyle] = useState<Partial<CardStyle>[]>([]);
   const incorrectCardRefs = useRef<Array<IShakeView>>([]);
-  const appProducer = useRef<IAppProducer>(InjectionManager.useInjection<IAppProducer>(DepInjectionsTokens.APP_PRODUCER_TOKEN));
+  const { appProducer } = useServices();
   Logger.log(logSource, `${JSON.stringify(ThemeManager.theme.games.matchTranslation.card)}`)
 
 
@@ -84,8 +82,8 @@ function MatchTranslationComponent({model, onCompleted}: GameComponentProps<Matc
   }
 
   function initData(){
-    const selectedLanguage = appProducer.current?.getSelectedLanguage() || Languages.EN;
-    const selectedTranslation = appProducer.current?.getSelectedTranslation() || Languages.EN;
+    const selectedLanguage = appProducer.getSelectedLanguage() || Languages.EN;
+    const selectedTranslation = appProducer.getSelectedTranslation() || Languages.EN;
     const wordsList:WordCardModel[] = [];
     const translationsList:WordCardModel[] = [];
 

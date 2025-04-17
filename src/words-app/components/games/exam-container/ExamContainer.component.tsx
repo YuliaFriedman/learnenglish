@@ -1,17 +1,15 @@
 import { View } from "react-native";
 import { GameContainerStyling } from "../game-container/GameContainer.styling.tsx";
-import React, { useRef } from "react";
+import React from "react";
 import PrimaryButtonComponent from "../../common/primary-button/PrimaryButton.component.tsx";
-import { INavigationManager } from "../../../navigation/INavigationManager.tsx";
-import InjectionManager from "../../../../core/services/InjectionManager.ts";
-import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
+import { useServices } from "../../../dependency-injection/ServicesContext.tsx";
 
 export function ExamContainerComponent(){
 
-  const navigationManager = useRef<INavigationManager>(InjectionManager.useInjection<INavigationManager>(DepInjectionsTokens.NAVIGATION_MANAGER));
+  const { navigationManager } = useServices();
 
   function examCompleted(){
-    navigationManager.current.goToNextStep();
+    navigationManager.goToNextStep();
   }
 
   return (

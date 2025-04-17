@@ -1,12 +1,8 @@
-import { CategoriesStepsStyling } from "./CategoriesSteps.styling.tsx";
 import { StyleSheet, Text, View } from "react-native";
 import { StepProgressIcon } from "./StepProgressIcon.component.tsx";
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { StepModel } from "../../app-data/models/StepModel.ts";
 import { TileOutfitComponent } from "../common/tile-outfit/TileOutfit.component.tsx";
-import InjectionManager from "../../../core/services/InjectionManager.ts";
-import { IAppProducer } from "../../app-data/store/IAppProducer.ts";
-import { DepInjectionsTokens } from "../../dependency-injection/DepInjectionTokens.ts";
 import { CategoryStyle } from "../../app-data/models/CategoryModel.ts";
 import {
   PressableWithAnimation

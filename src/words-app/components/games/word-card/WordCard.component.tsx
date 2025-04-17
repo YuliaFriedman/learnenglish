@@ -5,23 +5,20 @@
  * @format
  */
 
-import React, { useEffect, useRef, useState } from "react";
-import { Image, Pressable, Text, View, ViewStyle } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Image, View, ViewStyle } from "react-native";
 import { WordCardModel } from "./WordCardModel";
 import { Logger } from "../../../../logger/Logger";
 import { images } from "../../../app-data/ImagesManager";
 import { WordCardStyling } from "./WordCard.styling";
 import { AnswerStatus } from "../../../app-data/models/AnswerStatus.ts";
 import { DraggablePressable } from "../../../../core/components/draggable/draggablePressable.tsx";
-import InjectionManager from "../../../../core/services/InjectionManager.ts";
-import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
-import { IAudioManager } from "../../../../sound/IAudioManager.ts";
-import { TileOutfitComponent } from "../../common/tile-outfit/TileOutfit.component.tsx";
 import { ThemeManager } from "../../../style/ThemeManager.ts";
 import { GradientBorder } from "../../../../core/components/gradient-border/GradienBorder.tsx";
 import { CardText } from "../../common/card-text/CardText.tsx";
 import { Colors } from "../../../../style/Colors";
 import { animationStyles } from "../../../../core/styles/animations.tsx";
+import { useServices } from "../../../dependency-injection/ServicesContext.tsx";
 
 export interface CardStyle {
   borderColors: string[];
@@ -49,9 +46,7 @@ export interface WordCardComponentProps {
 function WordCardComponent({ model, style, onSpeakStarted, onSpeakCompleted, onPressed, cardStyle }:WordCardComponentProps): React.JSX.Element {
 
   const logSource = "WordCardComponent";
-  const audioManager = useRef<IAudioManager>(
-    InjectionManager.useInjection<IAudioManager>(DepInjectionsTokens.AUDIO_MANAGER_TOKEN)
-  );
+  const { audioManager } = useServices();
   const [borderColor, setBorderColor] = useState(getCardBorder(cardStyle));
   const [backgroundColor, setBackgroundColor] = useState<string>(getCardBackground(cardStyle));
   const [currentCardStyle, setCurrentCardStyle] = useState<CardStyle>(ThemeManager.theme.games.card)
@@ -81,12 +76,12 @@ function WordCardComponent({ model, style, onSpeakStarted, onSpeakCompleted, onP
 
   function playSound(){
     if(model){
-      Logger.log(logSource, `Playing sound ${model?.word} (${model?.language}) img = ${model?.image} has audio manager = ${audioManager.current?.playSound}`);
+      Logger.log(logSource, `Playing sound ${model?.word} (${model?.language}) img = ${model?.image} has audio manager = ${audioManager.playSound}`);
       if(onSpeakStarted){
         onSpeakStarted();
       }
       //audioManager.current?.test();
-      audioManager.current?.playSound({
+      audioManager.playSound({
         text: model.word,
         soundKey: model.sound,
         language: model.language

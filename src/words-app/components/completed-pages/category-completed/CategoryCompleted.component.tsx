@@ -1,22 +1,20 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 // @ts-ignore
 import Icon from "react-native-vector-icons/FontAwesome";
 import { ThemeManager } from "../../../style/ThemeManager.ts";
 import { CategoryCompletedStyling } from "./CategoryCompleted.styling.tsx";
 import PrimaryButtonComponent from "../../common/primary-button/PrimaryButton.component.tsx";
-import { useRef } from "react";
-import { DepInjectionsTokens } from "../../../dependency-injection/DepInjectionTokens.ts";
-import InjectionManager from "../../../../core/services/InjectionManager.ts";
-import { INavigationManager } from "../../../navigation/INavigationManager.tsx";
 import { fromPercentToPixelsWidth } from "../../../../style/dimentions.ts";
 import { StrokeText } from "@charmy.tech/react-native-stroke-text";
+import { useServices } from "../../../dependency-injection/ServicesContext.tsx";
 
 export function CategoryCompleted() {
 
-  const navigationManager = useRef<INavigationManager>( InjectionManager.useInjection<INavigationManager>(DepInjectionsTokens.NAVIGATION_MANAGER) );
+  const { navigationManager } = useServices();
+
 
   function navigateToHome() {
-    navigationManager.current.navigateHome();
+    navigationManager.navigateHome();
   }
 
   return(
