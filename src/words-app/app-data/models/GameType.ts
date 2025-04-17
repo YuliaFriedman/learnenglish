@@ -5,5 +5,4 @@ export enum GameType {
   MatchTranslation,
   Memory,
   PoppingWords,
-  Test
 }

@@ -27,14 +27,6 @@ export const AnimalsSteps: StepModel[] = [
     }
   },
   {
-    id: 3,
-    displayName: "3",
-    status: StepStatus.Idle,
-    game: {
-      type:  GameType.Test
-    }
-  },
-  {
     id: 4,
     displayName: "4",
     status: StepStatus.Idle,
